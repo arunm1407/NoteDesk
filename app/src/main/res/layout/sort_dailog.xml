@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/layout_miscellaneous"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="@dimen/margin_small"
+    android:background="@color/background"
+    android:padding="@dimen/padding_large"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_medium"
+        android:text="@string/sort_notes"
+        android:textColor="@color/colorText"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/toggleButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        android:layout_marginTop="10dp"
+        app:singleSelection="true"
+        android:gravity="center"
+        app:selectionRequired="true"
+        app:checkedButton="@id/button1"
+        >
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/descending"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:icon="@drawable/ic_baseline_arrow_upward_24"
+            android:backgroundTint="@color/buttonbg"
+            android:textColor="@color/textbackground"
+            app:iconTint="@color/textbackground"
+
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ascending"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:icon="@drawable/ic_baseline_arrow_downward_24"
+            android:backgroundTint="@color/buttonbg"
+            android:textColor="@color/textbackground"
+            app:iconTint="@color/textbackground"
+            />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/done"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/poppins"
+        android:text="@string/done"
+        android:textAllCaps="false"
+        android:textColor="@color/GREEN"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/radio_group"
+
+        />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/cancel"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/poppins"
+        android:text="@string/cancel"
+        android:textAllCaps="false"
+        android:textColor="@color/RED"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/done"
+        app:layout_constraintTop_toBottomOf="@id/radio_group"
+
+        />
+
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:padding="@dimen/padding_small"
+        app:layout_constraintStart_toStartOf="@id/tv_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_title">
+
+
+        <RadioButton
+            android:id="@+id/modification_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="?attr/colorSecondaryVariant"
+            android:padding="@dimen/padding_small"
+            android:text="@string/modification_date"
+            android:textColor="?attr/colorSecondaryVariant"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@id/radio_group"
+            app:layout_constraintTop_toBottomOf="@id/radio_group" />
+
+
+        <RadioButton
+            android:id="@+id/creationDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="?attr/colorSecondaryVariant"
+            android:padding="@dimen/padding_small"
+            android:text="@string/creationdate"
+            android:textColor="?attr/colorSecondaryVariant"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@id/modification_date"
+            app:layout_constraintTop_toBottomOf="@id/modification_date" />
+
+        <RadioButton
+            android:id="@+id/alphabetical_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="?attr/colorSecondaryVariant"
+            android:padding="@dimen/padding_small"
+            android:text="@string/alphabetically_title"
+            android:textColor="?attr/colorSecondaryVariant"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@id/modification_date"
+            app:layout_constraintTop_toBottomOf="@id/modification_date" />
+
+
+        <RadioButton
+            android:id="@+id/alphabetical_Subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="?attr/colorSecondaryVariant"
+            android:padding="@dimen/padding_small"
+            android:text="@string/alphabetically_sub_title"
+            android:textColor="?attr/colorSecondaryVariant"
+            android:textSize="18sp"
+            android:checked="true"
+            app:layout_constraintStart_toStartOf="@id/modification_date"
+            app:layout_constraintTop_toBottomOf="@id/modification_date" />
+
+        <RadioButton
+            android:id="@+id/priorty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="?attr/colorSecondaryVariant"
+            android:padding="@dimen/padding_small"
+            android:text="@string/priority"
+            android:textColor="?attr/colorSecondaryVariant"
+            android:textSize="18sp"
+            android:checked="true"
+            app:layout_constraintStart_toStartOf="@id/modification_date"
+            app:layout_constraintTop_toBottomOf="@id/modification_date" />
+
+    </RadioGroup>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

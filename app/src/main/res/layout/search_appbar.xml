@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background"
+    android:elevation="0dp">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/filter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFilter"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
+                android:text="@string/filter"
+                android:textColor="?attr/colorSecondaryVariant"
+                app:icon="@drawable/ic_filter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/btnFilterText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorSecondaryVariant"
+                android:textSize="12sp"
+
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/btnFilter"
+                app:layout_constraintStart_toEndOf="@id/btnFilter"
+                app:layout_constraintTop_toTopOf="@id/btnFilter" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        x<androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="50dp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSort"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort"
+                android:clickable="false"
+                android:focusable="false"
+                android:textColor="?attr/colorSecondaryVariant"
+                app:icon="@drawable/ic_baseline_sort_descending"
+                app:layout_constraintEnd_toStartOf="@id/btnSortText"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/btnSortText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(Title)"
+                android:textColor="?attr/colorSecondaryVariant"
+                android:textSize="12sp"
+
+                app:layout_constraintBottom_toBottomOf="@id/btnSort"
+                app:layout_constraintStart_toEndOf="@id/btnSort"
+                app:layout_constraintTop_toTopOf="@id/btnSort"
+                tools:ignore="HardcodedText" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</com.google.android.material.appbar.AppBarLayout>

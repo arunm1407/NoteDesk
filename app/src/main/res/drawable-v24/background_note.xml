@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/colorDefaultNoteColor"/>
+    <corners android:radius="7dp"/>
+    <item android:drawable="@color/buttonpressed" android:state_pressed="true"   />
+    <item android:drawable="?attr/colorOnPrimary" android:state_focused="false"   />
+    <item android:drawable="?attr/colorOnPrimary"    />
+</shape>
+

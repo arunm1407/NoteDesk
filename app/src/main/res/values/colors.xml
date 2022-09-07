@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources  xmlns:tools="http://schemas.android.com/tools">
+    <color name="color_primary">#1565C0</color>
+    <color name="color_primary_variant">#0D47A1</color>
+    <color name="color_secondary">#00838F</color>
+    <color name="color_secondary_variant">#006064</color>
+    <color name="color_background">#ffffff</color>
+    <color name="color_surface">#ffffff</color>
+    <color name="color_error">#B71C1C</color>
+    <color name="color_on_primary">#ffffff</color>
+    <color name="color_on_secondary">#ffffff</color>
+    <color name="color_on_background">#000000</color>
+    <color name="color_on_surface">#515151</color>
+    <color name="color_on_error">#ffffff</color>
+    <color name="color_highlight">#ffd740</color>
+    <color name="color_on_highlight">#000000</color>
+
+
+
+
+
+
+    <color name="colorPrimary">#1380c4</color>
+    <color name="colorPrimaryDark">#FFB400</color>
+    <color name="colorAccent">#FFC845</color>
+
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="background">#f2f0f4</color>
+    <color name="errorColor">#B71C1C</color>
+    <color name="infoColor">#0F4C81</color>
+
+    <color name="colorQuickActionsBackground">#EFEFEF</color>
+    <color name="colorIcons">#0E0E0E</color>
+    <color name="colorTextSubtitle">#2E2E2E</color>
+    <color name="colorDefaultNoteColor">#F1F1F1</color>
+    <color name="colorNoteSubtitleText">#292929</color>
+    <color name="colorMiscellaneousBackground">#FAFAFA</color>
+    <color name="colorText">#000000</color>
+    <color name="colorNotecolor2">#fcada8</color>
+    <color name="colorNotecolor3">#f19f71</color>
+    <color name="colorNotecolor4">#EAC78C</color>
+    <color name="colorNotecolor5">#b4ddd4</color>
+    <color name="colorNotecolor6">#d3bed7</color>
+    <color name="colorNotecolor7">#ECB680</color>
+    <color name="colorNotecolor8">#81DDD3</color>
+    <color name="colorNotecolor9">#A4ADE4</color>
+    <color name="colorNotecolor10">#F57777</color>
+    <color name="colorDelete">#FF4842</color>
+    <color name="colorSearchBackground">#EFEFEF</color>
+    <color name="colorTextHint">#8A8A8A</color>
+    <color name="sortAppBarColor">#B3B3B3</color>
+    <color name="colorMiscellanousBackground">#1F1F1F</color>
+    <color name="colorWhite">#e3e6e8</color>
+    <color name="RED">#b00020</color>
+    <color name="GREEN">#5EB511</color>
+    <color name="YELLOW">#FFC845</color>
+    <color name="BLUE">#344BE1</color>
+    <color name="btnfocused" tools:ignore="MissingDefaultResource">#0288D1</color>
+    <color name="buttonpressed">#e3e6e8</color>
+
+
+
+</resources>

@@ -1,0 +1,60 @@
+package com.example.notedesk.domain.util.sharedPreference
+
+import android.app.Activity
+import android.content.Context
+import android.content.SharedPreferences
+import com.example.notedesk.domain.util.keys.IndentKeys
+import com.example.notedesk.presentation.home.enums.SortValues
+
+
+class SharedPreference(private val activity: Activity) {
+
+
+    val preference: SharedPreferences by lazy {
+        activity.getSharedPreferences(
+            "main",
+            Context.MODE_PRIVATE
+        )
+    }
+
+
+    fun getSharedPreferenceInt(value: String): Int {
+        return preference.getInt(value, IndentKeys.LIST_VIEW)
+    }
+
+    fun getSharedPreferenceString(value: String): String? {
+        return preference.getString(value, SortValues.ALPHABETICALLY_TITLE.toString())
+    }
+
+    fun putIntSharePreferenceInt(string: String, value: Int) {
+        preference.edit().apply()
+        {
+            putInt(string, value)
+
+            apply()
+        }
+
+    }
+
+    fun putStringSharedPreference(string: String, value: String) {
+        preference.edit().apply()
+        {
+            putString(string, value)
+            apply()
+        }
+    }
+
+
+    fun putBooleanSharedPreference(string: String, value: Boolean) {
+        preference.edit().apply {
+            putBoolean(string, value)
+            apply()
+        }
+    }
+
+    fun getBooleanSharedPreference(string: String): Boolean {
+        return preference.getBoolean(string, false)
+    }
+
+
+}

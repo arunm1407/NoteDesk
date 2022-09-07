@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.NotesAppfragment" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/color_primary_variant</item>
+        <item name="colorOnPrimary">@color/color_on_primary</item>
+        <!-- Secondary brand color. -->.
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorSecondaryVariant">@color/color_on_highlight</item>
+        <item name="colorOnSecondary">@color/color_on_highlight</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" >@color/color_primary_variant</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="navigationIconTint">@color/colorWhite</item>
+        <item name="android:actionOverflowMenuStyle">@color/colorWhite</item>
+        <item name="actionModeStyle">@style/MyActionMode</item>
+
+    </style>
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/menu_image"
+        android:icon="@drawable/ic_image"
+        android:iconTint="?attr/colorSecondaryVariant"
+        android:title="@string/image"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_voice"
+        android:icon="@drawable/ic_voice"
+        android:iconTint="?attr/colorSecondaryVariant"
+        android:title="@string/voice_note"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_web_link"
+        android:icon="@drawable/ic_web_link"
+        android:iconTint="?attr/colorSecondaryVariant"
+        android:title="@string/web_link"
+        app:showAsAction="always" />
+
+
+
+
+
+
+
+
+</menu>
