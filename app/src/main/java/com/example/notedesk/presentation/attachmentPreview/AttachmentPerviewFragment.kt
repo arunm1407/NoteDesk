@@ -2,34 +2,45 @@ package com.example.notedesk.presentation.attachmentPreview
 
 import android.os.Bundle
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import com.example.notedesk.domain.util.keys.Keys.MAIN
 import com.example.notesappfragment.R
 import com.example.notesappfragment.databinding.FragmentAttachmentPerviewBinding
 import com.example.notedesk.domain.util.storage.InternalStoragePhoto
+import com.example.notedesk.domain.util.storage.Storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
-class AttachmentPerviewFragment private constructor() : Fragment() {
+class AttachmentPerviewFragment : Fragment() {
 
 
     companion object {
 
-        private const val INTERNAL_STORAGE_PHOTO = "InternalStoragePhoto"
-        fun newInstance(internalStoragePhoto: InternalStoragePhoto) =
+
+        fun newInstance(name: String) =
             AttachmentPerviewFragment().apply {
                 val bundle = Bundle()
-                bundle.putParcelable(INTERNAL_STORAGE_PHOTO, internalStoragePhoto)
+                bundle.putString(MAIN, name)
                 arguments = bundle
 
             }
     }
 
     private lateinit var binding: FragmentAttachmentPerviewBinding
-    private lateinit var internalStoragePhoto: InternalStoragePhoto
-    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private val viewModel: AttachmentPreviewViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,7 +48,20 @@ class AttachmentPerviewFragment private constructor() : Fragment() {
 
         binding = FragmentAttachmentPerviewBinding.inflate(layoutInflater, container, false)
         getArgumentParcelable()
-        binding.imagePreview.setImageBitmap(internalStoragePhoto.bmp)
+        lifecycleScope.launch()
+        {
+            binding.animationView.playAnimation()
+            val internalStoragePhoto: InternalStoragePhoto
+            withContext(Dispatchers.IO)
+            {
+                internalStoragePhoto = Storage.getPhotosFromInternalStorage(requireActivity(),viewModel.name)!!
+            }
+            delay(1000)
+            binding.animationView.cancelAnimation()
+            binding.animationView.visibility = View.GONE
+            binding.imagePreview.setImageBitmap(internalStoragePhoto.bmp)
+        }
+
         initializeMenu()
         return binding.root
     }
@@ -45,28 +69,28 @@ class AttachmentPerviewFragment private constructor() : Fragment() {
 
     private fun getArgumentParcelable() {
         val bundle: Bundle = requireArguments()
-        internalStoragePhoto = bundle.getParcelable(INTERNAL_STORAGE_PHOTO)!!
+        viewModel.name = bundle.getString(MAIN)!!
 
     }
 
     private fun initializeToolBar() {
-        toolbar = requireView().findViewById(R.id.my_toolbar)
+        val toolbar:Toolbar = requireView().findViewById(R.id.my_toolbar)
         toolbar.menu.clear()
-        toolbar.title = "Img_${internalStoragePhoto.name}"
+        toolbar.title = "Img_${viewModel.name}"
         (activity as AppCompatActivity).apply {
             this.setSupportActionBar(toolbar)
             this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
             this.supportActionBar!!.setDisplayShowHomeEnabled(true)
         }
-        toolbar.navigationIcon = resources.getDrawable(R.drawable.ic_baseline_arrow_back_24)
+        toolbar.navigationIcon =  ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_arrow_back_24)
 
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeToolBar()
+        backPressed()
     }
-
 
 
     private fun initializeMenu() {
@@ -91,6 +115,23 @@ class AttachmentPerviewFragment private constructor() : Fragment() {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
+    }
+
+
+
+
+
+
+
+
+    private fun backPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    parentFragmentManager.popBackStack()
+
+                }
+            })
     }
 
 }

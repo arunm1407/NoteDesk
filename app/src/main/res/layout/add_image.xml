@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@color/background"
+    android:background="?attr/background"
     android:layout_margin="@dimen/margin_small"
     android:padding="@dimen/padding_large"
     app:behavior_peekHeight="0dp"
@@ -18,7 +18,7 @@
         android:fontFamily="@font/poppins_medium"
         android:text="Add image"
         android:textSize="20sp"
-        android:textColor="@color/colorText"
+        android:textColor="?attr/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,7 +46,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/colorIcons" />
+            app:tint="?attr/colorAccent" />
 
         <TextView
             android:id="@+id/text_read_Note"
@@ -59,7 +59,7 @@
             android:text="@string/take_photo"
             android:textAlignment="textStart"
             android:textAllCaps="false"
-            android:textColor="@color/colorText"
+            android:textColor="?attr/colorAccent"
             android:textSize="14sp"
             android:textStyle="normal"
             app:layout_constraintBottom_toBottomOf="@id/take_photo"
@@ -92,7 +92,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/colorIcons" />
+            app:tint="?attr/colorAccent" />
 
         <TextView
             android:id="@+id/text_choose_image"
@@ -105,7 +105,7 @@
             android:text="@string/choose_image"
             android:textAlignment="textStart"
             android:textAllCaps="false"
-            android:textColor="@color/colorText"
+            android:textColor="?attr/colorAccent"
             android:textSize="14sp"
             android:textStyle="normal"
             app:layout_constraintBottom_toBottomOf="@+id/image_choose"

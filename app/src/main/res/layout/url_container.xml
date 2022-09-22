@@ -7,6 +7,7 @@
     android:layout_marginTop="15dp"
     android:layout_marginEnd="12dp"
     android:gravity="center_vertical"
+    android:id="@+id/url"
     android:background="@android:color/transparent"
     android:orientation="horizontal"
     android:visibility="visible">
@@ -19,19 +20,20 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:autoLink="web"
-            android:background="@android:color/transparent"
+            android:text="skldajbvlaksdbvlsdknv"
             android:fontFamily="@font/poppins_medium"
             android:includeFontPadding="false"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:textColor="?attr/colorSecondaryVariant"
+            android:textColor="@color/black"
             android:textSize="13sp"
+            android:textColorLink="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/removeUrl"
             android:layout_marginEnd="20dp"
-
-            app:drawableTint="@color/colorAccent"
-            app:drawableRightCompat="@drawable/ic_lang" />
+            android:drawableLeft="@drawable/ic_lang"
+            android:drawablePadding="10dp"
+           />
 
         <ImageView
             android:id="@+id/removeUrl"

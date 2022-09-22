@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="@dimen/margin_small"
-    android:background="@color/background"
+    android:background="?attr/colorOnSecondary"
     android:padding="@dimen/padding_large"
     app:behavior_peekHeight="0dp"
     app:layout_behavior="@string/bottom_sheet_behavior">
@@ -19,7 +19,7 @@
         android:layout_marginStart="10dp"
         android:fontFamily="@font/poppins"
         android:text="@string/Settings_Storage"
-        android:textColor="@color/colorText"
+        android:textColor="?attr/colorAccent"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"

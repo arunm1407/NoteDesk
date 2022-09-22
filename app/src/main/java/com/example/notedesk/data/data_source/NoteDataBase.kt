@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.room.*
 
 
-@Database(entities = [Notes::class, FileName::class], version = 2, exportSchema = true)
+@Database(entities = [Notes::class, FileName::class,History::class], version = 2, exportSchema = true)
 @TypeConverters(Notes.StringConvertor::class )
 abstract class NoteDataBase: RoomDatabase() {
 

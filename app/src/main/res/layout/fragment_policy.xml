@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="?attr/colorOnSecondary"
     android:clickable="true"
     android:focusable="true"
     tools:context="com.example.notedesk.presentation.policy.PolicyFragment"
@@ -16,14 +16,15 @@
         layout="@layout/toolbar" />
 
 
+
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginTop="55dp"
         android:clipToPadding="false"
-        android:paddingBottom="10dp">
+
+      >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -35,11 +36,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:fontFamily="@font/poppins_bold"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/poppins"
                 style="@style/Heading"
+                android:textSize="18sp"
                 android:text="@string/privacy_policy"
-                android:textColor="?attr/colorSecondaryVariant"
-                android:textSize="20sp"
+                android:textColor="?attr/colorAccent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,11 +49,13 @@
                 android:id="@+id/content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_small"
+                android:layout_marginHorizontal="@dimen/margin_large"
                 android:fontFamily="@font/poppins"
+
                 android:padding="@dimen/padding_large"
                 android:text="@string/content"
-                android:textColor="?attr/colorSecondaryVariant"
+              android:justificationMode="inter_word"
+                android:textColor="?attr/colorAccent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_title" />
@@ -61,11 +65,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:fontFamily="@font/poppins_medium"
+                android:fontFamily="@font/poppins"
                 android:text="@string/information_collection_use"
-                android:textColor="?attr/colorSecondaryVariant"
+                android:textColor="?attr/colorAccent"
                 android:textStyle="bold"
-                android:textSize="14sp"
+                android:textSize="18sp"
+                android:gravity="end"
+                style="@style/Heading"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/content" />
 
@@ -73,12 +79,14 @@
                 android:id="@+id/collection_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_small"
+
                 android:fontFamily="@font/poppins"
+                android:justificationMode="inter_word"
                 android:padding="@dimen/padding_large"
                 android:text="@string/collection_content"
-                android:textColor="?attr/colorSecondaryVariant"
+                android:textColor="?attr/colorAccent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/collection" />
 

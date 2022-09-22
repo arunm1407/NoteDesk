@@ -8,7 +8,6 @@
     android:background="@color/colorBackground"
     android:clickable="true"
     android:focusable="true"
-
     tools:context="com.example.notedesk.presentation.createNote.CreateNotesFragment">
 
 
@@ -17,12 +16,12 @@
         layout="@layout/toolbar" />
 
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="10dp"
         android:clipToPadding="false"
         android:paddingBottom="10dp">
 
@@ -54,41 +53,23 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
 
-
-            <FrameLayout
-                android:id="@+id/favoriteImage"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+            <CheckBox
+                android:id="@+id/like"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginStart="5dp"
-                app:layout_constraintBottom_toBottomOf="@id/priorty"
+                android:background="@drawable/like_icon"
+                android:button="@null"
+                android:checked="false"
+                android:clickable="false"
+                android:enabled="false"
+                android:focusable="false"
+                app:layout_constraintBottom_toBottomOf="@id/priority"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/priorty"
-                app:layout_constraintTop_toTopOf="@id/priorty">
-
-                <ImageView
-                    android:id="@+id/yes_a_faviortie"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/ic_faviortie"
-                    android:visibility="visible"
-                    android:contentDescription="@string/app_name" />
-
-                <ImageView
-                    android:id="@+id/not_a_Faviorte"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/ic_heart"
-                    android:visibility="visible"
-                    android:contentDescription="@string/app_name" />
-
-            </FrameLayout>
-
-
-
+                app:layout_constraintHorizontal_bias="0.714"
+                app:layout_constraintStart_toEndOf="@id/priority"
+                app:layout_constraintTop_toTopOf="@id/priority"
+                app:layout_constraintVertical_bias="0.562" />
 
             <TextView
                 android:id="@+id/inputNoteSubtitle"
@@ -115,7 +96,7 @@
 
 
             <LinearLayout
-                android:id="@+id/priorty"
+                android:id="@+id/priority"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_small"
@@ -178,6 +159,7 @@
                 android:layout_marginHorizontal="5dp"
                 android:layout_marginVertical="@dimen/margin_small"
                 android:visibility="gone"
+                android:nestedScrollingEnabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/inputNote"
                 app:layout_constraintTop_toBottomOf="@id/inputNote" />
@@ -193,16 +175,16 @@
                 android:hint="@string/type_note_here"
                 android:importantForAutofill="no"
                 android:includeFontPadding="false"
-                android:minHeight="150dp"
-                android:padding="@dimen/padding_small"
-
-                android:textColor="@color/colorTextSubtitle"
+                android:minHeight="200dp"
+                android:padding="10dp"
+                android:textColor="@color/color_on_highlight"
                 android:textColorHint="@color/colorTextHint"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/priorty"
+                app:layout_constraintTop_toBottomOf="@id/priority"
                 app:layout_constraintVertical_bias="0.0"
-                tools:layout_editor_absoluteX="16dp" />
+                tools:layout_editor_absoluteX="5dp" />
+
 
             <TextView
                 android:id="@+id/tv_attachment_title"
@@ -216,7 +198,7 @@
                 android:text="@string/attachment"
                 android:textColor="?attr/colorSecondaryVariant"
                 android:textStyle="bold"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@id/rv_attachment_progress"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rv_url" />
@@ -240,6 +222,7 @@
                 android:layout_marginHorizontal="@dimen/margin_small"
                 android:layout_marginVertical="@dimen/margin_small"
                 android:visibility="gone"
+                android:nestedScrollingEnabled="false"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_attachment_title" />
 
@@ -252,6 +235,7 @@
                 android:text="@string/today"
                 android:textColor="@color/color_on_highlight"
                 android:textSize="14sp"
+                app:layout_constraintVertical_bias="0.3"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rv_attachment_progress" />
 
@@ -274,16 +258,9 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </ScrollView>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bottom_nav_bar"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="bottom"
-        android:background="@color/colorBackground"
-        android:elevation="8dp">
+    </androidx.core.widget.NestedScrollView>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

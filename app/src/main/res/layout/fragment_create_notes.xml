@@ -13,15 +13,17 @@
 
     <include
         android:id="@+id/my_toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar"
+
+        />
 
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="55dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_marginBottom="50dp"
         android:clipToPadding="false"
         android:paddingBottom="10dp"
         app:layout_anchor="@+id/scrollView2"
@@ -50,19 +52,36 @@
                 android:includeFontPadding="false"
                 android:inputType="text"
                 android:padding="10dp"
-                android:textColor="?attr/colorSecondaryVariant"
+                android:textColor="?attr/colorPrimaryVariant"
                 android:textColorHint="@color/colorTextHint"
+                android:textCursorDrawable="@null"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="@id/inputNoteSubtitle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
+            <CheckBox
+                android:id="@+id/like"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/like_icon"
+                android:button="@null"
+                android:checked="false"
+                android:stateListAnimator="@animator/scale"
+                app:layout_constraintBottom_toBottomOf="@id/dropdown"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@id/dropdown"
+                app:layout_constraintTop_toTopOf="@id/dropdown"
+                app:layout_constraintVertical_bias="0.0" />
+
             <FrameLayout
                 android:id="@+id/favoriteImage"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="@dimen/margin_large"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/dropdown"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/dropdown"
@@ -74,9 +93,9 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
+                    android:contentDescription="@string/app_name"
                     android:src="@drawable/ic_faviortie"
-                    android:visibility="gone"
-                    android:contentDescription="@string/app_name" />
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/not_a_Faviorte"
@@ -84,10 +103,9 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
-                    android:src="@drawable/ic_heart"
-                    android:visibility="visible"
                     android:contentDescription="@string/app_name"
-                    />
+                    android:src="@drawable/ic_heart"
+                    android:visibility="visible" />
 
             </FrameLayout>
 
@@ -104,11 +122,12 @@
                 android:fontFamily="@font/poppins_medium"
                 android:hint="@string/note_subtitle"
                 android:importantForAutofill="no"
-
                 android:inputType="textMultiLine"
+
                 android:padding="10dp"
-                android:textColor="@color/colorTextSubtitle"
+                android:textColor="?attr/colorPrimaryVariant"
                 android:textColorHint="@color/colorTextHint"
+                android:textCursorDrawable="@null"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -122,7 +141,7 @@
                 android:layout_margin="@dimen/margin_small"
                 android:layout_marginHorizontal="5dp"
                 android:layout_marginVertical="@dimen/margin_small"
-                android:padding="@dimen/padding_small"
+                android:nestedScrollingEnabled="false"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/inputNote"
@@ -137,7 +156,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:padding="5dp"
                 android:text="@string/priority"
-                android:textColor="?attr/colorSecondaryVariant"
+                android:textColor="?attr/colorPrimaryVariant"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/rv_url"
@@ -150,14 +169,13 @@
                 android:id="@+id/dropdown"
                 android:layout_width="200dp"
                 android:layout_height="30dp"
-                android:layout_marginVertical="@dimen/margin_small"
-
-                android:backgroundTint="@color/color_on_highlight"
+                android:layout_marginVertical="10dp"
+                android:backgroundTint="@color/black"
+                android:popupBackground="?attr/colorOnPrimary"
                 app:layout_constraintBottom_toBottomOf="@id/priorty1"
                 app:layout_constraintEnd_toStartOf="@id/favoriteImage"
                 app:layout_constraintStart_toEndOf="@id/priorty1"
                 app:layout_constraintTop_toTopOf="@id/priorty1" />
-
 
             <EditText
                 android:id="@+id/inputNote"
@@ -173,8 +191,9 @@
                 android:inputType="textMultiLine"
                 android:minHeight="200dp"
                 android:padding="10dp"
-                android:textColor="@color/color_on_highlight"
+                android:textColor="?attr/colorPrimaryVariant"
                 android:textColorHint="@color/colorTextHint"
+                android:textCursorDrawable="@null"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/priorty1"
@@ -186,15 +205,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:fontFamily="@font/poppins_semibold"
-                android:padding="10dp"
+                android:padding="@dimen/padding_small"
                 android:text="@string/attachment"
-                android:textColor="?attr/colorSecondaryVariant"
+                android:textColor="?attr/colorPrimaryVariant"
                 android:textStyle="bold"
                 android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@id/rv_attachment"
+                app:layout_constraintBottom_toTopOf="@id/rv_attachment_progress"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rv_url" />
 
@@ -205,9 +224,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"
                 android:layout_marginVertical="@dimen/margin_small"
-                android:layout_marginBottom="100dp"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/updated_time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_attachment_title" />
@@ -216,8 +233,7 @@
                 android:id="@+id/rv_attachment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_small"
-                android:layout_marginHorizontal="5dp"
+                android:layout_marginHorizontal="@dimen/margin_small"
                 android:layout_marginVertical="@dimen/margin_small"
                 android:nestedScrollingEnabled="false"
                 android:visibility="gone"
@@ -231,10 +247,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_large"
                 android:text="@string/today"
-                android:textColor="@color/color_on_highlight"
+                android:textColor="?attr/colorPrimaryVariant"
                 android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rv_attachment_progress"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintVertical_bias="0.3" />
 
 
             <TextView
@@ -244,7 +261,7 @@
                 android:layout_margin="@dimen/margin_large"
                 android:layout_marginBottom="60dp"
                 android:text="@string/today"
-                android:textColor="@color/color_on_highlight"
+                android:textColor="?attr/colorPrimaryVariant"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -255,68 +272,68 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_nav_bar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_gravity="bottom"
-        android:background="@color/colorBackground"
+        android:background="?attr/colorOnSecondary"
         android:elevation="8dp">
 
         <ImageButton
             android:id="@+id/create_note_add_actions"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginStart="12dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:contentDescription="@string/app_name"
             android:focusable="true"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_add_actions"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/colorIcons"
-            android:contentDescription="@string/app_name"
-            />
+            app:tint="?attr/colorAccent" />
 
 
         <ImageButton
             android:id="@+id/pick_a_color"
-            android:layout_width="27dp"
-            android:layout_height="27dp"
-            android:layout_marginStart="12dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="18dp"
+
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:contentDescription="@string/app_name"
             android:focusable="true"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_baseline_color_lens_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/create_note_add_actions"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/app_name"
-            />
+            app:tint="?attr/colorAccent" />
 
 
         <ImageButton
             android:id="@+id/other_options"
-            android:layout_width="25dp"
-            android:layout_height="23dp"
-            android:layout_marginStart="12dp"
+            android:layout_width="30dp"
+            android:layout_height="26dp"
+            android:layout_margin="@dimen/margin_small"
+            android:layout_marginEnd="25dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="false"
+            android:contentDescription="@string/app_name"
             android:focusable="false"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_options_menu"
             android:visibility="gone"
-            android:layout_marginEnd="10dp"
-            android:layout_margin="@dimen/margin_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/app_name"
+            app:tint="?attr/colorAccent"
 
             />
 

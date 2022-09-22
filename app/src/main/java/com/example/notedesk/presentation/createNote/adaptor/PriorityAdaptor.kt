@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.notedesk.presentation.createNote.Priority
+import com.example.notedesk.data.data_source.Priority
 import com.example.notesappfragment.R
 
 class PriorityAdaptor(context: Context,list: List<Priority>): ArrayAdapter<Priority>(context,0,list) {

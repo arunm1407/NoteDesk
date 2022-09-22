@@ -12,23 +12,22 @@
     <color name="color_on_background">#000000</color>
     <color name="color_on_surface">#515151</color>
     <color name="color_on_error">#ffffff</color>
-    <color name="color_highlight">#ffd740</color>
     <color name="color_on_highlight">#000000</color>
+    <color name="customIconColor">#414A4C</color>
+    <color name="black">#000000</color>
+    <color name="color_primary_night">#222222</color>
 
 
 
 
 
-
-    <color name="colorPrimary">#1380c4</color>
+    <color name="colorPrimary">#1565C0</color>
     <color name="colorPrimaryDark">#FFB400</color>
     <color name="colorAccent">#FFC845</color>
-
     <color name="colorBackground">#FFFFFF</color>
     <color name="background">#f2f0f4</color>
     <color name="errorColor">#B71C1C</color>
     <color name="infoColor">#0F4C81</color>
-
     <color name="colorQuickActionsBackground">#EFEFEF</color>
     <color name="colorIcons">#0E0E0E</color>
     <color name="colorTextSubtitle">#2E2E2E</color>
@@ -57,6 +56,8 @@
     <color name="BLUE">#344BE1</color>
     <color name="btnfocused" tools:ignore="MissingDefaultResource">#0288D1</color>
     <color name="buttonpressed">#e3e6e8</color>
+    <color name="colorGrey">#dddddd</color>
+    <color name="dailogButton">#4487e1</color>
 
 
 

@@ -7,16 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.example.notesappfragment.R
 import com.example.notesappfragment.databinding.SortDailogBinding
 import com.example.notedesk.presentation.home.enums.SortBy
 import com.example.notedesk.presentation.home.enums.SortValues
-import com.example.notedesk.domain.util.keys.IndentKeys
+import com.example.notedesk.domain.util.keys.Keys
 import com.example.notedesk.presentation.home.Listener.SortLisenter
 
 
-class SortDialogFragment : DialogFragment(),
-    View.OnClickListener {
+class SortDialogFragment : DialogFragment(){
 
 
     companion object {
@@ -25,8 +23,8 @@ class SortDialogFragment : DialogFragment(),
         fun newInstance(sort: SortValues, sortBy: SortBy) =
             SortDialogFragment().apply {
                 val bundle = Bundle()
-                bundle.putSerializable(IndentKeys.SORT_VALUES, sort)
-                bundle.putSerializable(IndentKeys.SORT_BY, sortBy)
+                bundle.putSerializable(Keys.SORT_VALUES, sort)
+                bundle.putSerializable(Keys.SORT_BY, sortBy)
                 arguments = bundle
 
             }
@@ -54,8 +52,21 @@ class SortDialogFragment : DialogFragment(),
 
     private fun getArgumentParcelable() {
         val bundle: Bundle = requireArguments()
-        selectedSortChoice = bundle[IndentKeys.SORT_VALUES] as SortValues
-        sortBy = bundle[IndentKeys.SORT_BY] as SortBy
+        selectedSortChoice = bundle[Keys.SORT_VALUES] as SortValues
+        sortBy = bundle[Keys.SORT_BY] as SortBy
+
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.let {
+
+            val width=ViewGroup.LayoutParams.MATCH_PARENT
+            val height=ViewGroup.LayoutParams.WRAP_CONTENT
+            it.window?.setLayout(width,height)
+
+        }
     }
 
     override fun onCreateView(
@@ -65,6 +76,7 @@ class SortDialogFragment : DialogFragment(),
     ): View {
         binding = SortDailogBinding.inflate(inflater, container, false)
         retrievedChoiceToView()
+
         return binding.root
     }
 
@@ -72,17 +84,27 @@ class SortDialogFragment : DialogFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sortBy()
-        binding.cancel.setOnClickListener(this)
-        binding.done.setOnClickListener(this)
+        binding.cancel.setOnClickListener()
+        {
+            dismiss()
+        }
+        binding.done.setOnClickListener()
+        {
+            getSelectedChoice()
+            sortBy()
+            sortLisenter?.onSortOptionSelected(selectedSortChoice, sortBy)
+            dismiss()
+        }
 
     }
 
 
+
+
     private fun sortBy() {
         sortBy = when (binding.toggleButton.checkedButtonId) {
-            binding.button1.id -> SortBy.ASCENDING
-            else -> SortBy.DESENDING
+            binding.button1.id -> SortBy.DESCENDING
+            else -> SortBy.ASCENDING
         }
     }
 
@@ -112,6 +134,7 @@ class SortDialogFragment : DialogFragment(),
 
 
     private fun retrievedChoiceToView() {
+
         when (selectedSortChoice) {
             SortValues.MODIFICATION_DATE -> {
                 binding.modificationDate.isChecked = true
@@ -126,7 +149,7 @@ class SortDialogFragment : DialogFragment(),
                 binding.creationDate.isChecked = true
             }
             SortValues.PRIORITY -> {
-                binding.priorty.isChecked = true
+                binding.priority.isChecked = true
             }
         }
         when (sortBy) {
@@ -141,20 +164,14 @@ class SortDialogFragment : DialogFragment(),
     }
 
 
+
+
+
+
+
+
     override fun onDetach() {
         super.onDetach()
         sortLisenter = null
-    }
-
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.cancel -> dismiss()
-            R.id.done -> {
-                getSelectedChoice()
-                sortLisenter?.onOptionSelected(selectedSortChoice, sortBy)
-                dismiss()
-            }
-        }
-
     }
 }

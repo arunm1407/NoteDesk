@@ -15,12 +15,12 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NotesAppfragment"
-
+        android:theme="@style/Theme.NotesAppFragment"
         tools:targetApi="31">
 
+
         <activity
-            android:name="com.example.notedesk.presentation.splashScreen.SplashScreen"
+            android:name="com.example.notedesk.presentation.splashScreen.FlashScreen"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
@@ -30,11 +30,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.notedesk.presentation.util.MainActivity"
+            android:name="com.example.notedesk.presentation.activity.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/Theme.NotesAppfragment.NoActionBar"
+            android:theme="@style/Theme.NotesAppFragment.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
     </application>
 

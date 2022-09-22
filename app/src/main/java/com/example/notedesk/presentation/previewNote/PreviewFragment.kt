@@ -8,21 +8,20 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.notedesk.domain.util.storage.InternalStoragePhoto
 import com.example.notesappfragment.R
 import com.example.notedesk.presentation.attachmentPreview.adaptor.AttachmentAdaptor
 import com.example.notesappfragment.databinding.FragmentPerviewBinding
 import com.example.notedesk.data.data_source.Notes
 import com.example.notedesk.domain.util.keys.Constants
-import com.example.notedesk.domain.util.keys.IndentKeys
-import com.example.notedesk.domain.util.storage.Storage
+import com.example.notedesk.domain.util.keys.Keys
 import com.example.notedesk.domain.util.date.DateUtil.getDateAndTime
+import com.example.notedesk.domain.util.keys.Keys.SAVED_NOTES
 import com.example.notedesk.presentation.attachmentPreview.listener.AttachmentLisenter
 import com.example.notedesk.presentation.createNote.adaptor.UrlAdaptor
 import com.example.notedesk.presentation.createNote.listener.UrlListener
@@ -31,16 +30,16 @@ import com.example.notedesk.presentation.attachmentPreview.AttachmentPerviewFrag
 import com.example.notedesk.presentation.createNote.CreateNotesFragment
 import com.example.notedesk.presentation.home.enums.MenuActions
 import com.example.notedesk.presentation.util.BackStack
+import com.example.notedesk.presentation.util.initRecyclerView
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runBlocking
 
 
 class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
 
 
     companion object {
-        private const val SAVED_NOTES = "notes"
+
         fun newInstance(data: Notes) = PreviewFragment().apply {
             val bundle = Bundle()
             bundle.putParcelable(SAVED_NOTES, data)
@@ -48,28 +47,15 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
         }
     }
 
-
-    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var binding: FragmentPerviewBinding
-    private lateinit var notes: Notes
-    private lateinit var filenames: List<String>
-    private val viewModel: PerviewViewModel by viewModels()
+    private val viewModel: PreviewViewModel by viewModels()
     private var fragmentNavigationLisenter: FragmentNavigationLisenter? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-
-        binding = FragmentPerviewBinding.inflate(layoutInflater, container, false)
-        getArgumentParcelable()
-
-        return binding.root
-    }
 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        getArgumentParcelable()
+
         val parent = parentFragment ?: context
         if (parent is FragmentNavigationLisenter) {
             fragmentNavigationLisenter = parent
@@ -77,69 +63,74 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
 
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+
+        binding = FragmentPerviewBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
+
+
     private fun getArgumentParcelable() {
         val bundle: Bundle = requireArguments()
-        notes = bundle.getParcelable(SAVED_NOTES)!!
-        lifecycleScope.launch(Dispatchers.IO)
+        viewModel.notes = (bundle.getParcelable(SAVED_NOTES)!!)
+        runBlocking(Dispatchers.IO)
         {
-            filenames = viewModel.getFileName(notes.id)
-            withContext(Dispatchers.Main)
-            {
-                initAttachmentTitle()
-                triggerAttachmentList()
-            }
 
-
+            viewModel.filenames = viewModel.getFileName(viewModel.notes.id)
         }
+
 
     }
 
 
     private fun displayUrl(list: MutableList<String>) {
-        val recyclerView = binding.rvUrl
-        recyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        recyclerView.adapter = UrlAdaptor(list, this)
+        binding.rvUrl.initRecyclerView(
+            LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.VERTICAL,
+                false
+            ), UrlAdaptor(list, this, false), true
+        )
+
     }
 
 
     @SuppressLint("Range")
     private fun restoreDataToView() {
-        binding.createdTime.text = "Created Time :${getDateAndTime(notes.createdTime)}"
-        if (notes.modifiedTime.toInt() != notes.createdTime.toInt()) {
-            binding.updatedTime.text = "Updated Time :${getDateAndTime(notes.modifiedTime)}"
+        binding.createdTime.text =
+            resources.getString(R.string.createdtime, getDateAndTime(viewModel.notes.createdTime))
+        if (viewModel.notes.modifiedTime.toInt() != viewModel.notes.createdTime.toInt()) {
+            binding.updatedTime.text = resources.getString(
+                R.string.createdtime,
+                getDateAndTime(viewModel.notes.modifiedTime)
+            )
             binding.updatedTime.visibility = View.VISIBLE
         } else {
             binding.updatedTime.visibility = View.GONE
         }
-        binding.inputNoteTitle.text = notes.title
-        binding.inputNoteSubtitle.text = notes.subtitle
-        binding.inputNote.text = notes.noteText
-        binding.preview.setBackgroundColor(Color.parseColor(notes.color))
+        binding.inputNoteTitle.text = viewModel.notes.title
+        binding.inputNoteSubtitle.text = viewModel.notes.subtitle
+        binding.inputNote.text = viewModel.notes.noteText
+        binding.preview.setBackgroundColor(Color.parseColor(viewModel.notes.color))
 
-        if (notes.weblink.isNotEmpty()) {
-            displayUrl(notes.weblink)
+        if (viewModel.notes.weblink.isNotEmpty()) {
+            displayUrl(viewModel.notes.weblink)
             binding.rvUrl.visibility = View.VISIBLE
         }
-        displayUrl(notes.weblink)
-        if (notes.favorite) {
-            binding.yesAFaviortie.visibility = View.VISIBLE
-            binding.notAFaviorte.visibility = View.GONE
-        } else {
-            binding.notAFaviorte.visibility = View.VISIBLE
-            binding.yesAFaviortie.visibility = View.GONE
-
-
-        }
-        when (notes.priority) {
-            IndentKeys.GREEN ->
+        displayUrl(viewModel.notes.weblink)
+        binding.like.isChecked = viewModel.notes.favorite
+        when (viewModel.notes.priority) {
+            Keys.GREEN ->
                 binding.apply {
                     green.setImageResource(R.drawable.ic_done)
                     yellow.setImageResource(0)
                     red.setImageResource(0)
 
                 }
-            IndentKeys.RED ->
+            Keys.RED ->
                 binding.apply {
                     red.setImageResource(R.drawable.ic_done)
                     yellow.setImageResource(0)
@@ -148,7 +139,7 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
                 }
 
 
-            IndentKeys.YELLOW -> {
+            Keys.YELLOW -> {
                 binding.apply {
                     yellow.setImageResource(R.drawable.ic_done)
                     green.setImageResource(0)
@@ -163,21 +154,16 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
     }
 
     private fun triggerAttachmentList() {
-
-        if (filenames.isNotEmpty()) {
-            var list: MutableList<InternalStoragePhoto>?
-            lifecycleScope.launch {
-                list = Storage.getPhotosFromInternalStorage(filenames, requireActivity())
-                displayAttachment(list!!)
-            }
-
-
+        if (viewModel.filenames.isNotEmpty()) {
+            displayAttachment(viewModel.filenames)
         }
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initAttachmentTitle()
+        triggerAttachmentList()
         initializeMenu()
         initializeToolBar()
         restoreDataToView()
@@ -212,9 +198,10 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
     }
 
     private fun initAttachmentTitle() {
-        if (filenames.isNotEmpty()) {
+        if (viewModel.filenames.isNotEmpty()) {
             binding.tvAttachmentTitle.visibility = View.VISIBLE
-            binding.tvAttachmentTitle.text = "Attachment (${filenames.size})"
+            binding.tvAttachmentTitle.text =
+                resources.getString(R.string.attachmentCount, viewModel.filenames.size)
             hideRv()
         } else {
             binding.tvAttachmentTitle.visibility = View.GONE
@@ -224,7 +211,7 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
     }
 
     private fun navigate() {
-        val fragment = CreateNotesFragment.newInstance(notes, MenuActions.NOACTION)
+        val fragment = CreateNotesFragment.newInstance(viewModel.notes, MenuActions.NOACTION)
         fragmentNavigationLisenter?.navigate(fragment, BackStack.EDIT)
     }
 
@@ -261,7 +248,7 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
     }
 
     private fun initializeToolBar() {
-        toolbar = requireView().findViewById(R.id.my_toolbar)
+        val toolbar: androidx.appcompat.widget.Toolbar = requireView().findViewById(R.id.my_toolbar)
         toolbar.title = Constants.PREVIEW_FRAGMENT
         (activity as AppCompatActivity).apply {
             setSupportActionBar(toolbar)
@@ -272,34 +259,33 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
 
 
         }
-        toolbar.navigationIcon = resources.getDrawable(R.drawable.ic_baseline_arrow_back_24)
+        toolbar.navigationIcon =
+            ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_arrow_back_24)
 
     }
 
 
-    private fun displayAttachment(list: MutableList<InternalStoragePhoto>) {
-        val adaptor = AttachmentAdaptor(
-            list, this,
-            isDelete = false
+    private fun displayAttachment(list: List<String>) {
+        binding.rvAttachment.initRecyclerView(
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false),
+            AttachmentAdaptor(
+                list.toMutableList(), this,
+                isDelete = false
+            ),
+            true
         )
-        val recyclerView = binding.rvAttachment
-        recyclerView.let {
-            it.layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-            it.adapter = adaptor
-            displayRv()
-        }
+        displayRv()
 
 
     }
 
 
-    override fun onAttachmentClicked(internalStoragePhoto: InternalStoragePhoto) {
-        val fragment = AttachmentPerviewFragment.newInstance(internalStoragePhoto)
+    override fun onAttachmentClicked(name: String) {
+        val fragment = AttachmentPerviewFragment.newInstance(name)
         fragmentNavigationLisenter?.navigate(fragment, BackStack.ATTACHMENT_PREVIEW)
     }
 
-    override fun onDelete(internalStoragePhoto: InternalStoragePhoto, position: Int) {
+    override fun onDelete(name: String, position: Int) {
 
     }
 

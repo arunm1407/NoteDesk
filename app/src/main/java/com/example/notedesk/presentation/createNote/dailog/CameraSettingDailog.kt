@@ -10,7 +10,7 @@ import com.example.notesappfragment.databinding.SettingsCameraDailogBinding
 import com.example.notedesk.presentation.createNote.enums.ExitSettingsAction
 import com.example.notedesk.presentation.createNote.listener.ExitDailogLisenter
 
-class CameraSettingDailog: DialogFragment() {
+class CameraSettingDailog : DialogFragment() {
 
 
     private lateinit var binding: SettingsCameraDailogBinding
@@ -25,7 +25,6 @@ class CameraSettingDailog: DialogFragment() {
     }
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,6 +33,7 @@ class CameraSettingDailog: DialogFragment() {
         binding = SettingsCameraDailogBinding.inflate(layoutInflater, container, false)
         binding.yes.setOnClickListener {
             lisenter?.onClickYes(ExitSettingsAction.CAMERA)
+            dismiss()
         }
         binding.no.setOnClickListener {
             dismiss()

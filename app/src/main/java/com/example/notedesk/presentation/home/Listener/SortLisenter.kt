@@ -5,6 +5,6 @@ import com.example.notedesk.presentation.home.enums.SortValues
 
 interface SortLisenter {
 
-    fun onOptionSelected(sortValues: SortValues, sortBy: SortBy)
+    fun onSortOptionSelected(sortValues: SortValues, sortBy: SortBy)
 
 }

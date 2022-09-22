@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources >
+<resources>
     <string name="note_subtitle_optional">Note_SubTitle(Optional)</string>
     <string name="app_name">NoteDesk</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -53,7 +53,7 @@
     <string name="voice">Voice</string>
     <string name="dont_remember_just_note_it">Dont Remember Just Note It</string>
     <string name="add_note">Add Note</string>
-    <string name="add_voice_note">Add Voice Note</string>
+    <string name="add_voice_note">Add Voice To Text</string>
     <string name="share">Share</string>
     <string name="color">color</string>
     <string name="filter">filter</string>
@@ -95,11 +95,11 @@
     <string name="privacy">Privacy</string>
     <string name="app_info">App Info</string>
     <string name="priority_red">Priority (RED)</string>
-    <string name="priority_blue">Priority (Blue)</string>
+    <string name="priority_blue">Priority (Blue)</string>`
     <string name="priority_yellow">Priority (Yellow)</string>
     <string name="priority_green">Priority (Green)</string>
     <string name="privacy_policy">PRIVACY POLICY</string>
-    <string name="content">1. NoteDesk app which is currently not supporting Ads but might do in future. This service is provided by NoteDesk at no cost and is intended for use as is. \n\n 2. This page is used to inform users regarding our policies with the collection, use, and disclosure of personal information if anyone decides to use NoteDesk. \n\n 3. We want to assure our users here that NOTED doesn\'t collect any kind of personal information and doesn\'t have access to user\'s personal data preventing it from data breach of its users. NoteDesk also doesn\'t have access to user-created notes in the app. \n\n 4. It doesn\'t have access to any kind of images used during note creation and sharing. There\'re features in the app which might mislead the users for data breaching by us but we at NoteDesk takes full responsibility of this thing and assure you that we don\'t save any kind of your personal data or information in general.</string>
+    <string name="content">1. NoteDesk app which is currently not supporting Ads but might do in future. This service is provided by NoteDesk at no cost and is intended for use as it Is. \n\n 2. This page is used to inform users regarding our policies with the collection, use, and disclosure of personal information if anyone decides to use NoteDesk. \n\n 3. We want to assure our users here that NoteDesk doesn\'t collect any kind of personal information and doesn\'t have access to user\'s personal data preventing it from data breach of its users. NoteDesk also doesn\'t have access to user-created notes in the app. \n\n 4. It doesn\'t have access to any kind of images used during note creation and sharing. There\'re features in the app which might mislead the users for data breaching by us but we at NoteDesk takes full responsibility of this thing and assure you that we don\'t save any kind of your personal data or information in general.</string>
     <string name="collection_content">1. As we informed above that we don\'t have access to user\'s personal data and information in general and we don\'t collect and save the same. But, for a better experience and for some functionalities of the application, we\'ll need some run-time permission on the user\'s device. We also might need some identifiable information that will be retained on user\'s device and will not be collected by us in any way. \n\n 2. We\'ll have the user\'s device information once he/she install the application as this information is required by us and Google Play Services to generate analytics and crash reports. \n\n 3. Link to privacy policy of Google Play Services used by the app to generate reports</string>
     <string name="search_result_not_found">Search Result Not Found</string>
     <string name="title">Title</string>
@@ -115,6 +115,43 @@
     <string name="sort_modified">(Modified)</string>
     <string name="sort_creation">(Creation)</string>
     <string name="sort_priority">(Priority)</string>
-
+    <string name="saved_succes">Note is updated Successfully</string>
+    <string name="title_empty">Title is Empty</string>
+    <string name="des_empty">Description is Empty</string>
+    <string name="both_title_subtitle_empty">Both title and description is Empty</string>
+    <string name="note_saved">Note is Saved Successfully</string>
+    <string name="invalid_url">Pls Enter the Valid URL</string>
+    <string name="url_dailog_title">\"Maximum Limit Exceeds… \"</string>
+    <string name="url_daiolog_message">\"Sorry, Pls try to replace Existing URL  \"</string>
+    <string name="url_dailog_ok">OK</string>
+    <string name="delete_dailog_title">\"Confirm Delete \"</string>
+    <string name="delete_dailog_message">\"Are you Sure Want to Delete Note \"</string>
+    <string name="delte_dailog_positive">Yes</string>
+    <string name="delte_dailog_pnegative">No</string>
+    <string name="no_result_found_from_your_search">Sorry..No search result found…  </string>
+    <string name="notes_does_not_match_your_choice_selected_in_filter">Notes does not match your Filter Constraint</string>
+    <string name="viewall">ViewAll</string>
+    <string name="selectedCount">(%d)</string>
+    <string name="createdtime">Created  Time : %s</string>
+    <string name="updatedTime">Updated  Time : %s</string>
+    <string name="attachmentCount">Attachment (%d)</string>
+    <string name="count">(%d)</string>
+    <string name="attachmentName">Img-%s</string>
+    <string name="search_your_notes_here">Search your notes here....</string>
+    <string name="blank_note_discarded">Blank Note is Discarded</string>
+    <string name="voice_to_text">Speak to text</string>
+    <string name="are_you_sure_Title">Are you sure?</string>
+    <string name="without_saving_subtitle">Do you want to Exit without Saving ?</string>
+    <string name="positive">Yes</string>
+    <string name="negative">No</string>
+    <string name="upload_success">Photo Upload Successfully</string>
+    <string name="failed_to_save">Failed To Save Photo</string>
+    <string name="saved_success">Photo Saved Successfully</string>
+    <string name="failed_to_save_photo">Failed to save photo</string>
+    <string name="cannot_save">Couldn\'t save bitmap.</string>
+    <string name="fileFormat">%s.jpg</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Submit">Submit</string>
+    <string name="arunkumarwergwrtgskjfdfsmn_gwdnfgsvkja_b">arunkumarwergwrtgskjfdfsmn gwdnfgsvkja b</string>
 
 </resources>

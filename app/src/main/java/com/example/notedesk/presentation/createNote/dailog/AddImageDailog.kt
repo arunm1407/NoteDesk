@@ -12,8 +12,6 @@ import com.example.notedesk.presentation.createNote.listener.DialogLisenter
 
 class AddImageDailog : DialogFragment() {
 
-
-
     private lateinit var binding: AddImageBinding
     private var dialogLisenter: DialogLisenter?=null
 

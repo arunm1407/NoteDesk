@@ -3,23 +3,23 @@ package com.example.notedesk.domain.util.sharedPreference
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.notedesk.domain.util.keys.IndentKeys
+import com.example.notedesk.domain.util.keys.Keys
 import com.example.notedesk.presentation.home.enums.SortValues
 
 
 class SharedPreference(private val activity: Activity) {
 
 
-    val preference: SharedPreferences by lazy {
+    private val preference: SharedPreferences by lazy {
         activity.getSharedPreferences(
-            "main",
+            Keys.MAIN,
             Context.MODE_PRIVATE
         )
     }
 
 
     fun getSharedPreferenceInt(value: String): Int {
-        return preference.getInt(value, IndentKeys.LIST_VIEW)
+        return preference.getInt(value, Keys.LIST_VIEW)
     }
 
     fun getSharedPreferenceString(value: String): String? {
@@ -30,7 +30,6 @@ class SharedPreference(private val activity: Activity) {
         preference.edit().apply()
         {
             putInt(string, value)
-
             apply()
         }
 

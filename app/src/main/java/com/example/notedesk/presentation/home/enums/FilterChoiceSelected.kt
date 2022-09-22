@@ -4,7 +4,12 @@ import android.os.Parcel
 import android.os.Parcelable
 
 
-data class FilterChoiceSelected(val isFavorite:Boolean,val isPriority_red: Boolean,val isPriority_yellow: Boolean,val isPriority_green:Boolean) :
+data class FilterChoiceSelected(
+    val isFavorite: Boolean,
+    val isPriority_red: Boolean,
+    val isPriority_yellow: Boolean,
+    val isPriority_green: Boolean
+) :
     Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readByte() != 0.toByte(),
@@ -13,8 +18,7 @@ data class FilterChoiceSelected(val isFavorite:Boolean,val isPriority_red: Boole
         parcel.readByte() != 0.toByte(),
 
 
-    ) {
-    }
+        )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeByte(if (isFavorite) 1 else 0)

@@ -12,19 +12,30 @@ import com.example.notesappfragment.R
 
 class UrlAdaptor(
     private val webList: MutableList<String>,
-    private val url: UrlListener
+    private val url: UrlListener,
+    private val isRemove:Boolean,
 ) :
     RecyclerView.Adapter<UrlAdaptor.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bindItems(s: String) {
+
+
             itemView.findViewById<TextView>(R.id.textWebUrl).text = s
-            itemView.findViewById<ImageView>(R.id.removeUrl).setOnClickListener()
-            {
-                url.removeUrl(s)
-                notifyItemRemoved(adapterPosition)
-            }
+            itemView.findViewById<ImageView>(R.id.removeUrl).visibility=View.INVISIBLE
+           if (isRemove)
+           {  itemView.findViewById<ImageView>(R.id.removeUrl).visibility=View.VISIBLE
+               itemView.findViewById<ImageView>(R.id.removeUrl).setOnClickListener()
+               {
+                   url.removeUrl(s)
+                   notifyItemRemoved(adapterPosition)
+               }
+
+           }
+
+
+
         }
 
 

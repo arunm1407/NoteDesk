@@ -43,13 +43,14 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button1"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/descending"
             android:textSize="12sp"
             android:textStyle="bold"
             app:icon="@drawable/ic_baseline_arrow_upward_24"
-            android:backgroundTint="@color/buttonbg"
+            app:backgroundTint="@color/buttonbg"
             android:textColor="@color/textbackground"
             app:iconTint="@color/textbackground"
 
@@ -57,13 +58,14 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button2"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ascending"
             android:textSize="12sp"
             android:textStyle="bold"
             app:icon="@drawable/ic_baseline_arrow_downward_24"
-            android:backgroundTint="@color/buttonbg"
+            app:backgroundTint="@color/buttonbg"
             android:textColor="@color/textbackground"
             app:iconTint="@color/textbackground"
             />
@@ -80,7 +82,7 @@
         android:fontFamily="@font/poppins"
         android:text="@string/done"
         android:textAllCaps="false"
-        android:textColor="@color/GREEN"
+        android:textColor="?attr/colorPrimaryVariant"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -98,7 +100,7 @@
         android:fontFamily="@font/poppins"
         android:text="@string/cancel"
         android:textAllCaps="false"
-        android:textColor="@color/RED"
+        android:textColor="?attr/colorPrimaryVariant"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/done"
@@ -112,7 +114,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
-        android:padding="@dimen/padding_small"
         app:layout_constraintStart_toStartOf="@id/tv_title"
         app:layout_constraintTop_toBottomOf="@id/tv_title">
 
@@ -125,7 +126,7 @@
             android:padding="@dimen/padding_small"
             android:text="@string/modification_date"
             android:textColor="?attr/colorSecondaryVariant"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@id/radio_group"
             app:layout_constraintTop_toBottomOf="@id/radio_group" />
 
@@ -135,10 +136,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="?attr/colorSecondaryVariant"
-            android:padding="@dimen/padding_small"
+            android:paddingHorizontal="@dimen/padding_small"
             android:text="@string/creationdate"
             android:textColor="?attr/colorSecondaryVariant"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@id/modification_date"
             app:layout_constraintTop_toBottomOf="@id/modification_date" />
 
@@ -150,7 +151,7 @@
             android:padding="@dimen/padding_small"
             android:text="@string/alphabetically_title"
             android:textColor="?attr/colorSecondaryVariant"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@id/modification_date"
             app:layout_constraintTop_toBottomOf="@id/modification_date" />
 
@@ -163,20 +164,20 @@
             android:padding="@dimen/padding_small"
             android:text="@string/alphabetically_sub_title"
             android:textColor="?attr/colorSecondaryVariant"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:checked="true"
             app:layout_constraintStart_toStartOf="@id/modification_date"
             app:layout_constraintTop_toBottomOf="@id/modification_date" />
 
         <RadioButton
-            android:id="@+id/priorty"
+            android:id="@+id/priority"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="?attr/colorSecondaryVariant"
             android:padding="@dimen/padding_small"
             android:text="@string/priority"
             android:textColor="?attr/colorSecondaryVariant"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:checked="true"
             app:layout_constraintStart_toStartOf="@id/modification_date"
             app:layout_constraintTop_toBottomOf="@id/modification_date" />

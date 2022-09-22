@@ -7,10 +7,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
-import com.example.notedesk.domain.util.keys.IndentKeys
+import com.example.notedesk.domain.util.keys.Keys
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-
 
 
 @Entity
@@ -40,7 +39,7 @@ data class Notes(
     var weblink: ArrayList<String> = ArrayList(),
 
     @ColumnInfo(name = "priority")
-    var priority: Int = IndentKeys.GREEN,
+    var priority: Int = Keys.GREEN,
     @ColumnInfo(name = "attachmentCount")
     var attachmentCount: Int = 0,
 
@@ -52,7 +51,7 @@ data class Notes(
     val id: Int = 0
 
 
-) : Parcelable {
+) : Parcelable, NotesRvItem() {
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),
         parcel.readString().toString(),
@@ -109,7 +108,30 @@ data class Notes(
             return Gson().toJson(list)
         }
     }
+
+
+    override fun equals(other: Any?): Boolean {
+
+
+        if (this === other) return true
+        if (other !is Notes) return false
+        if (id != other.id) return false
+        if (title != other.title) return false
+        if (subtitle != other.subtitle) return false
+        if (color != other.color) return false
+        if (createdTime != other.createdTime) return false
+        if (modifiedTime != other.modifiedTime) return false
+        if (favorite != other.favorite) return false
+        if (attachmentCount != other.attachmentCount) return false
+        if (noteText != other.noteText) return false
+        if (priority != other.priority) return false
+        if (weblink != other.weblink) return false
+
+        return true
+
+    }
 }
+
 
 
 

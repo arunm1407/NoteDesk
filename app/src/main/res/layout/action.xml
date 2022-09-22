@@ -4,7 +4,8 @@
     android:id="@+id/layout_add_actions"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorBackground"
+    android:background="?attr/colorOnSecondary"
+    android:elevation="20dp"
     app:layout_behavior="@string/bottom_sheet_behavior"
     app:behavior_peekHeight="0dp">
 
@@ -43,7 +44,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:tint="@color/colorIcons" />
+            app:tint="?attr/colorAccent" />
 
         <TextView
             android:id="@+id/text_take_photo"
@@ -56,7 +57,7 @@
             android:text="@string/take_photo"
             android:textAlignment="textStart"
             android:textAllCaps="false"
-            android:textColor="@color/colorText"
+            android:textColor="?attr/colorAccent"
             android:textSize="14sp"
             android:textStyle="normal"
             app:layout_constraintBottom_toBottomOf="@+id/image_camera"
@@ -90,7 +91,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:tint="@color/colorIcons" />
+            app:tint="?attr/colorAccent" />
 
         <TextView
             android:id="@+id/text_add_image"
@@ -103,7 +104,7 @@
             android:text="@string/add_image"
             android:textAlignment="textStart"
             android:textAllCaps="false"
-            android:textColor="@color/colorText"
+            android:textColor="?attr/colorAccent"
             android:textSize="14sp"
             android:textStyle="normal"
             app:layout_constraintBottom_toBottomOf="@+id/image_img"
@@ -137,7 +138,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:tint="@color/colorIcons" />
+            app:tint="?attr/colorAccent" />
 
         <TextView
             android:id="@+id/text_voice_note"
@@ -150,7 +151,7 @@
             android:text="@string/add_voice_note"
             android:textAlignment="textStart"
             android:textAllCaps="false"
-            android:textColor="@color/colorText"
+            android:textColor="?attr/colorAccent"
             android:textSize="14sp"
             android:textStyle="normal"
             app:layout_constraintBottom_toBottomOf="@+id/image_voice"
@@ -188,7 +189,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/colorIcons" />
+            app:tint="?attr/colorAccent" />
 
         <TextView
             android:id="@+id/text_add_url"
@@ -201,7 +202,7 @@
             android:text="@string/add_url"
             android:textAlignment="textStart"
             android:textAllCaps="false"
-            android:textColor="@color/colorText"
+            android:textColor="?attr/colorAccent"
             android:textSize="14sp"
             android:textStyle="normal"
             app:layout_constraintBottom_toBottomOf="@+id/image_url"

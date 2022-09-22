@@ -2,20 +2,17 @@ package com.example.notedesk.presentation.home.dailog
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.example.notesappfragment.R
 import com.example.notedesk.presentation.home.enums.FilterChoiceSelected
 import com.example.notesappfragment.databinding.FilterDailogBinding
-import com.example.notedesk.domain.util.keys.IndentKeys
+import com.example.notedesk.domain.util.keys.Keys
 import com.example.notedesk.presentation.home.Listener.FilterChoiceLisenter
 import com.example.notedesk.presentation.home.Listener.SortLisenter
 
-class FilterDailog : DialogFragment(),
-    View.OnClickListener {
+class FilterDailog : DialogFragment() {
 
     private lateinit var filterChoiceSelected: FilterChoiceSelected
     private lateinit var binding: FilterDailogBinding
@@ -27,7 +24,7 @@ class FilterDailog : DialogFragment(),
         fun newInstance(filterChoiceSelected: FilterChoiceSelected) =
             FilterDailog().apply {
                 val bundle = Bundle()
-                bundle.putParcelable(IndentKeys.FILTER_VALUES, filterChoiceSelected)
+                bundle.putParcelable(Keys.FILTER_VALUES, filterChoiceSelected)
                 arguments = bundle
 
             }
@@ -56,19 +53,47 @@ class FilterDailog : DialogFragment(),
         return binding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+        dialog?.let {
+
+            val width = ViewGroup.LayoutParams.MATCH_PARENT
+            val height = ViewGroup.LayoutParams.WRAP_CONTENT
+            it.window?.setLayout(width, height)
+
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.cancel.setOnClickListener(this)
-        binding.done.setOnClickListener(this)
-        binding.clearData.setOnClickListener(this)
+        binding.cancel.setOnClickListener()
+        {
+            dismiss()
+        }
+        binding.done.setOnClickListener()
+        {
+            filterLisenter?.onFilterClickDone(
+                FilterChoiceSelected(
+                    binding.favorite.isChecked,
+                    binding.priorityRed.isChecked,
+                    binding.priorityYellow.isChecked,
+                    binding.priorityGreen.isChecked,
+                )
+            )
+            dismiss()
+
+        }
+        binding.clearData.setOnClickListener()
+        {
+            filterLisenter?.onFilterClear()
+            dismiss()
+        }
     }
 
 
     private fun getArgumentParcelable() {
         val bundle: Bundle = requireArguments()
-        filterChoiceSelected = bundle.getParcelable(IndentKeys.FILTER_VALUES)!!
-        Log.i("arun","$filterChoiceSelected")
+        filterChoiceSelected = bundle.getParcelable(Keys.FILTER_VALUES)!!
     }
 
 
@@ -83,24 +108,8 @@ class FilterDailog : DialogFragment(),
     }
 
 
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.cancel -> dismiss()
-            R.id.done -> {
-                filterLisenter?.onClickDone(
-                    FilterChoiceSelected(
-                        binding.favorite.isChecked,
-                        binding.priorityRed.isChecked,
-                        binding.priorityYellow.isChecked,
-                        binding.priorityGreen.isChecked,
-                    )
-                )
-                dismiss()
-            }
-            R.id.clear_data -> {
-                filterLisenter?.onClear()
-                dismiss()
-            }
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        filterLisenter = null
     }
 }

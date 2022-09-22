@@ -12,8 +12,7 @@ data class InternalStoragePhoto(
         parcel.readString().toString(),
 
         parcel.readParcelable(Bitmap::class.java.classLoader)!!
-    ) {
-    }
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)

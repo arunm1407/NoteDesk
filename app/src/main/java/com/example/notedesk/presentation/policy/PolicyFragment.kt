@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.notesappfragment.R
 import com.example.notedesk.domain.util.keys.Constants
 
@@ -48,7 +49,7 @@ private lateinit var toolbar: androidx.appcompat.widget.Toolbar
             this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
             this.supportActionBar!!.setDisplayShowHomeEnabled(true)
         }
-        toolbar.navigationIcon = resources.getDrawable(R.drawable.ic_baseline_arrow_back_24)
+        toolbar.navigationIcon =  ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_arrow_back_24)
 
     }
 

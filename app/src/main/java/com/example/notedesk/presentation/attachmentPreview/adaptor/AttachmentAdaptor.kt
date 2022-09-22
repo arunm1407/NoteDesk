@@ -1,6 +1,5 @@
 package com.example.notedesk.presentation.attachmentPreview.adaptor
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notesappfragment.R
 import com.example.notedesk.presentation.attachmentPreview.listener.AttachmentLisenter
-import com.example.notedesk.domain.util.storage.InternalStoragePhoto
 
 
 class AttachmentAdaptor(
-    private val attachmentList: MutableList<InternalStoragePhoto>,
+    private val attachmentList: MutableList<String>,
     private val attachmentLisenter: AttachmentLisenter,
     private val isDelete: Boolean,
 ) :
@@ -21,15 +19,17 @@ class AttachmentAdaptor(
 
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        @SuppressLint("SetTextI18n")
         fun bindItems(
-            internalStoragePhoto: InternalStoragePhoto,
+            name: String,
             attachmentLisenter: AttachmentLisenter,
             isDelete: Boolean,
 
             ) {
 
-            itemView.findViewById<TextView>(R.id.tvfileName).text =  "Img-${internalStoragePhoto.name}"
+            itemView.setOnClickListener {
+                attachmentLisenter.onAttachmentClicked(name)
+            }
+            itemView.findViewById<TextView>(R.id.tvfileName).text = itemView.resources.getString(R.string.attachmentName,name)
 
 
 
@@ -39,13 +39,11 @@ class AttachmentAdaptor(
                 itemView.findViewById<ImageView>(R.id.delete).visibility = View.VISIBLE
             }
 
-            itemView.setOnClickListener {
-                attachmentLisenter.onAttachmentClicked(internalStoragePhoto)
-            }
+
 
             itemView.findViewById<ImageView>(R.id.delete).setOnClickListener {
-                attachmentLisenter.onDelete(internalStoragePhoto, adapterPosition)
-                removeItem(position = adapterPosition)
+                attachmentLisenter.onDelete(name, adapterPosition)
+                removeItem(name,adapterPosition)
             }
 
 
@@ -65,16 +63,17 @@ class AttachmentAdaptor(
         holder.bindItems(
             attachmentList[position],
             attachmentLisenter,
-            isDelete)
+            isDelete
+        )
     }
 
     override fun getItemCount(): Int {
         return attachmentList.size
     }
 
-    private fun removeItem(position: Int) {
-        attachmentList.removeAt(position)
-        notifyItemRemoved(position)
+    private fun removeItem(name: String, adapterPosition: Int) {
+        attachmentList.remove(name)
+        notifyItemRemoved(adapterPosition)
     }
 
 

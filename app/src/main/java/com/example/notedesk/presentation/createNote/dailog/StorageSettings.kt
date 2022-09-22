@@ -11,7 +11,7 @@ import com.example.notedesk.presentation.createNote.enums.ExitSettingsAction
 import com.example.notedesk.presentation.createNote.listener.ExitDailogLisenter
 import com.example.notedesk.presentation.createNote.CreateNotesFragment
 
-class StorageSettings:DialogFragment() {
+class StorageSettings : DialogFragment() {
 
     private lateinit var binding: SettingsStorgaeDailogBinding
     private var lisenter: ExitDailogLisenter? = null
@@ -25,7 +25,6 @@ class StorageSettings:DialogFragment() {
     }
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,13 +32,21 @@ class StorageSettings:DialogFragment() {
     ): View {
         binding = SettingsStorgaeDailogBinding.inflate(layoutInflater, container, false)
         binding.yes.setOnClickListener {
+
             lisenter?.onClickYes(ExitSettingsAction.STORAGE)
             dismiss()
+
         }
         binding.no.setOnClickListener {
             dismiss()
         }
         return binding.root
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lisenter = null
     }
 
 }
