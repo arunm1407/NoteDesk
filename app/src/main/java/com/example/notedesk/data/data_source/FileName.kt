@@ -20,6 +20,7 @@ data class FileName(
 
     val name: String,
     val noteId: Int,
+    val userId:Int,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 

@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.example.notesappfragment.databinding.SettingsCameraDailogBinding
+import com.example.notedesk.databinding.SettingsCameraDailogBinding
 import com.example.notedesk.presentation.createNote.enums.ExitSettingsAction
 import com.example.notedesk.presentation.createNote.listener.ExitDailogLisenter
 
@@ -41,5 +41,10 @@ class CameraSettingDailog : DialogFragment() {
         return binding.root
     }
 
+
+    override fun onDetach() {
+        super.onDetach()
+        lisenter=null
+    }
 
 }

@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_marginTop="20dp"
+    android:background="@color/background"
+    android:layout_height="wrap_content">
 
-    android:id="@+id/layout_miscellaneous"
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_margin="@dimen/margin_small"
     android:background="@color/background"
-    android:padding="@dimen/padding_large"
-    app:behavior_peekHeight="0dp"
-    app:layout_behavior="@string/bottom_sheet_behavior">
+   >
 
     <TextView
         android:id="@+id/tv_title"
@@ -18,6 +22,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_medium"
         android:text="@string/sort_notes"
+        android:layout_margin="20dp"
         android:textColor="@color/colorText"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -50,9 +55,9 @@
             android:textSize="12sp"
             android:textStyle="bold"
             app:icon="@drawable/ic_baseline_arrow_upward_24"
-            app:backgroundTint="@color/buttonbg"
-            android:textColor="@color/textbackground"
-            app:iconTint="@color/textbackground"
+            app:backgroundTint="@color/button_bg"
+            android:textColor="@color/text_background"
+            app:iconTint="@color/text_background"
 
             />
 
@@ -65,9 +70,9 @@
             android:textSize="12sp"
             android:textStyle="bold"
             app:icon="@drawable/ic_baseline_arrow_downward_24"
-            app:backgroundTint="@color/buttonbg"
-            android:textColor="@color/textbackground"
-            app:iconTint="@color/textbackground"
+            app:backgroundTint="@color/button_bg"
+            android:textColor="@color/text_background"
+            app:iconTint="@color/text_background"
             />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -110,6 +115,7 @@
 
 
     <RadioGroup
+        android:padding="10dp"
         android:id="@+id/radio_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -186,3 +192,5 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

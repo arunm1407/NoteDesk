@@ -7,23 +7,27 @@ import android.provider.Settings
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.notedesk.domain.util.keys.Keys.PACKAGE
-import com.example.notedesk.presentation.home.Listener.FragmentNavigationLisenter
-import com.example.notedesk.presentation.home.Listener.SettingsLisenter
+import com.example.notedesk.R
+import com.example.notedesk.databinding.ActivityMainBinding
+import com.example.notedesk.util.keys.Keys.PACKAGE
+import com.example.notedesk.presentation.home.listener.FragmentNavigationLisenter
+import com.example.notedesk.presentation.home.listener.SettingsLisenter
 import com.example.notedesk.presentation.util.BackStack
-import com.example.notesappfragment.R
-import com.example.notesappfragment.databinding.ActivityMainBinding
 import com.example.notedesk.presentation.home.HomeFragment
+import com.example.notedesk.util.keys.Keys.USER_ID
+import com.example.notedesk.util.sharedPreference.SharedPreference
 
 
 class MainActivity : AppCompatActivity(), FragmentNavigationLisenter, SettingsLisenter {
 
     private lateinit var binding: ActivityMainBinding
+    private var userId:Int=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        userId=SharedPreference(this).getSharedPreferenceInt(USER_ID)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().apply {
                 replace(R.id.fragmentContainerView, HomeFragment()).addToBackStack(BackStack.HOME)
@@ -105,6 +109,10 @@ class MainActivity : AppCompatActivity(), FragmentNavigationLisenter, SettingsLi
                         .commit()
 
                 }
+                BackStack.PROFILE->{
+                    replace(R.id.fragmentContainerView, fragment).addToBackStack(BackStack.PROFILE)
+                        .commit()
+                }
 
             }
         }
@@ -112,12 +120,17 @@ class MainActivity : AppCompatActivity(), FragmentNavigationLisenter, SettingsLi
 
     }
 
+
+    fun getUserID():Int
+    {
+        return userId
+    }
+
     private fun openAppSettings() {
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        val uri: Uri = Uri.fromParts(PACKAGE, packageName, null)
-        intent.data = uri
-        startActivity(intent)
+        startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            data = Uri.fromParts(PACKAGE, packageName, null)
+        })
     }
 
     override fun settings() {

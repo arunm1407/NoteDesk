@@ -11,4 +11,5 @@ object BackStack {
     const val PREVIEW="preview"
     const val CREATE="create"
     const val SEARCH="search"
+    const val PROFILE="profile"
 }

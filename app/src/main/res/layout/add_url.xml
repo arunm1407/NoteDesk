@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/addurlcontainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,11 +15,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:drawableLeft="@drawable/ic_web_link"
+        android:drawableStart="@drawable/ic_web_link"
         android:drawableTint="?attr/colorAccent"
         android:drawablePadding="10dp"
         android:fontFamily="@font/poppins_medium"
-        android:text="Add URL"
+        android:text="@string/add_url1"
         android:textColor="?attr/colorAccent"
         app:tint="?attr/colorAccent"
         android:textSize="20sp"
@@ -45,12 +46,12 @@
         android:textColor="?attr/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
-
-        />
+        android:autofillHints="emailAddress"
+        tools:ignore="LabelFor,TextFields" />
 
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btncancel"
+        android:id="@+id/btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"

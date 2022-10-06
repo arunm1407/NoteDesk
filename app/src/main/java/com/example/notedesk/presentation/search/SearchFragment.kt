@@ -10,20 +10,22 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.notedesk.data.data_source.Notes
-import com.example.notedesk.data.data_source.NotesRvItem
+import com.example.notedesk.domain.model.Note
+import com.example.notedesk.presentation.Model.NotesRvItem
 import com.example.notedesk.domain.usecase.FilterList
 import com.example.notedesk.domain.usecase.SortList
-import com.example.notedesk.domain.util.keys.Keys.RECENT_SEARCH
-import com.example.notedesk.domain.util.keys.Keys.SEARCH
-import com.example.notedesk.domain.util.keys.Keys.SEARCH_SUGGESTION
-import com.example.notedesk.presentation.home.Listener.FilterChoiceLisenter
-import com.example.notedesk.presentation.home.Listener.FragmentNavigationLisenter
-import com.example.notedesk.presentation.home.Listener.SortLisenter
+import com.example.notedesk.presentation.activity.MainActivity
+import com.example.notedesk.util.keys.Keys.RECENT_SEARCH
+import com.example.notedesk.util.keys.Keys.SEARCH
+import com.example.notedesk.util.keys.Keys.SEARCH_SUGGESTION
+import com.example.notedesk.presentation.home.listener.FilterChoiceLisenter
+import com.example.notedesk.presentation.home.listener.FragmentNavigationLisenter
+import com.example.notedesk.presentation.home.listener.SortLisenter
 import com.example.notedesk.presentation.home.dailog.FilterDailog
 import com.example.notedesk.presentation.home.dailog.SortDialogFragment
 import com.example.notedesk.presentation.home.enums.FilterChoiceSelected
@@ -32,33 +34,29 @@ import com.example.notedesk.presentation.home.enums.SortValues
 import com.example.notedesk.presentation.previewNote.PreviewFragment
 import com.example.notedesk.presentation.search.adaptor.SearchViewAdaptor
 import com.example.notedesk.presentation.search.listner.SuggestionLisenter
-import com.example.notedesk.presentation.util.BackStack
-import com.example.notedesk.presentation.util.hideKeyboard
-import com.example.notedesk.presentation.util.initRecyclerView
-import com.example.notesappfragment.R
-import com.example.notesappfragment.databinding.FragmentSearchBinding
+import com.example.notedesk.presentation.util.*
+import com.example.notedesk.R
+import com.example.notedesk.databinding.FragmentSearchBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
     FilterChoiceLisenter {
 
-
-    private lateinit var binding: FragmentSearchBinding
     private val viewModel: SearchViewModel by viewModels()
+    private lateinit var binding: FragmentSearchBinding
     private lateinit var searchView: SearchView
     private lateinit var adaptor: SearchViewAdaptor
-    private var filterChoiceSelected: FilterChoiceSelected? = null
-    private var filterList = listOf<Notes>()
-    private var oldMyNotes = arrayListOf<Notes>()
-    private lateinit var sortedList: List<Notes>
-    private var searchNotes: List<Notes> = mutableListOf()
+    private lateinit var dialog: DialogFragment
+    private var fragmentNavigationLisenter: FragmentNavigationLisenter? = null
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is FragmentNavigationLisenter) {
-            viewModel.fragmentNavigationLisenter = context
+            fragmentNavigationLisenter = context
         }
     }
 
@@ -76,17 +74,32 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
-        searchNotes = viewModel.getSearchNotes()
-        filterList = searchNotes
-        oldMyNotes = searchNotes as ArrayList<Notes>
+        fetchData()
         return binding.root
+    }
+
+
+    private fun fetchData() {
+
+        lifecycleScope.launch()
+        {
+            viewModel.getNotes((requireActivity() as MainActivity).getUserID())
+                .observe(viewLifecycleOwner)
+                {
+                    viewModel.oldMyNotes = it
+                    viewModel.filterList = it
+                    viewModel.displayList = it
+
+                }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeToolBar()
-        actionBarListener()
         setAdaptor()
+        initializeToolBar()
+        observeFilterText()
+        actionBarListener()
         initializeMenu()
 
 
@@ -94,25 +107,32 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
 
 
     private fun initializeFilterChoice() {
-        filterChoiceSelected = FilterChoiceSelected(
-            isFavorite = false,
-            isPriority_red = false,
-            isPriority_yellow = false,
-            isPriority_green = false
+        viewModel.setFilterChoiceSelected(
+            FilterChoiceSelected(
+                isFavorite = false,
+                isPriority_red = false,
+                isPriority_yellow = false,
+                isPriority_green = false
+            )
         )
     }
 
     private fun initializeMenu() {
+
+
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
+
+
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menu.clear()
                 menuInflater.inflate(R.menu.search, menu)
                 val item = menu.findItem(R.id.search)
                 searchView = item.actionView as SearchView
-
                 item.expandActionView()
                 searchView.setIconifiedByDefault(true)
+                searchView.maxWidth = Integer.MAX_VALUE
+                searchView.setQuery(viewModel.searchQuery, false)
                 item.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                     override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
                         return true
@@ -138,16 +158,12 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
 
                     override fun onQueryTextChange(p0: String): Boolean {
 
+                        if (p0 != "") {
+                            viewModel.setSearchQuery(p0)
 
-                        if (p0 == "") {
-                            searchView.hideKeyboard()
                         }
-                        if (
-                            ::adaptor.isInitialized
-                        )
-                            notesFiltering(p0)
-
-                        return true
+                        notesFiltering(p0)
+                        return false
                     }
                 })
             }
@@ -156,7 +172,6 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
                 return false
             }
 
-
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
     }
@@ -164,22 +179,29 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
 
     private fun setAdaptor() {
         val list = mutableListOf<NotesRvItem>()
-        val suggestion = viewModel.getSuggestion()
-        if (suggestion.isNotEmpty()) {
-            list.add(NotesRvItem.Title(1, SEARCH_SUGGESTION))
-            suggestion.forEach {
-                list.add(NotesRvItem.Suggestion((it)))
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO)
+            {
+                val suggestion =
+                    viewModel.getSuggestion((requireActivity() as MainActivity).getUserID())
+                if (suggestion.isNotEmpty()) {
+                    list.add(NotesRvItem.Title(1, SEARCH_SUGGESTION))
+                    suggestion.forEach {
+                        list.add(NotesRvItem.Suggestion((it)))
+                    }
+                }
             }
+            adaptor = SearchViewAdaptor(list, this@SearchFragment)
+            binding.rvSuggestions.initRecyclerView(
+                LinearLayoutManager(
+                    requireContext(),
+                    LinearLayoutManager.VERTICAL,
+                    false
+                ), adaptor, false
+            )
 
 
         }
-        binding.rvSuggestions.initRecyclerView(
-            LinearLayoutManager(
-                requireContext(),
-                LinearLayoutManager.VERTICAL,
-                false
-            ), SearchViewAdaptor(list, this@SearchFragment), false
-        )
 
 
     }
@@ -202,17 +224,17 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
 
 
     private fun notesFiltering(p0: String) {
-        binding.searchtext.visibility = View.GONE
+        binding.searchText.visibility = View.GONE
         binding.searchImage.visibility = View.GONE
-        val newFilteredList = arrayListOf<Notes>()
+        val newFilteredList = mutableListOf<Note>()
         val list = mutableListOf<NotesRvItem>()
 
         if (p0 != "") {
-            binding.searchtext.visibility = View.GONE
+            binding.searchText.visibility = View.GONE
             binding.ivSearchIllustration.visibility = View.GONE
             binding.tvScreenInfo.visibility = View.GONE
             binding.searchImage.visibility = View.GONE
-            for (i in searchNotes) {
+            for (i in viewModel.displayList) {
                 if (i.title.contains(p0, true) || i.subtitle.contains(
                         p0,
                         true
@@ -227,106 +249,109 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
 
 
             }
+            updateList(list, newFilteredList, p0)
         } else {
-            binding.searchtext.visibility = View.VISIBLE
+            binding.searchText.visibility = View.VISIBLE
             binding.searchImage.visibility = View.VISIBLE
             binding.ivSearchIllustration.visibility = View.GONE
             binding.tvScreenInfo.visibility = View.GONE
+            updateList(mutableListOf(), listOf(), p0)
 
-            lifecycleScope.launch(Dispatchers.IO)
+            lifecycleScope.launch()
             {
-//                delay(5000L)
-                val suggestion = viewModel.getSuggestion()
-                if (suggestion.isNotEmpty()) {
-                    list.add(NotesRvItem.Title(1, SEARCH_SUGGESTION))
-                    suggestion.forEach {
-                        list.add(NotesRvItem.Suggestion((it)))
+
+                withContext(Dispatchers.IO)
+                {
+
+                    val suggestion =
+                        viewModel.getSuggestion((requireActivity() as MainActivity).getUserID())
+                    if (suggestion.isNotEmpty()) {
+                        list.add(NotesRvItem.Title(1, SEARCH_SUGGESTION))
+                        suggestion.forEach {
+                            list.add(NotesRvItem.Suggestion((it)))
+                        }
+
                     }
 
+                    launch(Dispatchers.Main) {
+                        updateList(list, newFilteredList, p0)
+                    }
 
                 }
-            }
 
+
+            }
 
         }
 
 
+    }
 
+
+    private fun updateList(
+        list: MutableList<NotesRvItem>,
+        newFilteredList: List<Note>,
+        p0: String
+    ) {
         if (newFilteredList.isEmpty() && p0 != "") {
             binding.tvScreenInfo.visibility = View.VISIBLE
             binding.ivSearchIllustration.visibility = View.VISIBLE
         } else if (newFilteredList.isNotEmpty()) {
             binding.tvScreenInfo.visibility = View.GONE
             binding.ivSearchIllustration.visibility = View.GONE
-            list.add(NotesRvItem.Title(2, RECENT_SEARCH))
+
         }
+        if (newFilteredList.isNotEmpty())
+            list.add(NotesRvItem.Title(2, RECENT_SEARCH))
+
         list.addAll(newFilteredList)
         adaptor.setData(list)
     }
 
-
     private fun navigationOnFragment(fragment: Fragment) {
-        viewModel.fragmentNavigationLisenter?.navigate(fragment, BackStack.PREVIEW)
+        fragmentNavigationLisenter?.navigate(fragment, BackStack.PREVIEW)
     }
 
 
     private fun displaySortDailog(): Boolean {
-        viewModel.dialog =
+        dialog =
             SortDialogFragment.newInstance(viewModel.currentSortOptions, viewModel.sortBy)
-        viewModel.dialog.show(childFragmentManager, "3")
+        dialog.show(childFragmentManager, "3")
         return true
     }
 
 
     private fun displayFilterDailog(): Boolean {
-        viewModel.dialog = FilterDailog.newInstance(filterChoiceSelected!!)
-        viewModel.dialog.show(childFragmentManager, "3")
+        dialog = FilterDailog.newInstance(viewModel.filterChoiceSelected.value!!)
+        dialog.show(childFragmentManager, "3")
         return true
     }
 
 
     override fun addSuggestion(name: String) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.deleteSearchHistory(name)
-            viewModel.addSuggestion(name)
-        }
+        viewModel.deleteSearchHistory(name, (requireActivity() as MainActivity).getUserID())
+        viewModel.addSuggestion(name, (requireActivity() as MainActivity).getUserID())
+
     }
 
     override fun onSuggestionClicked(name: String) {
         searchView.setQuery(name, false)
     }
 
-    override fun deleteSearchHistory(name: String) {
-        lifecycleScope.launch()
-        {
-            viewModel.deleteSearchHistory(name)
-            setData()
+    override fun deleteSearchHistory(name: String, position: Int) {
+        viewModel.deleteSearchHistory(name, (requireActivity() as MainActivity).getUserID())
+        adaptor.removeItemFromList(position)
 
 
-        }
     }
 
-    override fun onClickedNote(notes: Notes) {
+    override fun onClickedNote(notes: Note) {
         navigationOnFragment(PreviewFragment.newInstance(notes))
     }
 
     override fun onFilterClickDone(choice: FilterChoiceSelected) {
-        filterChoiceSelected = choice
-        viewModel.resetFilterCount()
-        if (choice.isFavorite) {
-            viewModel.addFilterCount()
-        }
-        if (choice.isPriority_red) {
-            viewModel.addFilterCount()
-        }
-        if (choice.isPriority_yellow) {
-            viewModel.addFilterCount()
-        }
-        if (choice.isPriority_green) {
-            viewModel.addFilterCount()
-        }
-        observeFilterText()
-        searchNotes = FilterList.filterListByChoice(filterList, choice)
+        viewModel.setFilterChoiceSelected(choice)
+        viewModel.displayList = FilterList.filterListByChoice(viewModel.filterList, choice)
     }
 
 
@@ -348,22 +373,30 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
     }
 
     override fun onFilterClear() {
-        viewModel.resetFilterCount()
-        filterChoiceSelected = FilterChoiceSelected(
-            isFavorite = false,
-            isPriority_red = false, isPriority_yellow = false,
-            isPriority_green = false
+        viewModel.setFilterChoiceSelected(
+            FilterChoiceSelected(
+                isFavorite = false,
+                isPriority_red = false, isPriority_yellow = false,
+                isPriority_green = false
+            )
         )
+        fetchData()
+
     }
 
     override fun onSortOptionSelected(sortValues: SortValues, sortBy: SortBy) {
 
         viewModel.currentSortOptions = sortValues
         updateAppBarText(sortValues)
-        updateAppBarText(sortValues)
         viewModel.sortBy = sortBy
-        sortedList = SortList.sortList(sortValues, viewModel.sortBy, oldMyNotes)
-        searchNotes = sortedList
+        viewModel.filterList =
+            FilterList.filterListByChoice(
+                viewModel.oldMyNotes,
+                viewModel.filterChoiceSelected.value!!
+            )
+        viewModel.displayList =
+            SortList.sortList(sortValues, viewModel.sortBy, viewModel.filterList)
+
     }
 
 
@@ -396,12 +429,15 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
 
 
     private fun observeFilterText() {
-        viewModel.filterSelectedCount.observe(viewLifecycleOwner)
+        viewModel.filterChoiceSelected.observe(viewLifecycleOwner)
         { selectedFilterCount ->
 
-            if (selectedFilterCount > 0) {
+            if (selectedFilterCount.getSelectedCount() > 0) {
                 binding.sort.btnFilterText.text =
-                    resources.getString(R.string.selectedCount, selectedFilterCount)
+                    resources.getString(
+                        R.string.selectedCount,
+                        selectedFilterCount.getSelectedCount()
+                    )
                 binding.sort.btnFilterText.visibility = View.VISIBLE
             } else {
                 binding.sort.btnFilterText.visibility = View.GONE
@@ -413,20 +449,18 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
     }
 
 
-    private fun setData() {
-        val list = mutableListOf<NotesRvItem>()
-        val suggestion = viewModel.getSuggestion()
-        if (suggestion.isNotEmpty()) {
-            list.add(NotesRvItem.Title(1, SEARCH_SUGGESTION))
-            suggestion.forEach {
-                list.add(NotesRvItem.Suggestion((it)))
-            }
-
-
-        }
-        adaptor.setData(list)
-
-
+    override fun onDetach() {
+        super.onDetach()
+        fragmentNavigationLisenter = null
     }
 
+
 }
+
+
+
+
+
+
+
+

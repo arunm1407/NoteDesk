@@ -7,15 +7,21 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.notedesk.R
 import com.example.notedesk.presentation.createNote.listener.UrlListener
-import com.example.notesappfragment.R
 
 class UrlAdaptor(
-    private val webList: MutableList<String>,
+    list: List<String>,
     private val url: UrlListener,
     private val isRemove:Boolean,
 ) :
     RecyclerView.Adapter<UrlAdaptor.ViewHolder>() {
+
+
+    private val webList:MutableList<String> =list.toMutableList()
+
+
+
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

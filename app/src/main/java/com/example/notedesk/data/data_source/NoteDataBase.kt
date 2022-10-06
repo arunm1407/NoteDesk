@@ -2,10 +2,11 @@ package com.example.notedesk.data.data_source
 
 import android.app.Application
 import androidx.room.*
+import com.example.notedesk.data.convertor.StringConvertor
 
 
-@Database(entities = [Notes::class, FileName::class,History::class], version = 2, exportSchema = true)
-@TypeConverters(Notes.StringConvertor::class )
+@Database(entities = [Notes::class, FileName::class,History::class,User::class], version = 1, exportSchema = true)
+@TypeConverters(StringConvertor::class )
 abstract class NoteDataBase: RoomDatabase() {
 
     abstract fun getNotesDao(): NoteDao

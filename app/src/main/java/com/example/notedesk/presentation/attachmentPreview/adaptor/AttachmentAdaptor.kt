@@ -6,16 +6,20 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.notesappfragment.R
+import com.example.notedesk.R
 import com.example.notedesk.presentation.attachmentPreview.listener.AttachmentLisenter
 
 
 class AttachmentAdaptor(
-    private val attachmentList: MutableList<String>,
+    list: List<String>,
     private val attachmentLisenter: AttachmentLisenter,
     private val isDelete: Boolean,
 ) :
     RecyclerView.Adapter<AttachmentAdaptor.ViewHolder>() {
+
+
+    private val attachmentList:MutableList<String> =list.toMutableList()
+
 
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -29,7 +33,7 @@ class AttachmentAdaptor(
             itemView.setOnClickListener {
                 attachmentLisenter.onAttachmentClicked(name)
             }
-            itemView.findViewById<TextView>(R.id.tvfileName).text = itemView.resources.getString(R.string.attachmentName,name)
+            itemView.findViewById<TextView>(R.id.tvFileName).text = itemView.resources.getString(R.string.attachmentName,name)
 
 
 

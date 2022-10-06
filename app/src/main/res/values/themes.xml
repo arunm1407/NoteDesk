@@ -74,8 +74,6 @@
     </style>
 
 
-
-
     <style name="Heading" parent="TextAppearance.AppCompat">
 
 
@@ -106,12 +104,11 @@
     </style>
 
 
-    <style name="DialogStyle" parent="Theme.AppCompat.Dialog" >
+    <style name="DialogStyle" parent="Theme.AppCompat.Dialog">
         <item name="android:windowMinWidthMajor">100%</item>
         <item name="android:windowMinWidthMinor">100%</item>
         <item name="colorAccent">@color/color_on_highlight</item>
     </style>
-
 
 
     <style name="ErrorAlert" parent="TextAppearance.AppCompat">
@@ -119,5 +116,9 @@
         <item name="android:fontFamily">@font/poppins</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="Theme.NotesAppFragment.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.NotesAppFragment.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

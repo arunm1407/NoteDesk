@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="30dp">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/image_onboarding"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="30dp"
+            android:scaleType="centerCrop"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/last" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_onboarding_title"
+            android:layout_marginTop="-149dp"
+            android:layout_marginBottom="60dp"
+            android:fontFamily="@font/poppins_medium"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="@string/welcome_to_notedesk"
+            android:textColor="?attr/colorAccent"
+            android:textSize="28sp" />
+
+        <TextView
+            android:id="@+id/text_onboarding_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_onboarding"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="108dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/poppins_medium"
+            android:gravity="center"
+            android:text="@string/keep_notes"
+            android:textColor="?attr/colorAccent"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_onboarding_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_onboarding_title"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="30dp"
+            android:gravity="center"
+            android:fontFamily="@font/poppins_light"
+            android:text="@string/we_that_we_don_t_have_access_to_user_s_personal_data_and_information_in_general_and_we_don_t_collect_and_save_the_same_but_for_a_better_experience_and_for_some_functionalities_of_the_application_we_ll_need_some_run_time_permission_on_the_user_s_device"
+            android:textColor="?attr/colorAccent"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/layout_start"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/getting_started"
+            android:textColor="@color/md_white_1000"/>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

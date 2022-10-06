@@ -1,64 +1,88 @@
 package com.example.notedesk.data.repository
 
 import androidx.lifecycle.LiveData
-import com.example.notedesk.data.data_source.FileName
-import com.example.notedesk.data.data_source.History
-import com.example.notedesk.data.data_source.Notes
-import com.example.notedesk.data.data_source.NoteDao
+import androidx.lifecycle.Transformations
+import com.example.notedesk.data.data_source.*
+import com.example.notedesk.data.util.fromDomain
+import com.example.notedesk.data.util.toDomain
+import com.example.notedesk.domain.model.Note
 import com.example.notedesk.domain.repository.NotesRepository
 
 class NotesRepositoryImplemenation(private val notesDao: NoteDao) : NotesRepository {
 
-    private val allNotes: LiveData<List<Notes>> = notesDao.getAllNotes()
 
 
+    override suspend fun getAllNotes(userId:Int): LiveData<List<Note>> {
+        return Transformations.map(notesDao.getAllNotes(userId)) { list ->
 
+            list.map { Notes ->
+                Notes.toDomain()
+            }
+        }
 
-    override fun getAllNotes(): LiveData<List<Notes>> {
-        return allNotes
     }
 
 
-
-    override suspend fun deleteFile(id: Int) {
-        notesDao.deleteFile(id)
+    override suspend fun deleteFile(id: Int,userId: Int) {
+        notesDao.deleteFile(id,userId)
     }
 
     override suspend fun insertHistory(history: History) {
         notesDao.insertHistory(history)
     }
 
-    override  fun getHistory(): List<String> {
-        return notesDao.getHistory()
+    override suspend fun getHistory(userId: Int): List<String> {
+        return notesDao.getHistory(userId)
     }
 
-    override  fun getSearchNotes(): List<Notes> {
-        return notesDao.getNotesForSearch()
+    override suspend fun deleteHistory(name: String,userId: Int) {
+        notesDao.deleteHistory(name,userId)
     }
 
-    override suspend fun deleteHistory(name: String) {
-        notesDao.deleteHistory(name)
+    override suspend fun isExistingEmail(name: String):Int {
+       return notesDao.isExistingEmail(name)
+    }
+
+    override suspend fun createUser(user: User) {
+        notesDao.createUser(user)
+    }
+
+    override suspend fun validatePassword(email: String, password: String):Int {
+        return notesDao.validatePassword(email,password)
+    }
+
+    override suspend fun getUserId(emailId: String): Long {
+        return notesDao.getUserId(emailId)
+    }
+
+    override suspend fun getUser(userId: Long): User {
+        return notesDao.getUser(userId)
+    }
+
+    override suspend fun updateUser(user: User) {
+        notesDao.updateUser(user)
     }
 
 
-    override suspend fun insert(note: Notes): Long {
-        return notesDao.insert(note)
+    override suspend fun insert(note: Note): Long {
+
+        return notesDao.insert(note.fromDomain())
     }
 
-    override suspend fun delete(id: Int) {
-        notesDao.delete(id)
+    override suspend fun delete(id: Int,userId: Int) {
+        notesDao.delete(id,userId)
     }
 
-    override suspend fun update(note: Notes) {
-        notesDao.update(note)
+    override suspend fun update(note: Note) {
+        notesDao.update(note.fromDomain())
     }
 
     override suspend fun insertFileName(fileName: FileName): Long {
         return notesDao.insertFileName(fileName)
     }
 
-    override  fun getFileName(noteId: Int): MutableList<String> {
-        return notesDao.getFileName(noteId)
+    override suspend fun getFileName(noteId: Int,userId: Int): List<String> {
+        return notesDao.getFileName(noteId,userId)
     }
 
     override suspend fun deleteFileName(fileName: String) {

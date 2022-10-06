@@ -5,9 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorOnSecondary"
-    android:elevation="20dp"
-    app:layout_behavior="@string/bottom_sheet_behavior"
-    app:behavior_peekHeight="0dp">
+    android:elevation="20dp">
 
     <View
         android:id="@+id/top_view"
@@ -39,12 +37,13 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:layout_marginStart="12dp"
-            android:src="@drawable/camera"
+            android:src="@drawable/ic_baseline_photo_camera_24"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:tint="?attr/colorAccent" />
+            app:tint="?attr/colorAccent"
+            android:contentDescription="@string/app_name" />
 
         <TextView
             android:id="@+id/text_take_photo"
@@ -63,7 +62,9 @@
             app:layout_constraintBottom_toBottomOf="@+id/image_camera"
             app:layout_constraintStart_toEndOf="@+id/image_camera"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/image_camera" />
+            app:layout_constraintTop_toTopOf="@+id/image_camera"
+            android:contentDescription="@string/app_name"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -76,6 +77,7 @@
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintTop_toBottomOf="@+id/layout_take_photo"
+        android:contentDescription="@string/app_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -91,6 +93,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="@string/app_name"
             app:tint="?attr/colorAccent" />
 
         <TextView
@@ -110,6 +113,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/image_img"
             app:layout_constraintStart_toEndOf="@+id/image_img"
             app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/app_name"
             app:layout_constraintTop_toTopOf="@+id/image_img" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -138,6 +142,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="@string/app_name"
             app:tint="?attr/colorAccent" />
 
         <TextView
@@ -157,6 +162,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/image_voice"
             app:layout_constraintStart_toEndOf="@+id/image_voice"
             app:layout_constraintEnd_toEndOf="parent"
+
             app:layout_constraintTop_toTopOf="@+id/image_voice" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -189,6 +195,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/app_name"
             app:tint="?attr/colorAccent" />
 
         <TextView

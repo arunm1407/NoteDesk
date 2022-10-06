@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import com.example.notedesk.databinding.FilterDailogBinding
 import com.example.notedesk.presentation.home.enums.FilterChoiceSelected
-import com.example.notesappfragment.databinding.FilterDailogBinding
-import com.example.notedesk.domain.util.keys.Keys
-import com.example.notedesk.presentation.home.Listener.FilterChoiceLisenter
-import com.example.notedesk.presentation.home.Listener.SortLisenter
+import com.example.notedesk.util.keys.Keys
+import com.example.notedesk.presentation.home.listener.FilterChoiceLisenter
+import com.example.notedesk.presentation.home.listener.SortLisenter
 
 class FilterDailog : DialogFragment() {
 

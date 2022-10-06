@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/priorty_image"
+        android:id="@+id/priority_image"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,10 +17,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/app_name" />
 
     <TextView
-        android:id="@+id/prioity_name"
+        android:id="@+id/priority_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -30,7 +31,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_marginEnd="8dp"
-        app:layout_constraintStart_toEndOf="@id/priorty_image"
+        app:layout_constraintStart_toEndOf="@id/priority_image"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintHorizontal_bias="0.0"

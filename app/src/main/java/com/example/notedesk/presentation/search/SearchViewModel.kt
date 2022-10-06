@@ -1,62 +1,75 @@
 package com.example.notedesk.presentation.search
 
 import android.app.Application
-import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.notedesk.data.data_source.History
-import com.example.notedesk.data.data_source.Notes
-import com.example.notedesk.presentation.home.Listener.FragmentNavigationLisenter
+import com.example.notedesk.domain.model.Note
+import com.example.notedesk.presentation.activity.NotesViewModel
+import com.example.notedesk.presentation.home.enums.FilterChoiceSelected
 import com.example.notedesk.presentation.home.enums.SortBy
 import com.example.notedesk.presentation.home.enums.SortValues
-import com.example.notedesk.presentation.activity.NotesViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-
 import java.util.*
 
 
 class SearchViewModel(application: Application) : NotesViewModel(application) {
 
-    var fragmentNavigationLisenter: FragmentNavigationLisenter? = null
-    var filterSelectedCount: MutableLiveData<Int> = MutableLiveData()
+
+    private val _filterChoiceSelected: MutableLiveData<FilterChoiceSelected> = MutableLiveData()
+
+    val filterChoiceSelected: LiveData<FilterChoiceSelected>
+        get() = _filterChoiceSelected
+
+
+    fun setFilterChoiceSelected(filterChoiceSelected: FilterChoiceSelected) {
+        _filterChoiceSelected.value = filterChoiceSelected
+
+    }
+
+
     var currentSortOptions: SortValues = SortValues.ALPHABETICALLY_TITLE
     var sortBy: SortBy = SortBy.DESCENDING
-    lateinit var dialog: DialogFragment
-    fun getSearchNotes(): List<Notes> {
-        return repo.getSearchNotes()
+    lateinit var filterList: List<Note>
+    lateinit var oldMyNotes: List<Note>
+    lateinit var displayList: List<Note>
+    private var _searchQuery:String=""
+
+    val searchQuery:String
+        get() = _searchQuery
+
+    fun setSearchQuery(name: String)
+    {
+        _searchQuery=name
     }
 
-    init {
-        filterSelectedCount.value = 0
-    }
 
-    fun addSuggestion(name: String) {
+
+    fun addSuggestion(name: String,userId:Int) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            repo.insertHistory(History(Calendar.getInstance().timeInMillis, name))
+            repo.insertHistory(History(userId,Calendar.getInstance().timeInMillis, name))
         }
 
     }
 
-    fun getSuggestion(): List<String> {
-        return repo.getHistory()
+    suspend fun getSuggestion(userId: Int): List<String> {
+
+        val list = viewModelScope.async(Dispatchers.IO)
+        {
+            return@async repo.getHistory(userId)
+        }
+        return list.await()
+
     }
 
 
-    fun addFilterCount() {
-        filterSelectedCount.value = filterSelectedCount.value?.plus(1)
-    }
-
-
-    fun resetFilterCount() {
-        filterSelectedCount.value = 0
-    }
-
-
-    fun deleteSearchHistory(name: String) {
+    fun deleteSearchHistory(name: String,userId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            repo.deleteHistory(name)
+            repo.deleteHistory(name,userId)
         }
 
     }

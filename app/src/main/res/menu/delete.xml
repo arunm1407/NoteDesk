@@ -7,14 +7,14 @@
         android:id="@+id/menu_delete"
         android:icon="@drawable/ic_delete"
         android:iconTint="?attr/colorOnPrimary"
-        android:title="Delete"
-        app:showAsAction="always"
+        android:title="@string/delete"
+        app:showAsAction="ifRoom"
         />
     <item
         android:id="@+id/menu_done"
         android:icon="@drawable/ic_done"
         android:iconTint="@color/colorWhite"
-        android:title="Done"
+        android:title="@string/done"
         app:showAsAction="always" />
 
 

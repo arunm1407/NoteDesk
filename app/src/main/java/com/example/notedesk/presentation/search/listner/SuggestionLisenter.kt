@@ -1,10 +1,10 @@
 package com.example.notedesk.presentation.search.listner
 
-import com.example.notedesk.data.data_source.Notes
+import com.example.notedesk.domain.model.Note
 
 interface SuggestionLisenter {
     fun addSuggestion(name:String)
     fun onSuggestionClicked(name:String)
-    fun deleteSearchHistory(name:String)
-    fun onClickedNote(notes: Notes)
+    fun deleteSearchHistory(name: String, position: Int)
+    fun onClickedNote(notes: Note)
 }

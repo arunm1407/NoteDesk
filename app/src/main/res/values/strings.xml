@@ -121,11 +121,11 @@
     <string name="both_title_subtitle_empty">Both title and description is Empty</string>
     <string name="note_saved">Note is Saved Successfully</string>
     <string name="invalid_url">Pls Enter the Valid URL</string>
-    <string name="url_dailog_title">\"Maximum Limit Exceeds… \"</string>
-    <string name="url_daiolog_message">\"Sorry, Pls try to replace Existing URL  \"</string>
+    <string name="url_dailog_title">\ Maximum Limit Exceeds… \</string>
+    <string name="url_daiolog_message">\ Sorry, Pls try to remove Existing URL  \</string>
     <string name="url_dailog_ok">OK</string>
-    <string name="delete_dailog_title">\"Confirm Delete \"</string>
-    <string name="delete_dailog_message">\"Are you Sure Want to Delete Note \"</string>
+    <string name="delete_dailog_title">\ Confirm Delete \</string>
+    <string name="delete_dailog_message">\ Are you Sure Want to Delete Note \ </string>
     <string name="delte_dailog_positive">Yes</string>
     <string name="delte_dailog_pnegative">No</string>
     <string name="no_result_found_from_your_search">Sorry..No search result found…  </string>
@@ -152,6 +152,97 @@
     <string name="fileFormat">%s.jpg</string>
     <string name="Cancel">Cancel</string>
     <string name="Submit">Submit</string>
-    <string name="arunkumarwergwrtgskjfdfsmn_gwdnfgsvkja_b">arunkumarwergwrtgskjfdfsmn gwdnfgsvkja b</string>
+    <string name="noteWorks">NoteWorks</string>
+    <string name="developed_by">Developed By</string>
+    <string name="notedesk1">NoteDesk</string>
+    <string name="add_image1">Add image</string>
+    <string name="add_url1">Add URL</string>
+    <string name="developed_by1">Developed By</string>
+    <string name="noteWorks1">NoteWorks</string>
+    <string name="count1">(1)</string>
+    <string name="maximum_limit">\ Maximum Limit Exceeds… \</string>
+    <string name="count_message"><![CDATA[\ Sorry, Pls try to remove attachment & Try again  \]]></string>
+    <string name="title_compulsory">Title Compulsory</string>
+    <string name="description_compuslory">Description Compulsory</string>
+    <string name="img">image/*</string>
+    <string name="skip">SKIP</string>
+    <string name="next">NEXT</string>
+    <string name="getting_started">GETTING STARTED</string>
+    <string name="start_text_advice">By continuing on this application you agree to our Terms of Use and Privacy Policy</string>
+    <string name="start">start</string>
+    <string name="finish">finish</string>
+    <string name="back">back</string>
+    <string name="welcome_to_notedesk">Welcome To NoteDesk</string>
+    <string name="keep_notes">Keep Notes</string>
+    <string name="we_that_we_don_t_have_access_to_user_s_personal_data_and_information_in_general_and_we_don_t_collect_and_save_the_same_but_for_a_better_experience_and_for_some_functionalities_of_the_application_we_ll_need_some_run_time_permission_on_the_user_s_device">We that we don\'t have access to user\'s personal data and information in general and we don\'t collect and save the same. But, for a better experience and for some functionalities of the application, we\'ll need some run-time permission on the user\'s device.</string>
+    <string name="SORT">SORT</string>
+    <string name="FILTER">FILTER</string>
 
+    <style name="Larger_Drawable">
+        <item name="android:textSize">10sp</item>
+        <item name="android:scaleX">.6</item>
+        <item name="android:scaleY">.6</item>
+    </style>
+
+    <string name="title_activity_main">MainActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="loading">Loading ...</string>
+    <string name="email">Email</string>
+    <string name="password_doesnt_match">Password does not match</string>
+    <string name="password_min_character">Password must contains atleast 8 characters</string>
+    <string name="not_a_mobile">Invalid mobile number</string>
+    <string name="not_an_email">Invalid email address</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="already_have_an_account">"Already have an account? "</string>
+    <string name="signup">SignUp</string>
+    <string name="don_t_have_an_account">"Don\'t have an account? "</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="firstname">FirstName</string>
+    <string name="lastname">LastName</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="address_line_1">Address Line 1</string>
+    <string name="address_line_2">Address Line 2</string>
+    <string name="city">City</string>
+    <string name="pincode">PinCode</string>
+    <string name="date_format">MM/dd/yyyy</string>
+    <string name="gender">Gender</string>
+    <string name="bio">Bio</string>
+    <string name="lowercase_letters">Lowercase Letters</string>
+    <string name="uppercase_letters">Uppercase Letters</string>
+    <string name="digits">Digits</string>
+    <string name="special_characters">Special Characters</string>
+    <string name="create_a_account">Create Account</string>
+    <string name="loading1">Loading ...</string>
+    <string name="account">Account</string>
+    <string name="personal">Personal</string>
+    <string name="address">Address</string>
+    <string name="password1">Password</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="contact">Contact</string>
+    <string name="colon">:</string>
+    <string name="arunkumar">ARUNKUMAR</string>
+    <string name="emoji">&#128072;</string>
+    <string name="none">-</string>
+    <string name="user_details">USER DETAILS</string>
+    <string name="about_me">About Me</string>
+    <string name="your_account_has_been_created_successfully">Your account has been created successfully</string>
+    <string name="get_started">Get Started</string>
+
+
+    <string-array name="gender">
+        <item>MEN</item>
+        <item>WOMEN</item>
+        <item>NOT INTERESTED</item>
+    </string-array>
 </resources>

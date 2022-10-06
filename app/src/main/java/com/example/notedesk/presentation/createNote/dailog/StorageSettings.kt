@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.example.notesappfragment.databinding.SettingsStorgaeDailogBinding
+import com.example.notedesk.databinding.SettingsStorgaeDailogBinding
 import com.example.notedesk.presentation.createNote.enums.ExitSettingsAction
 import com.example.notedesk.presentation.createNote.listener.ExitDailogLisenter
 import com.example.notedesk.presentation.createNote.CreateNotesFragment
@@ -44,8 +44,10 @@ class StorageSettings : DialogFragment() {
     }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
+
+
+    override fun onDetach() {
+        super.onDetach()
         lisenter = null
     }
 

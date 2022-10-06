@@ -1,28 +1,25 @@
 package com.example.notedesk.domain.usecase
 
-import com.example.notedesk.data.data_source.Notes
-import com.example.notedesk.domain.util.keys.Keys
+import com.example.notedesk.domain.model.Note
+import com.example.notedesk.util.keys.Keys
 import com.example.notedesk.presentation.home.enums.FilterChoiceSelected
 
 object FilterList {
 
 
     fun filterListByChoice(
-        oldMyNotes: List<Notes>,
+        oldMyNotes: List<Note>,
         filterChoiceSelected: FilterChoiceSelected
-    ): ArrayList<Notes> {
+    ): List<Note> {
+
+        val ans = mutableListOf<Note>()
         if (!(filterChoiceSelected.isFavorite || filterChoiceSelected.isPriority_red || filterChoiceSelected.isPriority_yellow || filterChoiceSelected.isPriority_green))
         {
-
-            if (oldMyNotes.isEmpty())
-            {
-                return ArrayList()
-            }
-            return oldMyNotes as ArrayList<Notes>
+            return oldMyNotes
         }
 
 
-        val ans = ArrayList<Notes>()
+
         oldMyNotes.forEach {
             if (it.favorite && filterChoiceSelected.isFavorite)
                 ans.add(it)
@@ -35,7 +32,7 @@ object FilterList {
 
         }
 
-        return ans
+        return ans.toList()
 
     }
 }

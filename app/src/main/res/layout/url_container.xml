@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -20,7 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:autoLink="web"
-            android:text="skldajbvlaksdbvlsdknv"
             android:fontFamily="@font/poppins_medium"
             android:includeFontPadding="false"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,9 +31,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/removeUrl"
             android:layout_marginEnd="20dp"
-            android:drawableLeft="@drawable/ic_lang"
+            android:drawableStart="@drawable/ic_lang"
             android:drawablePadding="10dp"
-           />
+            tools:ignore="UseCompatTextViewDrawableXml" />
 
         <ImageView
             android:id="@+id/removeUrl"
@@ -42,6 +42,7 @@
             android:src="@drawable/ic_baseline_remove_circle_outline_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:background="?attr/selectableItemBackground"
             app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="@string/app_name" />
 

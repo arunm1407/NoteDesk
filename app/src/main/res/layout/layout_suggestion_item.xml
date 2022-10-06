@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/padding_small">
+    android:paddingStart="@dimen/padding_small"
+    tools:ignore="RtlSymmetry">
 
     <TextView
         android:id="@+id/tvSuggestion"

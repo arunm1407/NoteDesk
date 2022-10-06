@@ -3,7 +3,11 @@ package com.example.notedesk.presentation.util
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.notedesk.data.util.presenter
+import com.example.notedesk.domain.model.Note
+import com.example.notedesk.presentation.Model.NotesRvItem
 import com.example.notedesk.presentation.home.enums.FilterChoiceSelected
 
 
@@ -43,6 +47,28 @@ fun FilterChoiceSelected.getSelectedCount(): Int {
     }
     return count
 }
+
+
+
+fun MutableList<in NotesRvItem>.addAll(elements: List<Note>) {
+    elements.forEach {
+
+        this.add(it.presenter())
+    }
+
+
+}
+
+fun TextView.set(name:String)
+{
+    this.text=name
+}
+
+
+
+
+
+
 
 
 

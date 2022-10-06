@@ -6,27 +6,28 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.notedesk.data.data_source.Notes
+import com.example.notedesk.domain.model.Note
 import com.example.notedesk.presentation.activity.NotesRVViewHolder
-import com.example.notedesk.data.data_source.NotesRvItem
+import com.example.notedesk.presentation.Model.NotesRvItem
 import com.example.notedesk.presentation.search.listner.SuggestionLisenter
-import com.example.notesappfragment.R
-import com.example.notesappfragment.databinding.ItemContainerBinding
-import com.example.notesappfragment.databinding.LayoutSuggestionItemBinding
-import com.example.notesappfragment.databinding.TitleItemBinding
+import com.example.notedesk.R
+import com.example.notedesk.databinding.ItemContainerBinding
+import com.example.notedesk.databinding.LayoutSuggestionItemBinding
+import com.example.notedesk.databinding.TitleItemBinding
 
 
 class SearchViewAdaptor(
-    private var items: MutableList<NotesRvItem>,
-    private val suggestionListener: SuggestionLisenter,
-
-
+    list: List<NotesRvItem>,
+    private val suggestionListener: SuggestionLisenter
     ) :
     RecyclerView.Adapter<NotesRVViewHolder>() {
 
+    private var items: MutableList<NotesRvItem> = list.toMutableList()
+
+
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(item: MutableList<NotesRvItem>) {
-        items = item
+    fun setData(item: List<NotesRvItem>) {
+        items = item.toMutableList()
         notifyDataSetChanged()
     }
 
@@ -61,26 +62,12 @@ class SearchViewAdaptor(
     override fun onBindViewHolder(holder: NotesRVViewHolder, position: Int) {
         when (holder) {
             is NotesRVViewHolder.NotesViewHolder -> {
-                holder.bind(items[position] as Notes)
+                holder.bind(items[position] as Note)
                 holder.itemView.setOnClickListener {
                     Log.i("arun", "inside bind")
-                    val searchNote = (items[position] as Notes)
-                    val notes = Notes(
-                        searchNote.title,
-                        searchNote.subtitle,
-                        searchNote.createdTime,
-                        searchNote.modifiedTime,
-                        searchNote.noteText,
-                        searchNote.color,
-                        searchNote.weblink,
-                        searchNote.priority,
-                        searchNote.attachmentCount,
-                        searchNote.favorite,
-                        searchNote.id
-                    )
-
-                    suggestionListener.addSuggestion(notes.title)
-                    suggestionListener.onClickedNote(notes)
+                    val note = (items[position] as Note)
+                    suggestionListener.addSuggestion(note.title)
+                    suggestionListener.onClickedNote(note)
 
 
                 }
@@ -95,7 +82,10 @@ class SearchViewAdaptor(
                 holder.itemView.findViewById<ImageView>(R.id.ibRemove).setOnClickListener {
 
                     val suggestion = items[position] as NotesRvItem.Suggestion
-                    suggestionListener.deleteSearchHistory(suggestion.suggestion)
+                    suggestionListener.deleteSearchHistory(
+                        suggestion.suggestion,
+                        holder.adapterPosition
+                    )
 
                 }
 
@@ -109,9 +99,15 @@ class SearchViewAdaptor(
 
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
-            is Notes -> R.layout.item_container
+            is NotesRvItem.UNotes -> R.layout.item_container
             is NotesRvItem.Suggestion -> R.layout.layout_suggestion_item
             is NotesRvItem.Title -> R.layout.title_item
         }
+    }
+
+
+    fun removeItemFromList(position: Int) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
     }
 }

@@ -6,17 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import com.example.notesappfragment.R
-import com.example.notedesk.domain.util.keys.Constants
-
-import com.example.notesappfragment.databinding.FragmentPolicyBinding
+import com.example.notedesk.R
+import com.example.notedesk.util.keys.Constants
+import com.example.notedesk.databinding.FragmentPolicyBinding
 
 
 class PolicyFragment : Fragment() {
 
 private lateinit var binding: FragmentPolicyBinding
-private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +42,8 @@ private lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
 
     private fun initializeToolBar() {
-        toolbar = requireView().findViewById(R.id.my_toolbar)
+        val toolbar: Toolbar = requireView().findViewById(R.id.my_toolbar)
+        toolbar.menu.clear()
         toolbar.title = Constants.POLICY_FRAGMENT
         (activity as AppCompatActivity).apply {
             this.setSupportActionBar(toolbar)

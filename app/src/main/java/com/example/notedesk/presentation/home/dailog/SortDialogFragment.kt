@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.example.notesappfragment.databinding.SortDailogBinding
+import com.example.notedesk.databinding.SortDailogBinding
 import com.example.notedesk.presentation.home.enums.SortBy
 import com.example.notedesk.presentation.home.enums.SortValues
-import com.example.notedesk.domain.util.keys.Keys
-import com.example.notedesk.presentation.home.Listener.SortLisenter
+import com.example.notedesk.util.keys.Keys
+import com.example.notedesk.presentation.home.listener.SortLisenter
 
 
 class SortDialogFragment : DialogFragment(){

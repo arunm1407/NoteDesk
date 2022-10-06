@@ -6,27 +6,38 @@ import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.notesappfragment.R
-import com.example.notedesk.data.data_source.Notes
+import com.example.notedesk.R
+import com.example.notedesk.databinding.ItemContainerBinding
+import com.example.notedesk.domain.model.Note
 import com.example.notedesk.presentation.activity.MyDiffUtil
-import com.example.notedesk.presentation.home.Listener.NotesListener
+import com.example.notedesk.presentation.home.listener.NotesListener
 import com.example.notedesk.presentation.activity.NotesRVViewHolder
-import com.example.notesappfragment.databinding.ItemContainerBinding
 
 
 class NotesAdaptor(
     private val context: FragmentActivity,
-    var notes: List<Notes>,
+    notes: List<Note>,
     private val notesListener: NotesListener
 ) :
     RecyclerView.Adapter<NotesRVViewHolder>() {
 
 
+    private var isAllSelected: Boolean = false
+    private var _notes: MutableList<Note> = notes.toMutableList()
+    val note: List<Note>
+        get() = _notes
 
-    fun setData(note: List<Notes>) {
-        val diffUtil = MyDiffUtil(notes, note)
+
+    fun setIsAllSelected(value: Boolean) {
+        isAllSelected = value
+
+    }
+
+
+    fun setData(note: List<Note>) {
+        val diffUtil = MyDiffUtil(_notes, note.toMutableList())
         val diffResults = DiffUtil.calculateDiff(diffUtil)
-        notes = note
+        _notes = note.toMutableList()
         diffResults.dispatchUpdatesTo(this)
     }
 
@@ -48,20 +59,18 @@ class NotesAdaptor(
 
         if (holder is NotesRVViewHolder.NotesViewHolder) {
 
-            val pos: Int = position
-            val data: Notes = notes[pos]
-            holder.bind(notes[position])
+            holder.bind(_notes[position])
             holder.itemView.setOnClickListener {
-                notesListener.onClick(holder, data)
+                notesListener.onClick(position)
 
             }
             holder.itemView.setOnLongClickListener {
-                notesListener.onLongClicked(holder, data)
+                notesListener.onLongClicked(position)
                 true
             }
         }
 
-        if (notesListener.isAllSelected()) {
+        if (isAllSelected) {
             holder.itemView.findViewById<ImageView>(R.id.checkbox).visibility = View.VISIBLE
             holder.itemView.foreground = getDrawable(context, R.drawable.foreground_selected_note)
 
@@ -70,12 +79,46 @@ class NotesAdaptor(
             holder.itemView.foreground = null
 
         }
+
+      notesListener.getSelectedNote().forEach {
+            if (it == note[holder.adapterPosition]) {
+                holder.itemView.findViewById<ImageView>(R.id.checkbox).visibility = View.VISIBLE
+                holder.itemView.foreground =
+                    getDrawable(context, R.drawable.foreground_selected_note)
+            }
+
+
+
+
+        }
+
+
     }
 
 
     override fun getItemCount(): Int {
-        return notes.size
+        return _notes.size
     }
+
+
+    fun removeNoteAtPosition(position: Int) {
+        _notes.removeAt(position)
+    }
+
+    fun getNotesAtPosition(position: Int): Note {
+        return _notes[position]
+    }
+
+
+    fun addNotes(position: Int, notes: Note) {
+        _notes.add(position, notes)
+    }
+
+
+    fun getNoteListSize(): Int {
+        return _notes.size
+    }
+
 
 }
 

@@ -12,13 +12,12 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import com.example.notedesk.domain.util.keys.Keys.MAIN
-import com.example.notesappfragment.R
-import com.example.notesappfragment.databinding.FragmentAttachmentPerviewBinding
-import com.example.notedesk.domain.util.storage.InternalStoragePhoto
-import com.example.notedesk.domain.util.storage.Storage
+import com.example.notedesk.R
+import com.example.notedesk.databinding.FragmentAttachmentPerviewBinding
+import com.example.notedesk.util.keys.Keys.MAIN
+import com.example.notedesk.util.storage.InternalStoragePhoto
+import com.example.notedesk.util.storage.Storage
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -50,16 +49,20 @@ class AttachmentPerviewFragment : Fragment() {
         getArgumentParcelable()
         lifecycleScope.launch()
         {
-            binding.animationView.playAnimation()
-            val internalStoragePhoto: InternalStoragePhoto
-            withContext(Dispatchers.IO)
+            withContext(Dispatchers.Main)
             {
-                internalStoragePhoto = Storage.getPhotosFromInternalStorage(requireActivity(),viewModel.name)!!
+                binding.animationView.playAnimation()
+                val internalStoragePhoto: InternalStoragePhoto
+                withContext(Dispatchers.IO)
+                {
+                        internalStoragePhoto = Storage.getPhotosFromInternalStorage(requireActivity(),viewModel.name)!!
+                }
+
+                binding.animationView.cancelAnimation()
+                binding.animationView.visibility = View.GONE
+                binding.imagePreview.setImageBitmap(internalStoragePhoto.bmp)
             }
-            delay(1000)
-            binding.animationView.cancelAnimation()
-            binding.animationView.visibility = View.GONE
-            binding.imagePreview.setImageBitmap(internalStoragePhoto.bmp)
+
         }
 
         initializeMenu()
@@ -76,7 +79,7 @@ class AttachmentPerviewFragment : Fragment() {
     private fun initializeToolBar() {
         val toolbar:Toolbar = requireView().findViewById(R.id.my_toolbar)
         toolbar.menu.clear()
-        toolbar.title = "Img_${viewModel.name}"
+        toolbar.title =requireContext().getString(R.string.attachmentName,viewModel.name)
         (activity as AppCompatActivity).apply {
             this.setSupportActionBar(toolbar)
             this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)

@@ -9,19 +9,23 @@
     <color name="color_error">#B71C1C</color>
     <color name="color_on_primary">#ffffff</color>
     <color name="color_on_secondary">#ffffff</color>
+    <color name="white">#FFFFFFFF</color>
     <color name="color_on_background">#000000</color>
     <color name="color_on_surface">#515151</color>
     <color name="color_on_error">#ffffff</color>
     <color name="color_on_highlight">#000000</color>
     <color name="customIconColor">#414A4C</color>
     <color name="black">#000000</color>
+    <color name="profilebg">#B4D5EF</color>
     <color name="color_primary_night">#222222</color>
+    <color name="profile_bg">#f2f3f5</color>
 
 
 
 
 
     <color name="colorPrimary">#1565C0</color>
+    <color name="unselected">#929595</color>
     <color name="colorPrimaryDark">#FFB400</color>
     <color name="colorAccent">#FFC845</color>
     <color name="colorBackground">#FFFFFF</color>
@@ -58,6 +62,23 @@
     <color name="buttonpressed">#e3e6e8</color>
     <color name="colorGrey">#dddddd</color>
     <color name="dailogButton">#4487e1</color>
+    <color name="md_grey_900">#212121</color>
+    <color name="dark_grey">#333333</color>
+    <color name="light_grey">#ABABAB</color>
+    <color name="md_white_1000">#ffffff</color>
+    <color name="md_blue_100">#BBDEFB</color>
+
+
+
+
+    <color name="lightGray">#E3E3E3</color>
+    <color name="darkGray">#959595</color>
+    <color name="weak">#FF4646</color>
+    <color name="medium">#ff8f00</color>
+    <color name="strong">#FCCA3F</color>
+    <color name="bulletproof">#00c853</color>
+
+
 
 
 

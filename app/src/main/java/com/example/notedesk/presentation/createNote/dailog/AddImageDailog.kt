@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.example.notesappfragment.databinding.AddImageBinding
+import com.example.notedesk.databinding.AddImageBinding
 import com.example.notedesk.presentation.createNote.enums.AddImage
 import com.example.notedesk.presentation.createNote.listener.DialogLisenter
 
@@ -42,10 +42,13 @@ class AddImageDailog : DialogFragment() {
         return binding.root
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+
+    override fun onDetach() {
+        super.onDetach()
         dialogLisenter=null
+
     }
+
 
 
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="@drawable/background_note">
+    <item>
+        <selector xmlns:android="http://schemas.android.com/apk/res/android" >
+            <item
+                android:drawable="@drawable/background_note"
+                android:state_checked="false"/>
+            <item
+                android:drawable="@drawable/background_note"
+                android:state_checked="true" />
+            <item
+                android:drawable="@drawable/background_note" />
+
+        </selector>
+    </item>
+</ripple>

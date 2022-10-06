@@ -2,21 +2,21 @@ package com.example.notedesk.presentation.activity
 
 import android.annotation.SuppressLint
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.example.notedesk.data.data_source.Notes
-import com.example.notedesk.data.data_source.NotesRvItem
-import com.example.notedesk.domain.util.date.DateUtil
-import com.example.notedesk.domain.util.keys.Keys
-import com.example.notedesk.domain.util.keys.Keys.COLOR_1
-import com.example.notesappfragment.R
-import com.example.notesappfragment.databinding.ItemContainerBinding
-import com.example.notesappfragment.databinding.LayoutSuggestionItemBinding
-import com.example.notesappfragment.databinding.TitleItemBinding
+import com.example.notedesk.R
+import com.example.notedesk.databinding.ItemContainerBinding
+import com.example.notedesk.databinding.LayoutSuggestionItemBinding
+import com.example.notedesk.databinding.TitleItemBinding
+import com.example.notedesk.domain.model.Note
+import com.example.notedesk.presentation.Model.NotesRvItem
+import com.example.notedesk.util.date.DateUtil
+import com.example.notedesk.util.keys.Keys
+import com.example.notedesk.util.keys.Keys.COLOR_1
+
 
 sealed class NotesRVViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
     class TitleViewHolder(private val binding: TitleItemBinding) : NotesRVViewHolder(binding) {
@@ -35,23 +35,23 @@ sealed class NotesRVViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(b
 
      class NotesViewHolder(private val binding: ItemContainerBinding) : NotesRVViewHolder(binding) {
         @SuppressLint("SetTextI18n")
-        fun bind(note: Notes) {
+        fun bind(note: Note) {
             if (note.title.trim().isEmpty()) {
-                binding.texttitle.visibility = View.GONE
-                binding.texttitle.text = note.title
+                binding.textTitle.visibility = View.GONE
+                binding.textTitle.text = note.title
 
 
             } else {
-                binding.texttitle.text = note.title
-                binding.texttitle.visibility = View.VISIBLE
+                binding.textTitle.text = note.title
+                binding.textTitle.visibility = View.VISIBLE
             }
             if (note.subtitle.trim().isEmpty()) {
-                binding.textsubtitle.text = note.subtitle
-                binding.textsubtitle.visibility = View.GONE
+                binding.textSubtitle.text = note.subtitle
+                binding.textSubtitle.visibility = View.GONE
 
             } else {
-                binding.textsubtitle.text = note.subtitle
-                binding.textsubtitle.visibility = View.VISIBLE
+                binding.textSubtitle.text = note.subtitle
+                binding.textSubtitle.visibility = View.VISIBLE
 
             }
             if (note.noteText.trim().isEmpty()) {
@@ -98,7 +98,7 @@ sealed class NotesRVViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(b
             }
             binding.checkbox.visibility = View.GONE
             binding.creationDate.text = DateUtil.getDateAndTime(note.createdTime)
-            val gradientDrawable = binding.layoutNote.background as GradientDrawable
+
             binding.rvFavoriteImage.isInvisible = !note.favorite
             if (note.attachmentCount>0)
             {
@@ -109,9 +109,10 @@ sealed class NotesRVViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(b
                 binding.attachmentCount.visibility=View.GONE
             }
             if (note.color.isNotEmpty())
-                gradientDrawable.setColor(Color.parseColor(note.color))
+                binding.layout.setBackgroundColor(Color.parseColor(note.color))
             else
-                gradientDrawable.setColor(Color.parseColor(COLOR_1))
+                binding.layout.setBackgroundColor(Color.parseColor(COLOR_1))
+
 
 
         }

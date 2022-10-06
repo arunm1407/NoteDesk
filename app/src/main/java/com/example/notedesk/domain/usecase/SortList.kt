@@ -1,85 +1,58 @@
 package com.example.notedesk.domain.usecase
 
 
-import com.example.notedesk.data.data_source.Notes
-import com.example.notedesk.data.data_source.NotesRvItem
+import com.example.notedesk.domain.model.Note
 import com.example.notedesk.presentation.home.enums.SortBy
 import com.example.notedesk.presentation.home.enums.SortValues
-import java.util.ArrayList
 
 object SortList {
 
 
-    fun sortList(currentSortOptions: SortValues, sortBy: SortBy, arrayList: ArrayList<Notes>):List<Notes> {
-        when (currentSortOptions) {
-            SortValues.ALPHABETICALLY_TITLE -> {
-                if (sortBy == SortBy.DESCENDING) {
-                    arrayList.sortByDescending { notes -> notes.title }
-                } else {
-                    arrayList.sortBy { notes -> notes.title }
-                }
+    fun sortList(
+        currentSortOptions: SortValues,
+        sortBy: SortBy,
+        List: List<Note>
+    ): List<Note> {
 
-            }
-            SortValues.ALPHABETICALLY_SUBTITLE -> {
-                if (sortBy == SortBy.DESCENDING) {
-                    arrayList.sortByDescending { notes -> notes.subtitle }
-                } else {
-                    arrayList.sortBy { notes -> notes.subtitle }
-                }
-            }
+        val list = List.toMutableList()
 
-
-            SortValues.CREATION_DATE -> {
-                if (sortBy == SortBy.DESCENDING) {
-                    arrayList.sortByDescending { notes -> notes.createdTime }
-                } else {
-                    arrayList.sortBy { notes -> notes.createdTime }
-                }
-            }
-            SortValues.MODIFICATION_DATE -> {
-                if (sortBy == SortBy.DESCENDING) {
-                    arrayList.sortByDescending { notes -> notes.modifiedTime }
-                } else {
-                    arrayList.sortBy { notes -> notes.modifiedTime }
-                }
-            }
-
-            SortValues.PRIORITY -> {
-                if (sortBy == SortBy.DESCENDING) {
-                    arrayList.sortByDescending { notes -> notes.priority }
-                } else {
-                    arrayList.sortBy { notes -> notes.priority }
-                }
+        list.sort(sortBy)
+        {
+            when (currentSortOptions) {
+                SortValues.ALPHABETICALLY_TITLE -> return@sort it.title
+                SortValues.ALPHABETICALLY_SUBTITLE -> return@sort it.subtitle
+                SortValues.PRIORITY -> return@sort it.priority.toString()
+                SortValues.CREATION_DATE -> return@sort it.createdTime.toString()
+                else -> return@sort it.modifiedTime.toString()
             }
         }
 
-        return arrayList
+        return list
+
     }
+
+
 }
 
 
+fun <T, R : Comparable<R>> MutableList<T>.sort(
+    sortBy: SortBy,
+    selector: (T) -> R?
+) {
 
 
-fun <T: Any> convert(item: T, block: (T) -> Notes): Notes {
-    return block(item)
-}
-
-class NotesItem(
-    val note: Notes
-)
-
-
-
-object Something {
-    val item1 = Notes()
-    val item2 = NotesItem(Notes())
-
-    init {
-        val note1: Notes = convert(item1) {
-            it
-        }
-        val note2: Notes = convert(item2) {
-            it.note
-        }
+    when (sortBy) {
+        SortBy.ASCENDING -> sortBy(selector)
+        SortBy.DESCENDING -> sortByDescending(selector)
     }
+
+
 }
+
+
+
+
+
+
+
+

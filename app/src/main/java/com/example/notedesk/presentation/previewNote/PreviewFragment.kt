@@ -13,26 +13,29 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.notesappfragment.R
+import com.example.notedesk.R
 import com.example.notedesk.presentation.attachmentPreview.adaptor.AttachmentAdaptor
-import com.example.notesappfragment.databinding.FragmentPerviewBinding
-import com.example.notedesk.data.data_source.Notes
-import com.example.notedesk.domain.util.keys.Constants
-import com.example.notedesk.domain.util.keys.Keys
-import com.example.notedesk.domain.util.date.DateUtil.getDateAndTime
-import com.example.notedesk.domain.util.keys.Keys.SAVED_NOTES
+import com.example.notedesk.databinding.FragmentPerviewBinding
+import com.example.notedesk.domain.model.Note
+import com.example.notedesk.presentation.activity.MainActivity
+import com.example.notedesk.util.keys.Constants
+import com.example.notedesk.util.keys.Keys
+import com.example.notedesk.util.date.DateUtil.getDateAndTime
+import com.example.notedesk.util.keys.Keys.SAVED_NOTES
 import com.example.notedesk.presentation.attachmentPreview.listener.AttachmentLisenter
 import com.example.notedesk.presentation.createNote.adaptor.UrlAdaptor
 import com.example.notedesk.presentation.createNote.listener.UrlListener
-import com.example.notedesk.presentation.home.Listener.FragmentNavigationLisenter
+import com.example.notedesk.presentation.home.listener.FragmentNavigationLisenter
 import com.example.notedesk.presentation.attachmentPreview.AttachmentPerviewFragment
 import com.example.notedesk.presentation.createNote.CreateNotesFragment
 import com.example.notedesk.presentation.home.enums.MenuActions
 import com.example.notedesk.presentation.util.BackStack
 import com.example.notedesk.presentation.util.initRecyclerView
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
@@ -40,15 +43,15 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
 
     companion object {
 
-        fun newInstance(data: Notes) = PreviewFragment().apply {
+        fun newInstance(data: Note) = PreviewFragment().apply {
             val bundle = Bundle()
             bundle.putParcelable(SAVED_NOTES, data)
             arguments = bundle
         }
     }
 
-    private lateinit var binding: FragmentPerviewBinding
     private val viewModel: PreviewViewModel by viewModels()
+    private lateinit var binding: FragmentPerviewBinding
     private var fragmentNavigationLisenter: FragmentNavigationLisenter? = null
 
 
@@ -76,10 +79,18 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
     private fun getArgumentParcelable() {
         val bundle: Bundle = requireArguments()
         viewModel.notes = (bundle.getParcelable(SAVED_NOTES)!!)
-        runBlocking(Dispatchers.IO)
-        {
 
-            viewModel.filenames = viewModel.getFileName(viewModel.notes.id)
+
+        lifecycleScope.launch()
+        {
+            withContext(Dispatchers.IO)
+            {
+                viewModel.filenames = viewModel.getFileName(
+                    viewModel.notes.id,
+                    (requireActivity() as MainActivity).getUserID()
+                )
+
+            }
         }
 
 
@@ -167,8 +178,6 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
         initializeMenu()
         initializeToolBar()
         restoreDataToView()
-
-
     }
 
 

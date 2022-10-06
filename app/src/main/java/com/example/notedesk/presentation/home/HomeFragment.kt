@@ -4,6 +4,7 @@ package com.example.notedesk.presentation.home
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -12,6 +13,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -30,36 +32,41 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.example.notedesk.data.data_source.Notes
+import com.example.notedesk.R
+import com.example.notedesk.databinding.FragmentHomeBinding
+import com.example.notedesk.domain.model.Note
 import com.example.notedesk.domain.usecase.FilterList.filterListByChoice
 import com.example.notedesk.domain.usecase.SortList.sortList
-import com.example.notedesk.domain.util.keys.Constants
-import com.example.notedesk.domain.util.keys.Keys
-import com.example.notedesk.domain.util.keys.Keys.BACKGROUND_COLOR
-import com.example.notedesk.domain.util.keys.Keys.CURRENT_MODE
-import com.example.notedesk.domain.util.keys.Keys.CURRENT_SORT_OPTION
-import com.example.notedesk.domain.util.keys.Keys.IS_FAVORITE
-import com.example.notedesk.domain.util.keys.Keys.IS_GREEN
-import com.example.notedesk.domain.util.keys.Keys.IS_RED
-import com.example.notedesk.domain.util.keys.Keys.IS_YELLOW
-import com.example.notedesk.domain.util.keys.Keys.LIST_VIEW
-import com.example.notedesk.domain.util.keys.Keys.SORT_ORDER
-import com.example.notedesk.domain.util.keys.Keys.STAGGERED_GRID
-import com.example.notedesk.domain.util.sharedPreference.SharedPreference
+import com.example.notedesk.presentation.activity.MainActivity
+import com.example.notedesk.presentation.activity.NotesRVViewHolder
 import com.example.notedesk.presentation.createNote.CreateNotesFragment
-import com.example.notedesk.presentation.home.Listener.*
 import com.example.notedesk.presentation.home.adptor.NotesAdaptor
 import com.example.notedesk.presentation.home.dailog.FilterDailog
 import com.example.notedesk.presentation.home.dailog.SortDialogFragment
+import com.example.notedesk.presentation.home.enums.*
+import com.example.notedesk.presentation.home.listener.*
+import com.example.notedesk.presentation.login.activity.LoginActivity
 import com.example.notedesk.presentation.policy.PolicyFragment
 import com.example.notedesk.presentation.previewNote.PreviewFragment
-import com.example.notedesk.presentation.activity.NotesRVViewHolder
-import com.example.notedesk.presentation.home.enums.*
+import com.example.notedesk.presentation.profilePage.ProfileFragment
 import com.example.notedesk.presentation.search.SearchFragment
 import com.example.notedesk.presentation.util.BackStack
 import com.example.notedesk.presentation.util.getSelectedCount
-import com.example.notesappfragment.R
-import com.example.notesappfragment.databinding.FragmentHomeBinding
+import com.example.notedesk.util.keys.Constants
+import com.example.notedesk.util.keys.Keys
+import com.example.notedesk.util.keys.Keys.BACKGROUND_COLOR
+import com.example.notedesk.util.keys.Keys.CURRENT_MODE
+import com.example.notedesk.util.keys.Keys.CURRENT_SORT_OPTION
+import com.example.notedesk.util.keys.Keys.IS_FAVORITE
+import com.example.notedesk.util.keys.Keys.IS_GREEN
+import com.example.notedesk.util.keys.Keys.IS_RED
+import com.example.notedesk.util.keys.Keys.IS_YELLOW
+import com.example.notedesk.util.keys.Keys.LIST_VIEW
+import com.example.notedesk.util.keys.Keys.SORT_ORDER
+import com.example.notedesk.util.keys.Keys.STAGGERED_GRID
+import com.example.notedesk.util.sharedPreference.SharedPreference
+import com.example.notedesk.util.storage.InternalStoragePhoto
+import com.example.notedesk.util.storage.Storage
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -68,26 +75,23 @@ import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListener {
 
-
+    private val viewModel: HomeViewModel by viewModels()
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapter: NotesAdaptor
-    private val viewModel: HomeViewModel by viewModels()
-    private var oldMyNotes = arrayListOf<Notes>()
-    private var filterChoiceSelected: FilterChoiceSelected? = null
-    private lateinit var sortedList: List<Notes>
     private lateinit var colorDrawableBackground: ColorDrawable
     private lateinit var deleteIcon: Drawable
-    private var filterList = listOf<Notes>()
+    private var fragmentNavigationLisenter: FragmentNavigationLisenter? = null
+    private var settingsLisenter: SettingsLisenter? = null
 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         retrievePreference()
         if (context is FragmentNavigationLisenter) {
-            viewModel.fragmentNavigationLisenter = context
+            fragmentNavigationLisenter = context
         }
         if (context is SettingsLisenter) {
-            viewModel.settingsLisenter = context
+            settingsLisenter = context
 
         }
     }
@@ -100,8 +104,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
             val red = getBooleanSharedPreference(IS_RED)
             val yellow = getBooleanSharedPreference(IS_YELLOW)
             val green = getBooleanSharedPreference(IS_GREEN)
-            filterChoiceSelected = FilterChoiceSelected(fav, red, yellow, green)
-            viewModel.filterSelectedCount.value = filterChoiceSelected!!.getSelectedCount()
+            viewModel.setFilterChoiceSelected(FilterChoiceSelected(fav, red, yellow, green))
             when (getSharedPreferenceString(CURRENT_SORT_OPTION)) {
                 SortValues.ALPHABETICALLY_TITLE.toString() -> {
                     viewModel.currentSortOptions = SortValues.ALPHABETICALLY_TITLE
@@ -207,16 +210,96 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                     binding.mainDrawerLayout.closeDrawer(GravityCompat.START)
                 }
                 R.id.menu_app_info -> {
-                    viewModel.settingsLisenter?.settings()
+                    settingsLisenter?.settings()
+
                 }
                 R.id.menu_privacy -> {
                     navigationOnFragment(PolicyFragment(), BackStack.POLICY)
+
+                }
+                R.id.menu_sign_out-> {
+                    signOut()
+                }
+                R.id.menu_profile -> {
+                    navigateToProfile()
                 }
             }
             binding.mainDrawerLayout.closeDrawer(GravityCompat.START)
             return@setNavigationItemSelectedListener true
         }
         animateNavigationDrawer()
+        var image: String?
+        var name: String?
+        var bitmap: InternalStoragePhoto?
+        lifecycleScope.launch(Dispatchers.IO)
+        {
+            withContext(Dispatchers.IO) {
+                image = viewModel. getProfileImage((requireActivity() as MainActivity).getUserID().toLong())
+                name = viewModel.getFullName((requireActivity() as MainActivity).getUserID())
+                bitmap = image?.let {
+                    Storage.getPhotosFromInternalStorage(
+                        requireActivity(),
+                        it
+                    )
+                }
+
+            }
+
+            withContext(Dispatchers.Main)
+            {
+                name?.let {
+                    binding.mainNavigationMenu.getHeaderView(0)
+                        .findViewById<TextView>(R.id.appName).text = it
+
+                }
+                image?.let {
+
+                    binding.mainNavigationMenu.getHeaderView(0)
+                        .findViewById<ImageView>(R.id.ivProfilePicture)
+                        .setImageBitmap(
+                            bitmap?.bmp
+                        )
+                }
+            }
+        }
+
+
+    }
+
+    private fun navigateToProfile() {
+
+        lifecycleScope.launch()
+        {
+            withContext(Dispatchers.IO)
+            {
+                fragmentNavigationLisenter?.navigate(
+                    ProfileFragment.newInstance(viewModel.getUser((requireActivity() as MainActivity).getUserID())),
+                    BackStack.PROFILE
+                )
+            }
+        }
+
+    }
+
+    private fun signOut() {
+
+        val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Are you sure ?")
+            .setIcon(R.drawable.ic_login)
+            .setMessage("Do you want SignOut from NoteDesk")
+            .setPositiveButton(
+                "Yes"
+
+            ) { _, _ ->
+                startActivity(Intent(requireContext(),LoginActivity()::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                })
+                requireActivity().finish()
+            }
+            .setNegativeButton("No", null)
+        val alert: AlertDialog = builder.create()
+        alert.show()
+
     }
 
     private fun navigateFragment(action: MenuActions) {
@@ -224,13 +307,13 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
     }
 
     private fun navigationOnFragment(fragment: Fragment, name: String) {
-        viewModel.fragmentNavigationLisenter?.navigate(fragment, name)
+        fragmentNavigationLisenter?.navigate(fragment, name)
     }
 
 
-    private fun displayNotes(list: List<Notes>) {
+    private fun displayNotes() {
         if (viewModel.currentMode == LIST_VIEW) {
-            setAdaptor(null, LinearLayoutManager(requireContext()), true, list)
+            setAdaptor(null, LinearLayoutManager(requireContext()), true, emptyList())
             activity
 
         } else if (viewModel.currentMode == STAGGERED_GRID) {
@@ -238,7 +321,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                 StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL),
                 null,
                 false,
-                list
+                emptyList()
             )
         }
 
@@ -260,7 +343,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         staggeredGridLayoutManager: StaggeredGridLayoutManager?,
         linearLayoutManager: LinearLayoutManager?,
         isLinear: Boolean,
-        list: List<Notes>
+        list: List<Note>
     ) {
         if (isLinear) {
             binding.recyclerView.layoutManager = linearLayoutManager
@@ -368,9 +451,9 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
-                val deletedNotes: Notes = oldMyNotes[viewHolder.adapterPosition]
+                val deletedNotes: Note = adapter.getNotesAtPosition(viewHolder.adapterPosition)
                 val position = viewHolder.adapterPosition
-                oldMyNotes.removeAt(viewHolder.adapterPosition)
+                adapter.removeNoteAtPosition(viewHolder.adapterPosition)
                 adapter.notifyItemRemoved(viewHolder.adapterPosition)
                 Snackbar.make(
                     binding.root, "Note   ${deletedNotes.title} Deleted ", Snackbar.LENGTH_SHORT
@@ -382,7 +465,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                         {
 
 
-                            oldMyNotes.add(position, deletedNotes)
+                            adapter.addNotes(position, deletedNotes)
                             lifecycleScope.launch(Dispatchers.IO)
                             {
                                 viewModel.addNotes(deletedNotes)
@@ -392,7 +475,10 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                         }
 
                     }.show()
-                viewModel.deleteNote(deletedNotes.id)
+                viewModel.deleteNote(
+                    deletedNotes.id,
+                    (requireActivity() as MainActivity).getUserID()
+                )
 
             }
 
@@ -408,6 +494,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         initializeView()
         updateAppBarText(viewModel.currentSortOptions)
         observeFilterText()
+        displayNotes()
         notesListener()
         actionBarListener()
         navigationLisenter()
@@ -415,8 +502,12 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         initializeMenu()
         backPressed()
         setActionOnViews()
+        if (viewModel.isContextualActive)
+            contextualActionMode()
+
 
     }
+
 
     private fun initializeView() {
         initializeToolBar()
@@ -455,11 +546,13 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
 
 
     private fun observeFilterText() {
-        viewModel.filterSelectedCount.observe(viewLifecycleOwner)
+        viewModel.filterChoiceSelected.observe(viewLifecycleOwner)
         { count ->
 
-            if (count > 0) {
-                binding.sort.btnFilterText.text = resources.getString(R.string.selectedCount, count)
+            if (count.getSelectedCount() > 0) {
+                Log.i("arun", resources.getString(R.string.selectedCount, count.getSelectedCount()))
+                binding.sort.btnFilterText.text =
+                    resources.getString(R.string.selectedCount, count.getSelectedCount())
                 binding.sort.btnFilterText.visibility = View.VISIBLE
 
 
@@ -477,16 +570,11 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
 
         binding.sort.sort.setOnClickListener()
         {
-
             displaySortDailog()
-
-
         }
         binding.sort.filter.setOnClickListener()
         {
-
             displayFilterDailog()
-
         }
     }
 
@@ -595,45 +683,56 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
 
 
     private fun notesListener() {
-        viewModel.getNotes().observe(viewLifecycleOwner) {
-
-            if (it.isEmpty()) {
-                binding.imageEmpty.visibility = View.VISIBLE
-                binding.textEmpty.visibility = View.VISIBLE
-                viewModel.listEmpty = true
-            } else {
-                binding.imageEmpty.visibility = View.GONE
-                binding.textEmpty.visibility = View.GONE
-
-            }
-
-            if (it.isNotEmpty()) {
-                binding.sort.root.visibility = View.VISIBLE
-
-            } else {
-                binding.sort.root.visibility = View.GONE
-
-            }
-
-            filterList = it
-            oldMyNotes = it as ArrayList<Notes>
-
-            sortedList = sortList(
-                viewModel.currentSortOptions,
-                viewModel.sortBy,
-                filterListByChoice(filterList, filterChoiceSelected!!)
-            )
-            if (sortedList.isEmpty() && it.isNotEmpty()) {
-                binding.filterEmptyImage.visibility = View.VISIBLE
-                binding.filterEmptyText.visibility = View.VISIBLE
-            } else {
-                binding.filterEmptyImage.visibility = View.GONE
-                binding.filterEmptyText.visibility = View.GONE
-            }
-            displayNotes(sortedList)
+        lifecycleScope.launch()
+        {
 
 
+            viewModel.getNotes((requireActivity() as MainActivity).getUserID())
+                .observe(viewLifecycleOwner) {
+
+                    Log.i("arun", "${it.size}")
+
+                    if (it.isEmpty()) {
+                        binding.imageEmpty.visibility = View.VISIBLE
+                        binding.textEmpty.visibility = View.VISIBLE
+                    } else {
+                        binding.imageEmpty.visibility = View.GONE
+                        binding.textEmpty.visibility = View.GONE
+
+                    }
+
+                    if (it.isNotEmpty()) {
+                        binding.sort.root.visibility = View.VISIBLE
+
+                    } else {
+                        binding.sort.root.visibility = View.GONE
+
+                    }
+
+
+                    viewModel.oldMyNotes = it
+                    viewModel.filterList = it
+                    viewModel.displayList = sortList(
+                        viewModel.currentSortOptions,
+                        viewModel.sortBy,
+                        filterListByChoice(
+                            viewModel.filterList,
+                            viewModel.filterChoiceSelected.value!!
+                        )
+                    )
+                    if (viewModel.displayList.isEmpty() && it.isNotEmpty()) {
+                        binding.filterEmptyImage.visibility = View.VISIBLE
+                        binding.filterEmptyText.visibility = View.VISIBLE
+                    } else {
+                        binding.filterEmptyImage.visibility = View.GONE
+                        binding.filterEmptyText.visibility = View.GONE
+                    }
+                    adapter.setData(viewModel.displayList)
+
+
+                }
         }
+
 
     }
 
@@ -642,33 +741,45 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         super.onStop()
         contextualActionModeDisabled()
         savePreference()
+
     }
 
 
     private fun displaySortDailog(): Boolean {
         val dialog = SortDialogFragment.newInstance(viewModel.currentSortOptions, viewModel.sortBy)
-        dialog.show(childFragmentManager, "3")
+        dialog.show(childFragmentManager, getString(R.string.SORT))
         return true
     }
 
 
     private fun displayFilterDailog(): Boolean {
-        val dialog = FilterDailog.newInstance(filterChoiceSelected!!)
-        dialog.show(childFragmentManager, "3")
+        val dialog = FilterDailog.newInstance(viewModel.filterChoiceSelected.value!!)
+        dialog.show(childFragmentManager, getString(R.string.FILTER))
         return true
     }
 
 
     private fun savePreference() {
         SharedPreference(requireActivity()).apply {
-
             putIntSharePreferenceInt(CURRENT_MODE, viewModel.currentMode)
             putStringSharedPreference(SORT_ORDER, viewModel.sortBy.toString())
             putStringSharedPreference(CURRENT_SORT_OPTION, viewModel.currentSortOptions.toString())
-            putBooleanSharedPreference(IS_FAVORITE, filterChoiceSelected!!.isFavorite)
-            putBooleanSharedPreference(IS_RED, filterChoiceSelected!!.isPriority_red)
-            putBooleanSharedPreference(IS_GREEN, filterChoiceSelected!!.isPriority_green)
-            putBooleanSharedPreference(IS_YELLOW, filterChoiceSelected!!.isPriority_yellow)
+            putBooleanSharedPreference(
+                IS_FAVORITE,
+                viewModel.filterChoiceSelected.value!!.isFavorite
+            )
+            putBooleanSharedPreference(
+                IS_RED,
+                viewModel.filterChoiceSelected.value!!.isPriority_red
+            )
+            putBooleanSharedPreference(
+                IS_GREEN,
+                viewModel.filterChoiceSelected.value!!.isPriority_green
+            )
+            putBooleanSharedPreference(
+                IS_YELLOW,
+                viewModel.filterChoiceSelected.value!!.isPriority_yellow
+            )
         }
     }
 
@@ -691,43 +802,43 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
     }
 
 
-    // SORT OPTION SELECTED Interface Implementation
-
-
     override fun onSortOptionSelected(sortValues: SortValues, sortBy: SortBy) {
+
         viewModel.currentSortOptions = sortValues
         updateAppBarText(sortValues)
         viewModel.sortBy = sortBy
-        sortedList = sortList(sortValues, viewModel.sortBy, oldMyNotes)
-        adapter.setData(sortedList)
+        viewModel.filterList =
+            filterListByChoice(viewModel.oldMyNotes, viewModel.filterChoiceSelected.value!!)
+        viewModel.displayList = sortList(sortValues, viewModel.sortBy, viewModel.filterList)
+        adapter.setData(viewModel.displayList.toMutableList())
     }
 
 
     // FILTER OPTION SELECTED Interface Implementation
 
     override fun onFilterClickDone(choice: FilterChoiceSelected) {
-        filterChoiceSelected = choice
-        viewModel.filterSelectedCount.value = filterChoiceSelected!!.getSelectedCount()
-        oldMyNotes = filterListByChoice(filterList, choice)
-        if (filterList.isNotEmpty() && oldMyNotes.isEmpty()) {
+        viewModel.setFilterChoiceSelected(choice)
+        viewModel.filterList = filterListByChoice(viewModel.oldMyNotes, choice)
+        if (viewModel.oldMyNotes.isNotEmpty() && viewModel.filterList.isEmpty()) {
             binding.filterEmptyImage.visibility = View.VISIBLE
             binding.filterEmptyText.visibility = View.VISIBLE
         } else {
             binding.filterEmptyImage.visibility = View.GONE
             binding.filterEmptyText.visibility = View.GONE
         }
-        adapter.setData(oldMyNotes)
+
+        adapter.setData(viewModel.filterList)
     }
 
 
     override fun onFilterClear() {
-
-        filterChoiceSelected = FilterChoiceSelected(
-            isFavorite = false,
-            isPriority_red = false, isPriority_yellow = false,
-            isPriority_green = false
+        viewModel.setFilterChoiceSelected(
+            FilterChoiceSelected(
+                isFavorite = false,
+                isPriority_red = false, isPriority_yellow = false,
+                isPriority_green = false
+            )
         )
-        viewModel.filterSelectedCount.value = filterChoiceSelected!!.getSelectedCount()
         notesListener()
     }
 
@@ -735,16 +846,130 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
     // NotesListener Interface Implementation
 
 
-    override fun onClick(holder: NotesRVViewHolder.NotesViewHolder, data: Notes) {
+    override fun onClick(pos: Int) {
+        val holder: RecyclerView.ViewHolder =
+            binding.recyclerView.findViewHolderForAdapterPosition(pos)!!
         if (isEnable()) {
-            clickItem(holder, data)
+            clickItem(holder, adapter.getNotesAtPosition(pos))
         } else {
-            onClicked(data)
+            onClicked(adapter.getNotesAtPosition(pos))
         }
     }
 
-    override fun onLongClicked(holder: RecyclerView.ViewHolder, data: Notes) {
+
+    private fun contextualActionMode() {
         setTrueContextualActionMode()
+
+        val callback = object : ActionMode.Callback {
+
+            override fun onCreateActionMode(
+                mode: ActionMode?,
+                menu: Menu?
+            ): Boolean {
+                val menuInflater: MenuInflater = mode!!.menuInflater
+                menuInflater.inflate(R.menu.muliptle_delete, menu)
+                return true
+            }
+
+            override fun onPrepareActionMode(
+                mode: ActionMode?,
+                menu: Menu?
+            ): Boolean {
+                viewModel.setIsEnable(true)
+
+                viewModel.text.observe(viewLifecycleOwner) {
+                    mode?.title = "$it Selected"
+                }
+
+                return true
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onActionItemClicked(
+                mode: ActionMode?,
+                item: MenuItem?
+            ): Boolean {
+                when (item!!.itemId) {
+                    R.id.menu_md_delete -> {
+
+                        if (viewModel.selectList.isEmpty()) {
+                            Toast.makeText(
+                                context,
+                                "No Selection is made",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            val builder: AlertDialog.Builder =
+                                AlertDialog.Builder(context)
+                            builder.setTitle("Are you sure?")
+                                .setMessage("Do you want to Delete the Notes ?")
+                                .setPositiveButton(
+                                    "Yes"
+
+                                ) { _, _ ->
+
+                                    viewModel.selectList.forEach { note ->
+                                        deleteNote(note.id)
+                                        deleteFile(
+                                            note.id,
+                                            (requireActivity() as MainActivity).getUserID()
+                                        )
+                                    }
+
+                                    mode!!.finish()
+
+                                }
+                                .setNegativeButton("No")
+                                { _, _ ->
+                                    mode!!.finish()
+                                }
+                            val alert: AlertDialog = builder.create()
+                            alert.show()
+                        }
+
+
+                    }
+                    R.id.menu_md_selectAll -> {
+                        if (viewModel.selectList.size == adapter.getNoteListSize()) {
+                            adapter.setIsAllSelected(false)
+                            viewModel.clearSelectedList()
+                            viewModel.setText(viewModel.selectList.size.toString())
+
+
+                        } else {
+                            adapter.setIsAllSelected(true)
+                            viewModel.clearSelectedList()
+                            viewModel.addListToSelectedList(adapter.note)
+                            viewModel.setText(viewModel.selectList.size.toString())
+
+
+                        }
+                        adapter.notifyDataSetChanged()
+
+                    }
+                }
+                return true
+
+            }
+
+
+            override fun onDestroyActionMode(mode: ActionMode?) {
+                contextualActionModeDisabled()
+                viewModel.clearSelectedList()
+                adapter.setIsAllSelected(false)
+                viewModel.setContextualActive(false)
+            }
+
+
+        }
+        requireActivity().startActionMode(callback)
+    }
+
+    override fun onLongClicked(pos: Int) {
+        viewModel.setContextualActive(true)
+        setTrueContextualActionMode()
+        val holder: RecyclerView.ViewHolder =
+            binding.recyclerView.findViewHolderForAdapterPosition(pos)!!
         if (holder is NotesRVViewHolder
         )
             if (!viewModel.isEnable) {
@@ -763,8 +988,8 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                         mode: ActionMode?,
                         menu: Menu?
                     ): Boolean {
-                        viewModel.isEnable = true
-                        clickItem(holder, data)
+                        viewModel.setIsEnable(true)
+                        clickItem(holder, adapter.getNotesAtPosition(holder.adapterPosition))
                         viewModel.text.observeForever {
                             mode?.title = "$it Selected"
                         }
@@ -799,7 +1024,10 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                                             viewModel.selectList.forEach { note ->
 
                                                 deleteNote(note.id)
-                                                deleteFile(note.id)
+                                                deleteFile(
+                                                    note.id,
+                                                    (requireActivity() as MainActivity).getUserID()
+                                                )
                                             }
 
                                             mode!!.finish()
@@ -816,17 +1044,17 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
 
                             }
                             R.id.menu_md_selectAll -> {
-                                if (viewModel.selectList.size == adapter.notes.size) {
-                                    viewModel.isSelectAll = false
-                                    viewModel.selectList.clear()
-                                    viewModel.text.value = "${viewModel.selectList.size}"
+                                if (viewModel.selectList.size == adapter.getNoteListSize()) {
+                                    adapter.setIsAllSelected(false)
+                                    viewModel.clearSelectedList()
+                                    viewModel.setText(viewModel.selectList.size.toString())
 
 
                                 } else {
-                                    viewModel.isSelectAll = true
-                                    viewModel.selectList.clear()
-                                    viewModel.selectList.addAll(adapter.notes)
-                                    viewModel.text.value = "${viewModel.selectList.size}"
+                                    adapter.setIsAllSelected(true)
+                                    viewModel.clearSelectedList()
+                                    viewModel.addListToSelectedList(adapter.note)
+                                    viewModel.setText(viewModel.selectList.size.toString())
 
                                 }
                                 adapter.notifyDataSetChanged()
@@ -840,6 +1068,9 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                     override fun onDestroyActionMode(mode: ActionMode?) {
                         holder.itemView.foreground = null
                         contextualActionModeDisabled()
+                        viewModel.clearSelectedList()
+                        adapter.setIsAllSelected(false)
+                        viewModel.setContextualActive(false)
 
                     }
 
@@ -848,51 +1079,42 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                 requireActivity().startActionMode(callback)
 
             } else {
-                clickItem(holder, data)
+                clickItem(holder, adapter.getNotesAtPosition(holder.adapterPosition))
                 setText()
             }
 
 
     }
 
-
-    override fun isAllSelected(): Boolean {
-        return viewModel.isSelectAll
+    override fun getSelectedNote(): List<Note> {
+        return viewModel.selectList
     }
 
 
     // Class Function
 
 
-    private fun onClicked(notes: Notes) {
+    private fun onClicked(notes: Note) {
         navigationOnFragment(PreviewFragment.newInstance(notes), BackStack.PREVIEW)
     }
 
 
     private fun deleteNote(id: Int) {
-        viewModel.deleteNote(id)
+        viewModel.deleteNote(id, (requireActivity() as MainActivity).getUserID())
     }
 
-    private fun deleteFile(id: Int) {
-
-        lifecycleScope.launch(Dispatchers.IO)
-        {
-            withContext(Dispatchers.IO) {
-                viewModel.deleteFile(id)
-            }
-        }
-
+    private fun deleteFile(id: Int, userId: Int) {
+        viewModel.deleteFile(id, userId)
     }
 
 
     @SuppressLint("NotifyDataSetChanged")
     private fun contextualActionModeDisabled() {
 
-        viewModel.isEnable = false
-        viewModel.isSelectAll = false
-        viewModel.selectList.clear()
+        viewModel.setIsEnable(false)
         adapter.notifyDataSetChanged()
         setContextualFalse()
+
     }
 
     private fun isEnable(): Boolean {
@@ -900,20 +1122,20 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
     }
 
 
-    private fun addNoteToSelectedList(notes: Notes) {
-        viewModel.selectList.add(notes)
+    private fun addNoteToSelectedList(notes: Note) {
+        viewModel.addSelectList(notes)
     }
 
-    private fun removeNoteFromSelectedList(notes: Notes) {
-        viewModel.selectList.remove(notes)
+    private fun removeNoteFromSelectedList(notes: Note) {
+        viewModel.removeFromSelectedList(notes)
     }
 
     private fun setText() {
-        viewModel.text.value = "${viewModel.selectList.size}"
+        viewModel.setText(viewModel.selectList.size.toString())
     }
 
 
-    private fun clickItem(holder: NotesRVViewHolder, note: Notes) {
+    private fun clickItem(holder: RecyclerView.ViewHolder, note: Note) {
         if (holder.itemView.findViewById<ImageView>(R.id.checkbox).visibility == View.GONE) {
             holder.itemView.findViewById<ImageView>(R.id.checkbox).visibility = View.VISIBLE
             holder.itemView.foreground = AppCompatResources.getDrawable(
@@ -934,11 +1156,18 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
 
 
     private fun setContextualFalse() {
-        viewModel.contextual.value = false
+        viewModel.setContextual(false)
     }
 
     private fun setTrueContextualActionMode() {
-        viewModel.contextual.value = true
+        viewModel.setContextual(true)
+    }
+
+
+    override fun onDetach() {
+        super.onDetach()
+        fragmentNavigationLisenter = null
+        settingsLisenter = null
     }
 
 

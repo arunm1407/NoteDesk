@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_miscellaneous"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="?attr/background"
     android:layout_margin="@dimen/margin_small"
-    android:padding="@dimen/padding_large"
-    app:behavior_peekHeight="0dp"
-    app:layout_behavior="@string/bottom_sheet_behavior">
+    android:padding="@dimen/padding_large">
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_medium"
-        android:text="Add image"
+        android:text="@string/add_image1"
         android:textSize="20sp"
         android:textColor="?attr/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +43,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorAccent" />
+            app:tint="?attr/colorAccent"
+            android:contentDescription="@string/app_name" />
 
         <TextView
             android:id="@+id/text_read_Note"
@@ -92,7 +90,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorAccent" />
+            app:tint="?attr/colorAccent"
+            android:contentDescription="@string/app_name" />
 
         <TextView
             android:id="@+id/text_choose_image"

@@ -9,8 +9,11 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.notedesk.presentation.activity.MainActivity
-import com.example.notesappfragment.R
+import com.example.notedesk.presentation.login.activity.LoginActivity
+import com.example.notedesk.util.keys.Keys
+import com.example.notedesk.util.sharedPreference.SharedPreference
+import com.example.notedesk.R
+import com.example.notedesk.databinding.ActivitySplashScreen1Binding
 
 
 class FlashScreen : AppCompatActivity() {
@@ -22,18 +25,20 @@ class FlashScreen : AppCompatActivity() {
     private lateinit var tv2: TextView
     private lateinit var topAnimation: Animation
     private lateinit var bottomAnimation: Animation
+    private lateinit var binding: ActivitySplashScreen1Binding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash_screen1)
+        binding = ActivitySplashScreen1Binding.inflate(layoutInflater)
+        setContentView(binding.root)
         initViews()
         initAnimation()
     }
 
     private fun initViews() {
-        appLogo = findViewById(R.id.app_logo)
-        appName = findViewById(R.id.app_name)
-        tv1 = findViewById(R.id.tv1)
-        tv2 = findViewById(R.id.tv2)
+        appLogo = binding.appLogo
+        appName = binding.appName
+        tv1 = binding.tv1
+        tv2 = binding.tv2
     }
 
     private fun initAnimation() {
@@ -50,14 +55,48 @@ class FlashScreen : AppCompatActivity() {
         tv1.animation = bottomAnimation
         tv2.animation = bottomAnimation
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            finish()
-        },  2000)
+//        if (checkOnBoardingCompleted()) {
+//
+//            startActivityNavigation(Intent(this, BoardingScreen::class.java))
+//        } else {
+//            startActivityNavigation(Intent(this, BoardingScreen::class.java))
+////            startActivityNavigation(Intent(this, BoardingScreen::class.java))
+//
+//        }
+
+//
+        if (checkIsLogin()) {
+//            startActivityNavigation(Intent(this, MainActivity::class.java))
+            startActivityNavigation(Intent(this, LoginActivity::class.java))
+
+        } else {
+            startActivityNavigation(Intent(this, LoginActivity::class.java))
+
+        }
+
+
     }
 
+
+    private fun checkIsLogin(): Boolean {
+        return SharedPreference(this).getBooleanSharedPreference(Keys.IS_LOGIN)
+
+    }
+
+    private fun startActivityNavigation(intent: Intent) {
+        Handler(Looper.getMainLooper()).postDelayed({
+            startActivity(intent.apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            })
+            finish()
+        }, 1)
+    }
+
+
+    private fun checkOnBoardingCompleted(): Boolean {
+
+        return SharedPreference(this).getBooleanSharedPreference(Keys.ONBOARDING)
+    }
 
     override fun onBackPressed() {
         super.onBackPressed()
