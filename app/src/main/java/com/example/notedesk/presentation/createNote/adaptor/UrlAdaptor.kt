@@ -17,7 +17,6 @@ class UrlAdaptor(
 ) :
     RecyclerView.Adapter<UrlAdaptor.ViewHolder>() {
 
-
     private val webList:MutableList<String> =list.toMutableList()
 
 
@@ -31,7 +30,7 @@ class UrlAdaptor(
             itemView.findViewById<TextView>(R.id.textWebUrl).text = s
             itemView.findViewById<ImageView>(R.id.removeUrl).visibility=View.INVISIBLE
            if (isRemove)
-           {  itemView.findViewById<ImageView>(R.id.removeUrl).visibility=View.VISIBLE
+           {  itemView.findViewById<ImageView>(R.id.removeUrl).visibility = View.VISIBLE
                itemView.findViewById<ImageView>(R.id.removeUrl).setOnClickListener()
                {
                    url.removeUrl(s)

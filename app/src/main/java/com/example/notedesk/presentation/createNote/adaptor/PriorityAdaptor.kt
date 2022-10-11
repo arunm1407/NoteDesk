@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.notedesk.R
-import com.example.notedesk.presentation.Model.Priority
+import com.example.notedesk.presentation.model.Priority
 
 class PriorityAdaptor(context: Context,list: List<Priority>): ArrayAdapter<Priority>(context,0,list) {
 

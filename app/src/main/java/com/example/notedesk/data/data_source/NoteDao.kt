@@ -46,33 +46,10 @@ interface NoteDao {
     suspend fun insertHistory(history: History): Long
 
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun createUser(user:User):Long
-
-    @Update
-    suspend fun updateUser(user: User)
-
-
-    @Query("UPDATE USER SET image = :imageName where userId = :userId")
-    suspend fun addProfilePicture(imageName: String, userId: Int)
 
 
 
-    @Query("SELECT EXISTS(SELECT 1 FROM User WHERE email = :emailId  )")
-    suspend fun isExistingEmail(emailId: String): Int
 
 
-    @Query("SELECT EXISTS(SELECT 1 FROM User WHERE email = :emailId AND password = :password)")
-     suspend fun validatePassword(emailId: String, password: String): Int
-
-    @Query("SELECT userId FROM User WHERE email = :emailId")
-    suspend fun getUserId(emailId: String): Long
-
-    @Query("SELECT * FROM User WHERE userId = :userId")
-    suspend fun getUser(userId: Long): User
-
-
-    @Query("UPDATE User SET image = Null where userId = :userId")
-    suspend fun deleteProfilePicture(userId: Int)
 
 }

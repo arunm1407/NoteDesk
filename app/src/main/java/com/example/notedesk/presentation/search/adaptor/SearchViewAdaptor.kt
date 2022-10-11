@@ -1,25 +1,23 @@
 package com.example.notedesk.presentation.search.adaptor
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.notedesk.domain.model.Note
-import com.example.notedesk.presentation.activity.NotesRVViewHolder
-import com.example.notedesk.presentation.Model.NotesRvItem
-import com.example.notedesk.presentation.search.listner.SuggestionLisenter
 import com.example.notedesk.R
 import com.example.notedesk.databinding.ItemContainerBinding
 import com.example.notedesk.databinding.LayoutSuggestionItemBinding
 import com.example.notedesk.databinding.TitleItemBinding
+import com.example.notedesk.presentation.model.NotesRvItem
+import com.example.notedesk.presentation.activity.NotesRVViewHolder
+import com.example.notedesk.presentation.search.listner.SuggestionLisenter
 
 
 class SearchViewAdaptor(
     list: List<NotesRvItem>,
     private val suggestionListener: SuggestionLisenter
-    ) :
+) :
     RecyclerView.Adapter<NotesRVViewHolder>() {
 
     private var items: MutableList<NotesRvItem> = list.toMutableList()
@@ -62,11 +60,10 @@ class SearchViewAdaptor(
     override fun onBindViewHolder(holder: NotesRVViewHolder, position: Int) {
         when (holder) {
             is NotesRVViewHolder.NotesViewHolder -> {
-                holder.bind(items[position] as Note)
+                holder.bind(items[position] as NotesRvItem.UNotes)
                 holder.itemView.setOnClickListener {
-                    Log.i("arun", "inside bind")
-                    val note = (items[position] as Note)
-                    suggestionListener.addSuggestion(note.title)
+                    val note = (items[position] as NotesRvItem.UNotes)
+                    suggestionListener.addSuggestion(note.note.title)
                     suggestionListener.onClickedNote(note)
 
 

@@ -11,6 +11,7 @@ import com.example.notedesk.presentation.home.enums.FilterChoiceSelected
 import com.example.notedesk.util.keys.Keys
 import com.example.notedesk.presentation.home.listener.FilterChoiceLisenter
 import com.example.notedesk.presentation.home.listener.SortLisenter
+import com.example.notedesk.presentation.util.withArgs
 
 class FilterDailog : DialogFragment() {
 
@@ -22,10 +23,10 @@ class FilterDailog : DialogFragment() {
 
 
         fun newInstance(filterChoiceSelected: FilterChoiceSelected) =
-            FilterDailog().apply {
-                val bundle = Bundle()
-                bundle.putParcelable(Keys.FILTER_VALUES, filterChoiceSelected)
-                arguments = bundle
+            FilterDailog().withArgs {
+
+                putSerializable(Keys.FILTER_VALUES, filterChoiceSelected)
+
 
             }
     }
@@ -93,12 +94,14 @@ class FilterDailog : DialogFragment() {
 
     private fun getArgumentParcelable() {
         val bundle: Bundle = requireArguments()
-        filterChoiceSelected = bundle.getParcelable(Keys.FILTER_VALUES)!!
+        val value=bundle.getSerializable(Keys.FILTER_VALUES)
+        if(value is FilterChoiceSelected )
+            filterChoiceSelected=value
+
     }
 
 
     private fun retrievedChoiceToView() {
-
         binding.favorite.isChecked = filterChoiceSelected.isFavorite
         binding.priorityGreen.isChecked = filterChoiceSelected.isPriority_green
         binding.priorityRed.isChecked = filterChoiceSelected.isPriority_red

@@ -50,7 +50,7 @@
 
         <item
             android:id="@+id/menu_profile"
-            android:title="Profile"
+            android:title="@string/profile"
             android:icon="@drawable/profile"
             android:iconTint="?attr/colorOnPrimary"
             android:orderInCategory="6"/>
@@ -58,7 +58,7 @@
 
         <item
             android:id="@+id/menu_sign_out"
-            android:title="SignOut"
+            android:title="@string/signout"
             android:icon="@drawable/ic_login"
             android:iconTint="?attr/colorOnPrimary"
             android:orderInCategory="6"/>

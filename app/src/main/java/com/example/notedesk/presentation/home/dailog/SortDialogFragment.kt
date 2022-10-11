@@ -12,20 +12,21 @@ import com.example.notedesk.presentation.home.enums.SortBy
 import com.example.notedesk.presentation.home.enums.SortValues
 import com.example.notedesk.util.keys.Keys
 import com.example.notedesk.presentation.home.listener.SortLisenter
+import com.example.notedesk.presentation.util.withArgs
 
 
-class SortDialogFragment : DialogFragment(){
+class SortDialogFragment : DialogFragment() {
 
 
     companion object {
 
 
         fun newInstance(sort: SortValues, sortBy: SortBy) =
-            SortDialogFragment().apply {
-                val bundle = Bundle()
-                bundle.putSerializable(Keys.SORT_VALUES, sort)
-                bundle.putSerializable(Keys.SORT_BY, sortBy)
-                arguments = bundle
+            SortDialogFragment().withArgs {
+
+                putSerializable(Keys.SORT_VALUES, sort)
+                putSerializable(Keys.SORT_BY, sortBy)
+
 
             }
     }
@@ -62,9 +63,9 @@ class SortDialogFragment : DialogFragment(){
         super.onStart()
         dialog?.let {
 
-            val width=ViewGroup.LayoutParams.MATCH_PARENT
-            val height=ViewGroup.LayoutParams.WRAP_CONTENT
-            it.window?.setLayout(width,height)
+            val width = ViewGroup.LayoutParams.MATCH_PARENT
+            val height = ViewGroup.LayoutParams.WRAP_CONTENT
+            it.window?.setLayout(width, height)
 
         }
     }
@@ -76,7 +77,6 @@ class SortDialogFragment : DialogFragment(){
     ): View {
         binding = SortDailogBinding.inflate(inflater, container, false)
         retrievedChoiceToView()
-
         return binding.root
     }
 
@@ -97,8 +97,6 @@ class SortDialogFragment : DialogFragment(){
         }
 
     }
-
-
 
 
     private fun sortBy() {
@@ -162,12 +160,6 @@ class SortDialogFragment : DialogFragment(){
         }
 
     }
-
-
-
-
-
-
 
 
     override fun onDetach() {

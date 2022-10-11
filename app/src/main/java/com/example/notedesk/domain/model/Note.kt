@@ -9,31 +9,16 @@ import com.example.notedesk.util.keys.Keys
 data class Note(
 
     var title: String = "",
-
-
     var subtitle: String = "",
-
     var createdTime: Long = 0,
-
     var modifiedTime: Long = 0,
-
     var noteText: String = "",
-
-
     var color: String = Keys.COLOR_1,
-
     var weblink: ArrayList<String> = ArrayList(),
-
     var priority: Int = Keys.GREEN,
-
     var attachmentCount: Int = 0,
-
-
     var favorite: Boolean = false,
-
     var userID: Int = 0,
-
-
     var id: Int = 0
 
 

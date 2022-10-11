@@ -2,7 +2,6 @@ package com.example.notedesk.presentation.login
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,22 +9,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.notedesk.R
 import com.example.notedesk.databinding.FragmentLoginBinding
 import com.example.notedesk.domain.usecase.ValidateNewEmail
 import com.example.notedesk.domain.usecase.ValidationResult
 import com.example.notedesk.domain.usecase.CheckUserAuthentication
 import com.example.notedesk.presentation.activity.MainActivity
 import com.example.notedesk.presentation.login.listener.Navigation
-import com.example.notedesk.util.keys.Keys.IS_LOGIN
+import com.example.notedesk.presentation.onBoarding.activity.BoardingScreen
+import com.example.notedesk.presentation.signup.activity.CreateAccount
+import com.example.notedesk.presentation.util.*
 import com.example.notedesk.util.keys.Keys.USER_ID
 import com.example.notedesk.util.sharedPreference.SharedPreference
-import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.*
-import java.util.*
 
 
 class LoginFragment : Fragment() {
@@ -53,29 +51,41 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        backPressed()
         textWatcherInitialzation()
         setUpFocusChangeListeners()
-
+        removeError()
 
         binding.toSignup.setOnClickListener {
             clearData()
-            navigationLisenter?.navigate()
+            navigationLisenter?.navigate(Intent(requireContext(), CreateAccount::class.java))
         }
-
+        binding.tiEtPassword.actionDone()
         binding.btnLogin.setOnClickListener {
 
 
             lifecycleScope.launch()
             {
                 if (validateData()) {
-                    startActivity(
-                        Intent(requireContext(), MainActivity::class.java).apply {
-                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        }
 
 
-                    )
-                    requireActivity().finish()
+                    if (viewModel.checkUserIsOnBoarded(viewModel.userId)) {
+                        navigationLisenter?.navigate(
+                            Intent(
+                                requireContext(),
+                                MainActivity::class.java
+                            )
+                        )
+
+                    } else {
+                        navigationLisenter?.navigate(
+                            Intent(
+                                requireContext(),
+                                BoardingScreen::class.java
+                            )
+                        )
+                    }
+
 
                 }
 
@@ -87,45 +97,41 @@ class LoginFragment : Fragment() {
 
     }
 
+    private fun removeError() {
+        binding.tiEtEmail.setOnClickListener {
+            binding.tvLoginName.clearError()
+        }
+        binding.tiEtPassword.setOnClickListener {
+            binding.tvLoginPassword.clearError()
+        }
+    }
+
     private fun clearData() {
-        binding.tiEtEmail.text?.clear()
-        binding.tiEtPassword.text?.clear()
-        binding.tvLoginName.error = null
-        binding.tvLoginPassword.error = null
+        binding.tiEtEmail.clearText()
+        binding.tiEtPassword.clearText()
+        binding.tvLoginName.clearError()
+        binding.tvLoginPassword.clearError()
     }
 
 
     private fun setUpFocusChangeListeners() {
 
         binding.tiEtEmail.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) binding.tvLoginName.error = null
-            setIconColor(
-                binding.tvLoginName,
-                hasFocus
-            )
+            if (hasFocus) binding.tvLoginName.clearError()
+
+
         }
         binding.tiEtPassword.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) binding.tvLoginPassword.error = null
-            setIconColor(
-                binding.tvLoginPassword,
-                hasFocus
-            )
+            if (hasFocus) binding.tvLoginPassword.clearError()
         }
 
 
     }
 
 
-    private fun setIconColor(textInputLayout: TextInputLayout, hasFocus: Boolean) {
-        val colorFocussed = ResourcesCompat.getColor(resources, R.color.color_primary, null)
-        val colorNonFocussed = ResourcesCompat.getColor(resources, R.color.unselected, null)
-        val color = if (hasFocus) colorFocussed else colorNonFocussed
-        textInputLayout.setStartIconTintList(ColorStateList.valueOf(color))
-    }
-
     private suspend fun validateData(): Boolean {
-        val email = binding.tiEtEmail.text.toString().lowercase(Locale.ROOT)
-        val password = binding.tiEtPassword.text.toString()
+        val email = binding.tiEtEmail.getStringLower()
+        val password = binding.tiEtPassword.getString()
         var pass: ValidationResult
         var res: ValidationResult
 
@@ -133,7 +139,7 @@ class LoginFragment : Fragment() {
         withContext(Dispatchers.IO)
         {
             res = ValidateNewEmail.execute(email) {
-                validateEmail(it)
+                viewModel.isExistingEmail(email)
             }
             pass = CheckUserAuthentication.execute(email, password) { email, password ->
                 viewModel.checkUserAuthentication(email, password)
@@ -143,32 +149,26 @@ class LoginFragment : Fragment() {
 
 
         if (!res.successful) {
-            binding.tvLoginName.error = res.errorMessage
+            binding.tvLoginName.setErrorMessage(res.errorMessage)
             return false
         }
 
         if (!pass.successful) {
-            binding.tvLoginPassword.error = pass.errorMessage
+            binding.tvLoginPassword.setErrorMessage(pass.errorMessage)
             return false
         }
         withContext(Dispatchers.Main) {
-            SharedPreference(requireActivity()).putBooleanSharedPreference(IS_LOGIN, true)
+
+
+            viewModel.setUserId(viewModel.getUserIDFromEmail(email))
             SharedPreference(requireActivity()).putIntSharePreferenceInt(
                 USER_ID,
-                viewModel.getUserIDFromEmail(email)
+                viewModel.userId
             )
 
         }
 
         return true
-    }
-
-
-    private suspend fun validateEmail(email: String): Boolean {
-
-        return viewModel.isExistingEmail(email)
-
-
     }
 
 
@@ -186,6 +186,8 @@ class LoginFragment : Fragment() {
 
     private val textWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
+
+
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -193,13 +195,23 @@ class LoginFragment : Fragment() {
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
 
-
-            binding.btnLogin.isEnabled = (binding.tiEtEmail.text.toString().trim()
-                .isNotEmpty() && binding.tiEtPassword.text.toString().trim().isNotEmpty())
+            binding.btnLogin.isEnabled =
+                (binding.tiEtEmail.checkNotEmpty() && binding.tiEtPassword.checkNotEmpty())
 
 
         }
     }
+
+    private fun backPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                   requireActivity().finish()
+
+                }
+            })
+    }
+
 
 
 }

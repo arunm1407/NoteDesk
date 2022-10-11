@@ -14,6 +14,9 @@ import com.example.notedesk.presentation.home.listener.FragmentNavigationLisente
 import com.example.notedesk.presentation.home.listener.SettingsLisenter
 import com.example.notedesk.presentation.util.BackStack
 import com.example.notedesk.presentation.home.HomeFragment
+import com.example.notedesk.presentation.util.checkNull
+import com.example.notedesk.presentation.util.inTransaction
+import com.example.notedesk.presentation.util.startActivity
 import com.example.notedesk.util.keys.Keys.USER_ID
 import com.example.notedesk.util.sharedPreference.SharedPreference
 
@@ -21,18 +24,18 @@ import com.example.notedesk.util.sharedPreference.SharedPreference
 class MainActivity : AppCompatActivity(), FragmentNavigationLisenter, SettingsLisenter {
 
     private lateinit var binding: ActivityMainBinding
-    private var userId:Int=0
+    private var userId: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        userId=SharedPreference(this).getSharedPreferenceInt(USER_ID)
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.fragmentContainerView, HomeFragment()).addToBackStack(BackStack.HOME)
-                    .commit()
+        userId = SharedPreference(this).getSharedPreferenceInt(USER_ID)
+        if (savedInstanceState.checkNull()) {
+            supportFragmentManager.inTransaction(BackStack.HOME)
+            {
+                replace(R.id.fragmentContainerView, HomeFragment())
             }
+
         }
 
     }
@@ -54,84 +57,58 @@ class MainActivity : AppCompatActivity(), FragmentNavigationLisenter, SettingsLi
 
 
     override fun navigate(fragment: Fragment, name: String) {
-        supportFragmentManager.beginTransaction().apply {
-            setCustomAnimations(
-                R.anim.enter_from_right,
-                R.anim.exit_to_left,
-                R.anim.enter_from_left,
-                R.anim.exit_to_right
-            )
-            when (name) {
+        var name1: String? = null
+        when (name) {
+            BackStack.HOME -> {
+                name1 = BackStack.HOME
 
-
-                BackStack.SEARCH -> {
-                    replace(
-                        R.id.fragmentContainerView,
-                        fragment
-                    ).addToBackStack(BackStack.SEARCH)
-                        .commit()
-                }
-
-                BackStack.PREVIEW -> {
-
-                    replace(
-                        R.id.fragmentContainerView,
-                        fragment
-                    ).addToBackStack(BackStack.PREVIEW)
-                        .commit()
-                }
-
-
-                BackStack.HOME -> {
-                    supportFragmentManager.popBackStack(
-                        BackStack.HOME, 0
-                    )
-                }
-                BackStack.ATTACHMENT_PREVIEW -> {
-
-                    replace(
-                        R.id.fragmentContainerView,
-                        fragment
-                    ).addToBackStack(BackStack.ATTACHMENT_PREVIEW).commit()
-                }
-                BackStack.POLICY -> {
-                    replace(R.id.fragmentContainerView, fragment).addToBackStack(BackStack.POLICY)
-                        .commit()
-                }
-                BackStack.CREATE -> {
-                    replace(R.id.fragmentContainerView, fragment).addToBackStack(BackStack.CREATE)
-                        .commit()
-
-                }
-                BackStack.EDIT -> {
-
-                    replace(R.id.fragmentContainerView, fragment).addToBackStack(BackStack.EDIT)
-                        .commit()
-
-                }
-                BackStack.PROFILE->{
-                    replace(R.id.fragmentContainerView, fragment).addToBackStack(BackStack.PROFILE)
-                        .commit()
-                }
-
+                supportFragmentManager.popBackStack(
+                    BackStack.HOME, 0
+                )
             }
+            BackStack.SEARCH -> name1 = BackStack.SEARCH
+            BackStack.PREVIEW -> name1 = BackStack.PREVIEW
+            BackStack.ATTACHMENT_PREVIEW -> name1 = BackStack.ATTACHMENT_PREVIEW
+            BackStack.POLICY -> name1 = BackStack.POLICY
+            BackStack.CREATE -> name1 = BackStack.CREATE
+            BackStack.EDIT -> name1 = BackStack.EDIT
+            BackStack.PROFILE -> {
+                name1 = BackStack.PROFILE
+                supportFragmentManager.popBackStack(
+                    BackStack.PROFILE, 1
+                )
+            }
+            BackStack.PROFILE_EDIT -> name1 = BackStack.PROFILE_EDIT
+
+
+        }
+        supportFragmentManager.inTransaction(name1)
+        {
+            replace(R.id.fragmentContainerView, fragment)
         }
 
 
     }
 
+    override fun <T> navigateActivity(it: Class<T>) {
+        startActivity(it)
+        finishAffinity()
+    }
 
-    fun getUserID():Int
-    {
+
+    fun getUserID(): Int {
         return userId
     }
 
     private fun openAppSettings() {
+
+
         startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             data = Uri.fromParts(PACKAGE, packageName, null)
         })
     }
+
 
     override fun settings() {
         openAppSettings()

@@ -1,7 +1,6 @@
 package com.example.notedesk.presentation.activity
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -20,22 +19,20 @@ abstract class NotesViewModel(application: Application) : AndroidViewModel(appli
     protected val repo: NotesRepository
 
 
-
     init {
-        Log.i("natz","repo called")
         val dao = NoteDataBase.getDatabase(application).getNotesDao()
         repo = NotesRepositoryImplemenation(dao)
 
     }
 
 
-    fun deleteNote(id: Int,userId: Int) = viewModelScope.launch(Dispatchers.IO) {
-        repo.delete(id,userId)
+    fun deleteNote(id: Int, userId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        repo.delete(id, userId)
 
     }
 
-    suspend fun getNotes(userId:Int): LiveData<List<Note>> {
-       return repo.getAllNotes(userId)
+    suspend fun getNotes(userId: Int): LiveData<List<Note>> {
+        return repo.getAllNotes(userId)
     }
 
 
@@ -50,11 +47,14 @@ abstract class NotesViewModel(application: Application) : AndroidViewModel(appli
     }
 
 
-    suspend fun getFileName(noteId: Int,userId: Int): List<String> {
-        Log.i("file","file name $noteId  $userId")
-        return repo.getFileName(noteId,userId)
+    suspend fun getFileName(noteId: Int, userId: Int): List<String> {
+        return repo.getFileName(noteId, userId)
 
     }
+
+
+
+
 
 
 }

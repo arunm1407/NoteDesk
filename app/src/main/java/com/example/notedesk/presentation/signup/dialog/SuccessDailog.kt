@@ -1,8 +1,7 @@
-package com.example.notedesk.presentation.signup
+package com.example.notedesk.presentation.signup.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.DialogFragment
@@ -47,13 +46,6 @@ class SuccessDailog : DialogFragment() {
             WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
         )
 
-        dialog?.window?.decorView?.setOnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                val dialogBounds = Rect()
-                v.getHitRect(dialogBounds)
-            }
-            true
-        }
     }
 
         override fun onDetach() {

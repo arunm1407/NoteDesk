@@ -8,12 +8,18 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.notedesk.presentation.login.activity.LoginActivity
 import com.example.notedesk.util.keys.Keys
 import com.example.notedesk.util.sharedPreference.SharedPreference
 import com.example.notedesk.R
 import com.example.notedesk.databinding.ActivitySplashScreen1Binding
+import com.example.notedesk.presentation.activity.MainActivity
+import com.example.notedesk.presentation.onBoarding.activity.BoardingScreen
+import com.example.notedesk.presentation.util.openActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 
 class FlashScreen : AppCompatActivity() {
@@ -26,6 +32,8 @@ class FlashScreen : AppCompatActivity() {
     private lateinit var topAnimation: Animation
     private lateinit var bottomAnimation: Animation
     private lateinit var binding: ActivitySplashScreen1Binding
+    private val viewModel: LoginViewModel by viewModels()
+    private lateinit var handler:Handler
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashScreen1Binding.inflate(layoutInflater)
@@ -55,51 +63,49 @@ class FlashScreen : AppCompatActivity() {
         tv1.animation = bottomAnimation
         tv2.animation = bottomAnimation
 
-//        if (checkOnBoardingCompleted()) {
-//
-//            startActivityNavigation(Intent(this, BoardingScreen::class.java))
-//        } else {
-//            startActivityNavigation(Intent(this, BoardingScreen::class.java))
-////            startActivityNavigation(Intent(this, BoardingScreen::class.java))
-//
-//        }
 
-//
-        if (checkIsLogin()) {
-//            startActivityNavigation(Intent(this, MainActivity::class.java))
-            startActivityNavigation(Intent(this, LoginActivity::class.java))
 
+        if (checkIsLogin() != 0 && checkOnBoardingCompleted()) {
+            startActivityNavigation(Intent(this, MainActivity::class.java))
+
+        } else if (checkIsLogin() != 0 && !checkOnBoardingCompleted()) {
+            startActivityNavigation(Intent(this, BoardingScreen::class.java))
         } else {
             startActivityNavigation(Intent(this, LoginActivity::class.java))
-
         }
 
 
     }
 
 
-    private fun checkIsLogin(): Boolean {
-        return SharedPreference(this).getBooleanSharedPreference(Keys.IS_LOGIN)
+    private fun checkIsLogin(): Int {
+        return SharedPreference(this).getSharedPreferenceInt(Keys.USER_ID)
 
     }
 
     private fun startActivityNavigation(intent: Intent) {
-        Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(intent.apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            })
-            finish()
-        }, 1)
+       handler= Handler(Looper.getMainLooper()).apply {
+           postDelayed({
+           openActivity(intent)
+           finish()
+       }, 2000)
+       }
     }
 
 
     private fun checkOnBoardingCompleted(): Boolean {
+        val flag: Boolean
+        val userId = SharedPreference(this).getSharedPreferenceInt(Keys.USER_ID)
+        if (userId == 0) return false
+        runBlocking(Dispatchers.IO) { flag = viewModel.getOnBoardedStatus(userId) }
+        return flag
 
-        return SharedPreference(this).getBooleanSharedPreference(Keys.ONBOARDING)
+
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finishAffinity()
+
+    override fun onDestroy() {
+        handler.removeCallbacksAndMessages(null)
+        super.onDestroy()
     }
 }

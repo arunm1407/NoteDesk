@@ -2,37 +2,33 @@ package com.example.notedesk.presentation.previewNote
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.notedesk.R
-import com.example.notedesk.presentation.attachmentPreview.adaptor.AttachmentAdaptor
 import com.example.notedesk.databinding.FragmentPerviewBinding
 import com.example.notedesk.domain.model.Note
 import com.example.notedesk.presentation.activity.MainActivity
-import com.example.notedesk.util.keys.Constants
-import com.example.notedesk.util.keys.Keys
-import com.example.notedesk.util.date.DateUtil.getDateAndTime
-import com.example.notedesk.util.keys.Keys.SAVED_NOTES
+import com.example.notedesk.presentation.attachmentPreview.AttachmentPerviewFragment
+import com.example.notedesk.presentation.attachmentPreview.adaptor.AttachmentAdaptor
 import com.example.notedesk.presentation.attachmentPreview.listener.AttachmentLisenter
+import com.example.notedesk.presentation.createNote.CreateNotesFragment
 import com.example.notedesk.presentation.createNote.adaptor.UrlAdaptor
 import com.example.notedesk.presentation.createNote.listener.UrlListener
-import com.example.notedesk.presentation.home.listener.FragmentNavigationLisenter
-import com.example.notedesk.presentation.attachmentPreview.AttachmentPerviewFragment
-import com.example.notedesk.presentation.createNote.CreateNotesFragment
 import com.example.notedesk.presentation.home.enums.MenuActions
-import com.example.notedesk.presentation.util.BackStack
-import com.example.notedesk.presentation.util.initRecyclerView
+import com.example.notedesk.presentation.home.listener.FragmentNavigationLisenter
+import com.example.notedesk.presentation.util.*
+import com.example.notedesk.util.date.DateUtil.getDateAndTime
+import com.example.notedesk.util.keys.Constants
+import com.example.notedesk.util.keys.Keys
+import com.example.notedesk.util.keys.Keys.SAVED_NOTES
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -43,10 +39,10 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
 
     companion object {
 
-        fun newInstance(data: Note) = PreviewFragment().apply {
-            val bundle = Bundle()
-            bundle.putParcelable(SAVED_NOTES, data)
-            arguments = bundle
+        fun newInstance(data: Note) = PreviewFragment().withArgs {
+
+            putParcelable(SAVED_NOTES, data)
+
         }
     }
 
@@ -115,7 +111,7 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
             resources.getString(R.string.createdtime, getDateAndTime(viewModel.notes.createdTime))
         if (viewModel.notes.modifiedTime.toInt() != viewModel.notes.createdTime.toInt()) {
             binding.updatedTime.text = resources.getString(
-                R.string.createdtime,
+                R.string.updatedTime,
                 getDateAndTime(viewModel.notes.modifiedTime)
             )
             binding.updatedTime.visibility = View.VISIBLE
@@ -125,7 +121,7 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
         binding.inputNoteTitle.text = viewModel.notes.title
         binding.inputNoteSubtitle.text = viewModel.notes.subtitle
         binding.inputNote.text = viewModel.notes.noteText
-        binding.preview.setBackgroundColor(Color.parseColor(viewModel.notes.color))
+        binding.preview.setBackgroundColor(viewModel.notes.color.toColor())
 
         if (viewModel.notes.weblink.isNotEmpty()) {
             displayUrl(viewModel.notes.weblink)
@@ -258,18 +254,7 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
 
     private fun initializeToolBar() {
         val toolbar: androidx.appcompat.widget.Toolbar = requireView().findViewById(R.id.my_toolbar)
-        toolbar.title = Constants.PREVIEW_FRAGMENT
-        (activity as AppCompatActivity).apply {
-            setSupportActionBar(toolbar)
-            supportActionBar?.let {
-                it.setDisplayHomeAsUpEnabled(true)
-                it.setDisplayShowHomeEnabled(true)
-            }
-
-
-        }
-        toolbar.navigationIcon =
-            ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_arrow_back_24)
+        toolbar.setup(requireActivity(),Constants.PREVIEW_FRAGMENT)
 
     }
 
@@ -290,8 +275,8 @@ class PreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
 
 
     override fun onAttachmentClicked(name: String) {
-        val fragment = AttachmentPerviewFragment.newInstance(name)
-        fragmentNavigationLisenter?.navigate(fragment, BackStack.ATTACHMENT_PREVIEW)
+
+        fragmentNavigationLisenter?.navigate(AttachmentPerviewFragment.newInstance(name), BackStack.ATTACHMENT_PREVIEW)
     }
 
     override fun onDelete(name: String, position: Int) {

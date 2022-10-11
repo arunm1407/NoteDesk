@@ -8,6 +8,7 @@
         <item name="colorSecondaryVariant">@color/color_on_highlight</item>
         <item name="colorOnSecondary">@color/color_primary_night</item>
         <item name="colorAccent">@color/colorWhite</item>
+        <item name="colorSecondaryContainer">@color/white</item>
         <item name="background">@color/color_primary_night</item>
         <item name="android:statusBarColor">@color/color_primary_night</item>
         <item name="windowActionModeOverlay">true</item>
@@ -21,6 +22,9 @@
         <item name="colorBackgroundFloating">#00838F</item>
         <item name="colorPrimaryDark">@color/color_on_highlight</item>
         <item name="colorSurface">#1f2c34</item>
+        <item name="colorControlActivated">#3b3b3b</item>
+        <item name="materialCalendarTheme">@style/MaterialCalendarTheme</item>
+
 
     </style>
 

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context="com.example.notedesk.presentation.login.SignUpFragment">
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -82,13 +80,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_large"
+            android:backgroundTint="?attr/colorAccent"
             android:hint="@string/bio"
+            android:textCursorDrawable="?attr/colorAccent"
+            app:boxStrokeColor="@color/textview"
+            app:hintTextColor="@color/colorPrimary"
             app:layout_constraintBottom_toTopOf="@id/tilGender"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/clProfilePicture"
             app:layout_constraintVertical_bias="0.5"
-
+            app:startIconTint="@color/icon"
             app:startIconDrawable="@drawable/ic_baseline_supervised_user_circle_24">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -97,7 +99,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 android:minHeight="100dp"
-                android:textColor="?attr/colorPrimaryVariant" />
+                android:textCursorDrawable="@null"
+                android:textColor="?attr/colorAccent" />
 
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -110,20 +113,24 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_large"
             android:layout_marginTop="32dp"
-            android:hint="@string/gender"
+            android:backgroundTint="?attr/colorAccent"
+            app:endIconTint="?attr/colorAccent"
             app:layout_constraintBottom_toTopOf="@id/tilDOB"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilBio"
             app:startIconDrawable="@drawable/profile">
 
-            <AutoCompleteTextView
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/autoCompleteTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:imeOptions="actionNext"
                 android:inputType="none"
+                android:nextFocusDown="@id/tilEtDOB"
                 android:text="Select your Gender"
-                android:textColor="?attr/colorPrimaryVariant"
+                android:textCursorDrawable="@null"
+                android:textColor="?attr/colorAccent"
                 android:textSize="14sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -135,9 +142,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_large"
             android:layout_marginHorizontal="@dimen/margin_large"
+            android:backgroundTint="?attr/colorAccent"
             android:hint="@string/date_of_birth"
-         
-            app:layout_constraintBottom_toTopOf="@+id/tilEmail"
+            android:textCursorDrawable="?attr/colorAccent"
+            app:boxStrokeColor="@color/textview"
+            app:hintTextColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilGender"
@@ -152,8 +161,12 @@
                 android:cursorVisible="true"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
+                android:imeOptions="actionNext"
                 android:inputType="text"
-                android:textColor="?attr/colorPrimaryVariant" />
+                app:startIconTint="@color/icon"
+                android:textCursorDrawable="@null"
+                android:nextFocusDown="@id/tilEtMobile"
+                android:textColor="?attr/colorAccent" />
 
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -166,9 +179,13 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
+            android:backgroundTint="?attr/colorAccent"
             android:hint="@string/mobile_number"
-         
+            android:textCursorDrawable="?attr/colorAccent"
+            app:boxStrokeColor="@color/textview"
+            app:hintTextColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
+            app:startIconTint="@color/icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilDOB"
             app:startIconDrawable="@drawable/ic_mobile">
@@ -177,9 +194,11 @@
                 android:id="@+id/tilEtMobile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:imeOptions="actionDone"
                 android:inputType="number"
                 android:maxLength="10"
-                android:textColor="?attr/colorPrimaryVariant" />
+                android:textCursorDrawable="@null"
+                android:textColor="?attr/colorAccent" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -190,6 +209,7 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/margin_small"
             android:text="@string/next"
+            android:backgroundTint="@color/colorPrimary"
             android:textColor="?attr/colorOnPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -197,7 +217,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilMobile"
             app:layout_constraintVertical_bias="0.0" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

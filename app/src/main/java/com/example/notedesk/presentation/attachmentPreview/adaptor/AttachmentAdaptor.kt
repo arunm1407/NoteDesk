@@ -43,8 +43,6 @@ class AttachmentAdaptor(
                 itemView.findViewById<ImageView>(R.id.delete).visibility = View.VISIBLE
             }
 
-
-
             itemView.findViewById<ImageView>(R.id.delete).setOnClickListener {
                 attachmentLisenter.onDelete(name, adapterPosition)
                 removeItem(name,adapterPosition)

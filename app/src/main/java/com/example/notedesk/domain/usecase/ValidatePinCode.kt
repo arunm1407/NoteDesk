@@ -7,7 +7,6 @@ object ValidatePinCode {
 
     fun execute(pinCode: String): ValidationResult {
 
-
         if(!pinCodeCheck(pinCode)) {
             return ValidationResult(
                 successful = false,

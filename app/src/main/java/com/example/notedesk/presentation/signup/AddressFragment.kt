@@ -2,16 +2,20 @@ package com.example.notedesk.presentation.signup
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.notedesk.domain.usecase.ValidatePinCode
-import com.example.notedesk.presentation.signup.listener.Navigate
 import com.example.notedesk.R
 import com.example.notedesk.databinding.FragmentAddressBinding
+import com.example.notedesk.domain.usecase.ValidatePinCode
+import com.example.notedesk.presentation.signup.listener.Navigate
+import com.example.notedesk.presentation.util.clearError
+import com.example.notedesk.presentation.util.getString
+import com.example.notedesk.presentation.util.setErrorMessage
 import com.shuhart.stepview.StepView
 
 
@@ -42,7 +46,10 @@ class AddressFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUpFocusChangeListeners()
         eventHandler()
+        removeError()
+
     }
 
     private fun eventHandler() {
@@ -53,10 +60,21 @@ class AddressFragment : Fragment() {
 
     private fun nextListener() {
         binding.btnNext.setOnClickListener {
-            if (validateData())
+            if (validateData()) {
+                removeError()
+
                 navigationLisenter?.navigate(PasswordFragment())
+            }
+
 
         }
+    }
+
+    private fun removeError() {
+        binding.tilAddressLine1.clearError()
+        binding.tilAddressLine2.clearError()
+        binding.tilCity.clearError()
+        binding.tilPinCode.clearError()
     }
 
     private fun stepViewAction() {
@@ -64,48 +82,55 @@ class AddressFragment : Fragment() {
     }
 
     private fun validateData(): Boolean {
-        val pinCode = binding.tilEtPinCode.text.toString()
-        val addressLine1 = binding.tilEtaddress1.text.toString()
-        val addressLine2 = binding.tilEtaddress2.text.toString()
-        val city = binding.tilEtcity.text.toString()
+        val pinCode = binding.tilEtPinCode.getString()
         if (pinCode.isNotEmpty()) {
             val res = ValidatePinCode.execute(pinCode)
-
             if (!res.successful) {
-                binding.tilPinCode.error = res.errorMessage
+                binding.tilPinCode.setErrorMessage(res.errorMessage)
+                binding.tilEtPinCode.clearFocus()
                 return false
             }
         }
-        updateData(addressLine1, addressLine2, city, pinCode)
+        viewModel.userData.apply {
+
+            this.city = binding.tilEtcity.getString()
+            this.addressLine1 = binding.tilEtaddress1.getString()
+            this.addressLine2 = binding.tilEtaddress2.getString()
+            this.pinCode = binding.tilEtPinCode.getString()
+
+
+        }
         return true
 
     }
 
-    private fun updateData(
-        addressLine1: String,
-        addressLine2: String,
-        city: String,
-        pinCode: String
-    ) {
 
-        viewModel.userData.apply {
-            when {
-                pinCode.isNotEmpty() -> this.pinCode = pinCode.toInt()
-                addressLine1.isNotEmpty() -> this.addressLine1 = addressLine1
-                addressLine2.isNotEmpty() -> this.addressLine2 = addressLine2
-                city.isNotEmpty() -> this.city = city
-            }
+    private fun setUpFocusChangeListeners() {
 
+        binding.tilEtaddress1.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) binding.tilAddressLine1.clearError()
+
+        }
+        binding.tilEtaddress2.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) binding.tilAddressLine2.clearError()
+        }
+        binding.tilEtcity.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) binding.tilCity.clearError()
 
         }
 
+        binding.tilEtPinCode.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) binding.tilPinCode.clearError()
+        }
+
+
     }
+
 
     private fun backPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-
                     parentFragmentManager.popBackStack()
 
                 }

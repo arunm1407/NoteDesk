@@ -5,12 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import com.example.notedesk.R
 import com.example.notedesk.util.keys.Constants
 import com.example.notedesk.databinding.FragmentPolicyBinding
+import com.example.notedesk.presentation.util.setup
 
 
 class PolicyFragment : Fragment() {
@@ -43,14 +42,8 @@ private lateinit var binding: FragmentPolicyBinding
 
     private fun initializeToolBar() {
         val toolbar: Toolbar = requireView().findViewById(R.id.my_toolbar)
-        toolbar.menu.clear()
-        toolbar.title = Constants.POLICY_FRAGMENT
-        (activity as AppCompatActivity).apply {
-            this.setSupportActionBar(toolbar)
-            this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            this.supportActionBar!!.setDisplayShowHomeEnabled(true)
-        }
-        toolbar.navigationIcon =  ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_arrow_back_24)
+      toolbar.setup(requireActivity(),Constants.POLICY_FRAGMENT)
+
 
     }
 

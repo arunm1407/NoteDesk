@@ -2,6 +2,7 @@ package com.example.notedesk.domain.usecase
 
 import android.util.Patterns
 
+
 object ValidateNewEmail {
 
 

@@ -147,7 +147,7 @@
     <string name="upload_success">Photo Upload Successfully</string>
     <string name="failed_to_save">Failed To Save Photo</string>
     <string name="saved_success">Photo Saved Successfully</string>
-    <string name="failed_to_save_photo">Failed to save photo</string>
+    <string name="failed_to_save_photo">Failed to take photo</string>
     <string name="cannot_save">Couldn\'t save bitmap.</string>
     <string name="fileFormat">%s.jpg</string>
     <string name="Cancel">Cancel</string>
@@ -177,21 +177,6 @@
     <string name="we_that_we_don_t_have_access_to_user_s_personal_data_and_information_in_general_and_we_don_t_collect_and_save_the_same_but_for_a_better_experience_and_for_some_functionalities_of_the_application_we_ll_need_some_run_time_permission_on_the_user_s_device">We that we don\'t have access to user\'s personal data and information in general and we don\'t collect and save the same. But, for a better experience and for some functionalities of the application, we\'ll need some run-time permission on the user\'s device.</string>
     <string name="SORT">SORT</string>
     <string name="FILTER">FILTER</string>
-
-    <style name="Larger_Drawable">
-        <item name="android:textSize">10sp</item>
-        <item name="android:scaleX">.6</item>
-        <item name="android:scaleY">.6</item>
-    </style>
-
-    <string name="title_activity_main">MainActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="loading">Loading ...</string>
     <string name="email">Email</string>
     <string name="password_doesnt_match">Password does not match</string>
@@ -238,11 +223,33 @@
     <string name="about_me">About Me</string>
     <string name="your_account_has_been_created_successfully">Your account has been created successfully</string>
     <string name="get_started">Get Started</string>
+    <string name="dateforamt">dd/MM/yyyy</string>
+    <string name="password_does_not_match">The Password does not match</string>
+    <string name="not_valid_email">That\'s not a valid email</string>
+    <string name="mail_does_not_exist">The email does not exist</string>
+    <string name="invalid_mobile">The mobile number is invalid</string>
+    <string name="email_already_exist">The email already exist</string>
+    <string name="invlaid_pincode">The pinCode is Invalid</string>
+    <string name="updating_data">Updating the Data</string>
+    <string name="delete_image">Delete Image</string>
+    <string name="profile">Profile</string>
+    <string name="signout">SignOut</string>
+    <string name="are_your_sure">Are you sure ?</string>
+    <string name="sign_out">Do you want SignOut from NoteDesk</string>
+    <string name="arunji12345_ak_gmail_com">arunji12345.ak@gmail.com</string>
+    <string name="select_date">Select date</string>
+    <string name="date_picker">date picker</string>
+    <string name="edit_profile_page">Edit Profile Page</string>
+    <string name="confirm_to_update">Confirm to Update ?</string>
+    <string name="sure_Want_to_update">Are you want Update the Profile</string>
+    <string name="confirm_to_exit">Confirm to Exit ?</string>
+    <string name="sure_to_Exit">\"Are you sure want to Exit without saving \"</string>
+    <string name="pls_Set_profile_image">Pls set the Profile Image</string>
 
 
     <string-array name="gender">
         <item>MEN</item>
         <item>WOMEN</item>
-        <item>NOT INTERESTED</item>
+        <item>NOT SPECIFIED</item>
     </string-array>
 </resources>

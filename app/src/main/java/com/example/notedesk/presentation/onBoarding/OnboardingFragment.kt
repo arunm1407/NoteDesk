@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.notedesk.databinding.FragmentOnboarding1Binding
+import com.example.notedesk.presentation.util.withArgs
 
 
 class OnboardingFragment : Fragment() {
@@ -20,14 +21,12 @@ class OnboardingFragment : Fragment() {
             title: String?,
             description: String?,
             imageResource: Int
-        ): OnboardingFragment =
-            OnboardingFragment().apply {
-                val args = Bundle()
-                args.putString(TITLE, title)
-                args.putString(DESCRIPTION, description)
-                args.putInt(IMAGE, imageResource)
-                arguments = args
-            }
+        ): OnboardingFragment = OnboardingFragment().withArgs {
+            putString(TITLE, title)
+            putString(DESCRIPTION, description)
+            putInt(IMAGE, imageResource)
+
+        }
 
 
     }
@@ -62,4 +61,9 @@ class OnboardingFragment : Fragment() {
     }
 
 
+    override fun onDestroy() {
+        super.onDestroy()
+          title = null
+          description= null
+    }
 }

@@ -1,11 +1,11 @@
 package com.example.notedesk.presentation.activity
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.notedesk.domain.model.Note
+import com.example.notedesk.presentation.model.NotesRvItem
 
 class MyDiffUtil(
-    private val oldList:List<Note>,
-    private val newList:List<Note>
+    private val oldList:List<NotesRvItem.UNotes>,
+    private val newList:List<NotesRvItem.UNotes>
 
 ):DiffUtil.Callback() {
     override fun getOldListSize(): Int {
@@ -18,7 +18,7 @@ class MyDiffUtil(
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
 
-        return oldList[oldItemPosition].id == newList[newItemPosition].id
+        return oldList[oldItemPosition].note.id == newList[newItemPosition].note.id
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="@dimen/margin_small"
-    android:background="@color/white"
+    android:background="?attr/colorOnSecondary"
     android:elevation="20dp"
     android:padding="@dimen/padding_large">
 
@@ -31,7 +31,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         android:textSize="16sp"
-        android:textColor="?attr/colorPrimaryVariant"
+        android:textColor="?attr/colorAccent"
         android:fontFamily="@font/poppins_light"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"

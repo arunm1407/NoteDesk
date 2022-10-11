@@ -1,14 +1,31 @@
 package com.example.notedesk.presentation.util
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
+import com.example.notedesk.R
 import com.example.notedesk.data.util.presenter
 import com.example.notedesk.domain.model.Note
-import com.example.notedesk.presentation.Model.NotesRvItem
+import com.example.notedesk.presentation.model.NotesRvItem
 import com.example.notedesk.presentation.home.enums.FilterChoiceSelected
+import com.example.notedesk.presentation.login.Gender
+import com.google.android.material.textfield.TextInputLayout
+import java.util.*
 
 
 fun View.hideKeyboard() {
@@ -49,7 +66,6 @@ fun FilterChoiceSelected.getSelectedCount(): Int {
 }
 
 
-
 fun MutableList<in NotesRvItem>.addAll(elements: List<Note>) {
     elements.forEach {
 
@@ -59,16 +75,188 @@ fun MutableList<in NotesRvItem>.addAll(elements: List<Note>) {
 
 }
 
-fun TextView.set(name:String)
+fun TextView.set(name: String) {
+    this.text = name
+}
+
+
+fun EditText.checkNotEmpty(): Boolean {
+    return this.text.toString().trim().isNotEmpty()
+}
+
+
+fun String.checkEmpty(): Boolean {
+    return this.trim().isEmpty()
+}
+fun EditText.getString(): String {
+    return this.text.trim().toString()
+}
+
+fun EditText.getStringLower(): String {
+    return this.text.trim().toString().lowercase(Locale.ROOT)
+}
+
+fun TextInputLayout.clearError() {
+    this.error = null
+}
+
+
+fun EditText.clearText() {
+    this.text.clear()
+}
+
+
+fun TextInputLayout.setErrorMessage(error: String?) {
+    this.error = error
+}
+
+
+fun Toolbar.setup(activity: Activity, name: String) {
+
+    menu.clear()
+    (activity as AppCompatActivity).apply {
+        this.title = name
+        this.setSupportActionBar(this@setup)
+        this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        this.supportActionBar!!.setDisplayShowHomeEnabled(true)
+    }
+    this.navigationIcon =
+        ContextCompat.getDrawable(activity, R.drawable.ic_baseline_arrow_back_24)
+}
+
+
+
+fun Toolbar.updateTitle(name:String)
 {
-    this.text=name
+    this.title=name
+}
+
+fun TextView.getString(): String {
+    return this.text.trim().toString()
+}
+
+
+fun TextView.checkEmpty(): Boolean {
+    return this.text.isEmpty()
+}
+
+inline fun FragmentManager.inTransaction(
+    name: String?,
+    func: FragmentTransaction.() -> FragmentTransaction
+) {
+
+    beginTransaction().apply {
+        setCustomAnimations(
+            R.anim.enter_from_right,
+            R.anim.exit_to_left,
+            R.anim.enter_from_left,
+            R.anim.exit_to_right
+        )
+        addToBackStack(name)
+        func().commit()
+
+    }
+
+}
+
+
+fun String.getGender(): Gender {
+
+
+    return when (this) {
+        "MEN" -> Gender.MEN
+        "WOMEN" -> Gender.WOMEN
+        else -> Gender.NOT_SPECIFIED
+    }
+}
+
+
+inline fun <T : Fragment> T.withArgs(args: Bundle.() -> Unit): T =
+    this.apply {
+        arguments = Bundle().apply(args)
+
+    }
+
+
+fun Context.openActivity(it: Intent, args: Bundle.() -> Unit = {}) {
+
+    it.putExtras(Bundle().apply(args))
+    startActivity(it)
+}
+
+
+fun NotesRvItem.UNotes.toDomainLayer(): Note {
+    return Note(
+        note.title,
+        note.subtitle,
+        note.createdTime,
+        note.modifiedTime,
+        note.noteText,
+        note.color,
+        note.weblink,
+        note.priority,
+        note.attachmentCount,
+        note.favorite,
+        note.userID,
+        note.id
+
+
+    )
+
+
+}
+
+fun <T> Context.startActivity(it: Class<T>, extras: Bundle.() -> Unit = {}) {
+    val intent = Intent(this, it)
+    intent.putExtras(Bundle().apply(extras))
+    startActivity(intent)
 }
 
 
 
 
+fun ImageView.setColor(color: Int) {
+    this.setColorFilter(
+        ContextCompat.getColor(
+            context,
+            color
+        )
+    )
+}
+
+
+fun String.toColor(): Int {
+    return Color.parseColor(this)
+}
+
+
+fun Any?.checkNull(): Boolean {
+    if (this == null) return true
+
+    return false
+}
 
 
 
+fun TextView.actionDone()
+{
+    this.setOnEditorActionListener { v, actionId, _ ->
+        return@setOnEditorActionListener when (actionId) {
+            EditorInfo.IME_ACTION_DONE -> {
+                v.clearFocus()
+                v.hideKeyboard()
+                true
+            }
+            else -> false
+        }
+    }
+}
 
 
+fun EditText.clearErrorOnClick(view:TextInputLayout)
+{
+    this.setOnClickListener {
+
+        view.clearError()
+    }
+}

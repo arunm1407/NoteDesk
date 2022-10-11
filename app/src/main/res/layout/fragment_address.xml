@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context="com.example.notedesk.presentation.login.SignUpFragment">
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -21,20 +17,29 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
+            android:backgroundTint="?attr/colorAccent"
             android:hint="@string/address_line_1"
+            android:textCursorDrawable="?attr/colorAccent"
+            app:boxStrokeColor="@color/textview"
+            app:hintTextColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5"
+            app:startIconTint="@color/icon"
+
             app:startIconDrawable="@drawable/ic_home">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tilEtaddress1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:imeOptions="actionNext"
                 android:inputType="text"
-                android:maxLength="20"
-                android:textColor="?attr/colorPrimaryVariant" />
+                android:maxLength="30"
+                android:textCursorDrawable="@null"
+                android:nextFocusDown="@id/tilEtaddress2"
+                android:textColor="?attr/colorAccent" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -46,20 +51,28 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
+            android:backgroundTint="?attr/colorAccent"
             android:hint="@string/address_line_2"
+            android:textCursorDrawable="?attr/colorAccent"
+            app:boxStrokeColor="@color/textview"
+            app:hintTextColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilAddressLine1"
             app:layout_constraintVertical_bias="0.5"
+            app:startIconTint="@color/icon"
             app:startIconDrawable="@drawable/ic_home">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tilEtaddress2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:imeOptions="actionNext"
                 android:inputType="text"
                 android:maxLength="30"
-                android:textColor="?attr/colorPrimaryVariant" />
+                android:textCursorDrawable="@null"
+                android:nextFocusDown="@id/tilEtcity"
+                android:textColor="?attr/colorAccent" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -71,9 +84,14 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_large"
             android:layout_marginTop="32dp"
+            android:backgroundTint="?attr/colorAccent"
             android:hint="@string/city"
+            android:textCursorDrawable="?attr/colorAccent"
+            app:boxStrokeColor="@color/textview"
+            app:hintTextColor="@color/colorPrimary"
             app:layout_constraintEnd_toStartOf="@id/tilPinCode"
             app:layout_constraintStart_toStartOf="parent"
+            app:startIconTint="@color/icon"
             app:layout_constraintTop_toBottomOf="@id/tilAddressLine2"
             app:startIconDrawable="@drawable/ic_location">
 
@@ -81,11 +99,13 @@
                 android:id="@+id/tilEtcity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:imeOptions="actionNext"
                 android:inputType="text"
                 android:lines="1"
-                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 android:maxLength="30"
-                android:textColor="?attr/colorPrimaryVariant" />
+                android:textCursorDrawable="@null"
+                android:nextFocusDown="@id/tilEtPinCode"
+                android:textColor="?attr/colorAccent" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,21 +116,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_large"
+            android:backgroundTint="?attr/colorAccent"
             android:hint="@string/pincode"
-            app:layout_constraintBottom_toTopOf="@id/tilCity"
+            android:textCursorDrawable="?attr/colorAccent"
+            app:boxStrokeColor="@color/textview"
+            app:hintTextColor="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@id/tilCity"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tilCity"
-            app:layout_constraintTop_toBottomOf="@id/tilCity"
+            app:layout_constraintTop_toTopOf="@id/tilCity"
             app:layout_constraintVertical_bias="0.5"
+            app:startIconTint="@color/icon"
             app:startIconDrawable="@drawable/ic_pincode">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tilEtPinCode"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:imeOptions="actionDone"
                 android:inputType="number"
                 android:maxLength="6"
-                android:textColor="?attr/colorPrimaryVariant" />
+                android:textCursorDrawable="@null"
+                android:textColor="?attr/colorAccent" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -120,14 +147,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/margin_small"
+            android:layout_marginTop="100dp"
             android:text="@string/next"
+            android:backgroundTint="@color/colorPrimary"
             android:textColor="?attr/colorOnPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.95"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
+            app:layout_constraintTop_toBottomOf="@id/tilPinCode"
+            app:layout_constraintVertical_bias="1" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

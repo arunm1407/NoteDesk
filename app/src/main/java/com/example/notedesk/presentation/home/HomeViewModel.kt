@@ -1,11 +1,9 @@
 package com.example.notedesk.presentation.home
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.notedesk.data.data_source.User
 import com.example.notedesk.util.keys.Keys
 import com.example.notedesk.presentation.home.enums.SortBy
 import com.example.notedesk.presentation.home.enums.SortValues
@@ -68,9 +66,9 @@ class HomeViewModel(application: Application) : NotesViewModel(application) {
     }
 
 
-    lateinit var oldMyNotes: List<Note>
-    lateinit var displayList: List<Note>
-    lateinit var filterList: List<Note>
+    var oldMyNotes: List<Note> = listOf()
+    var displayList: List<Note> = listOf()
+    var filterList: List<Note> = listOf()
 
 
     var currentMode: Int = Keys.LIST_VIEW
@@ -112,11 +110,7 @@ class HomeViewModel(application: Application) : NotesViewModel(application) {
 
 
     suspend fun getProfileImage(userId: Long): String? {
-        Log.i("natz","  $repo")
-    return repo.getUser(userId).image
-
-
-
+        return repo.getUser(userId).image
 
 
     }
@@ -124,12 +118,6 @@ class HomeViewModel(application: Application) : NotesViewModel(application) {
     suspend fun getFullName(userId: Int): String {
 
         return repo.getUser(userId.toLong()).firstName + "   " + repo.getUser(userId.toLong()).lastName
-    }
-
-
-    suspend fun getUser(userId: Int): User
-    {
-        return repo.getUser(userId.toLong())
     }
 
 

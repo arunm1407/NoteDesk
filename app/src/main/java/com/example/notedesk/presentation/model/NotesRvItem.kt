@@ -1,4 +1,4 @@
-package com.example.notedesk.presentation.Model
+package com.example.notedesk.presentation.model
 
 import com.example.notedesk.domain.model.Note
 

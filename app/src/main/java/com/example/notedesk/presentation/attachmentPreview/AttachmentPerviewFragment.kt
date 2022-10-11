@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
@@ -14,6 +12,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.notedesk.R
 import com.example.notedesk.databinding.FragmentAttachmentPerviewBinding
+import com.example.notedesk.presentation.util.setup
+import com.example.notedesk.presentation.util.withArgs
 import com.example.notedesk.util.keys.Keys.MAIN
 import com.example.notedesk.util.storage.InternalStoragePhoto
 import com.example.notedesk.util.storage.Storage
@@ -28,13 +28,10 @@ class AttachmentPerviewFragment : Fragment() {
     companion object {
 
 
-        fun newInstance(name: String) =
-            AttachmentPerviewFragment().apply {
-                val bundle = Bundle()
-                bundle.putString(MAIN, name)
-                arguments = bundle
+        fun newInstance(name: String) =AttachmentPerviewFragment().withArgs {
+            putString(MAIN, name)
+        }
 
-            }
     }
 
     private lateinit var binding: FragmentAttachmentPerviewBinding
@@ -78,15 +75,7 @@ class AttachmentPerviewFragment : Fragment() {
 
     private fun initializeToolBar() {
         val toolbar:Toolbar = requireView().findViewById(R.id.my_toolbar)
-        toolbar.menu.clear()
-        toolbar.title =requireContext().getString(R.string.attachmentName,viewModel.name)
-        (activity as AppCompatActivity).apply {
-            this.setSupportActionBar(toolbar)
-            this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            this.supportActionBar!!.setDisplayShowHomeEnabled(true)
-        }
-        toolbar.navigationIcon =  ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_arrow_back_24)
-
+        toolbar.setup(requireActivity(),requireContext().getString(R.string.attachmentName,viewModel.name))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

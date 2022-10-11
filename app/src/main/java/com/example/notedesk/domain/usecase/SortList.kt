@@ -35,7 +35,7 @@ object SortList {
 }
 
 
-fun <T, R : Comparable<R>> MutableList<T>.sort(
+private fun <T, R : Comparable<R>> MutableList<T>.sort(
     sortBy: SortBy,
     selector: (T) -> R?
 ) {

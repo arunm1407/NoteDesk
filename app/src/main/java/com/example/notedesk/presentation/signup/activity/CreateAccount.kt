@@ -1,5 +1,6 @@
 package com.example.notedesk.presentation.signup.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -9,33 +10,50 @@ import com.example.notedesk.presentation.signup.listener.Navigate
 import com.example.notedesk.presentation.util.BackStack
 import com.example.notedesk.R
 import com.example.notedesk.databinding.ActivityCreateAccountBinding
+import com.example.notedesk.presentation.login.listener.Navigation
+import com.example.notedesk.presentation.util.inTransaction
+import com.example.notedesk.presentation.util.openActivity
 import com.shuhart.stepview.StepView
 
 
-class CreateAccount : AppCompatActivity(), Navigate {
+class CreateAccount : AppCompatActivity(), Navigate, Navigation {
 
 
     private lateinit var binding: ActivityCreateAccountBinding
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateAccountBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction().apply {
+            supportFragmentManager.inTransaction(null) {
                 replace(
                     R.id.fragmentContainerView,
                     AccountDetailsFragment()
-                ).commit()
+                )
             }
         }
+        setStateForStepView()
+        navigationListener()
+
+    }
+
+    private fun navigationListener() {
+        binding.ivImage.setOnClickListener {
+            finish()
+        }
+    }
+
+    override fun navigate(fragment: Fragment) {
+
+        supportFragmentManager.inTransaction(null) {
+            replace(R.id.fragmentContainerView, fragment).addToBackStack(
+                BackStack.HOME
+            )
+        }
+    }
 
 
-
-
+    private fun setStateForStepView() {
         binding.stepView.state
             .selectedTextColor(
                 ContextCompat.getColor(
@@ -71,20 +89,9 @@ class CreateAccount : AppCompatActivity(), Navigate {
 
     }
 
-    override fun navigate(fragment: Fragment) {
-
-        supportFragmentManager.beginTransaction().apply {
-            setCustomAnimations(
-                R.anim.enter_from_right,
-                R.anim.exit_to_left,
-                R.anim.enter_from_left,
-                R.anim.exit_to_right
-            )
-            replace(R.id.fragmentContainerView, fragment).addToBackStack(
-                BackStack.HOME
-            )
-            commit()
-        }
+    override fun navigate(intent: Intent) {
+        openActivity(intent)
+        finish()
     }
 
 

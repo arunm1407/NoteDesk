@@ -19,6 +19,10 @@
     <color name="profilebg">#B4D5EF</color>
     <color name="color_primary_night">#222222</color>
     <color name="profile_bg">#f2f3f5</color>
+    <color name="datepicker_color">#009688</color>
+    <color name="success">#9FCD69</color>
+    <color name="error">#DA6361</color>
+    <color name="darkAccent">#1976D2</color>
 
 
 
@@ -76,7 +80,7 @@
     <color name="weak">#FF4646</color>
     <color name="medium">#ff8f00</color>
     <color name="strong">#FCCA3F</color>
-    <color name="bulletproof">#00c853</color>
+    <color name="green">#00c853</color>
 
 
 

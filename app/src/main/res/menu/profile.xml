@@ -4,9 +4,9 @@
 
     >
     <item
-        android:id="@+id/menu_done"
-        android:icon="@drawable/done"
+        android:id="@+id/menu_edit"
+        android:icon="@drawable/ic_edit"
         android:iconTint="@color/colorWhite"
-        android:title="@string/done"
+        android:title="@string/edit"
         app:showAsAction="always" />
 </menu>

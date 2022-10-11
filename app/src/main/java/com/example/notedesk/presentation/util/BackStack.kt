@@ -12,4 +12,6 @@ object BackStack {
     const val CREATE="create"
     const val SEARCH="search"
     const val PROFILE="profile"
+    const val PROFILE_EDIT="profile_edit"
+    const val LOGIN="login"
 }

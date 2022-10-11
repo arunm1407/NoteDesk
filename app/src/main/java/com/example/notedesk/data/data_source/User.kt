@@ -16,21 +16,17 @@ data class User(
     var firstName: String="",
     var lastName: String="",
     var email: String="",
-
-
     var bio:String="",
     var dob:String="",
-    var gender:Gender=Gender.NOT_INTERESTED,
+    var gender:Gender=Gender.NOT_SPECIFIED,
     var mobileNumber: String="",
     var image: String? = null,
     var addressLine1:String="",
     var addressLine2: String="",
     var city:String="",
-    var pinCode:Int=0,
-
-
+    var pinCode:String="",
     var password: String="",
-
+    var isOnBoarded:Boolean=false,
     @PrimaryKey(autoGenerate = true)
     val userId: Int = 0,
 ):Serializable

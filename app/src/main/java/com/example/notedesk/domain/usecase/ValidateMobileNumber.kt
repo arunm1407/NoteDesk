@@ -5,7 +5,9 @@ import androidx.core.text.isDigitsOnly
 object ValidateMobileNumber {
 
     fun execute(mobile: String): ValidationResult {
-        if(!mobileCheck(mobile)) {
+
+
+        if (!mobileCheck(mobile)) {
             return ValidationResult(
                 successful = false,
                 errorMessage = "The mobile number is invalid"
@@ -17,10 +19,7 @@ object ValidateMobileNumber {
     }
 
 
-
-
-
-    private fun mobileCheck(mobile:String): Boolean {
+    private fun mobileCheck(mobile: String): Boolean {
 
         if (!mobile.isDigitsOnly() || mobile.length != 10 || mobile.first().toString()
                 .toInt() !in listOf(6, 7, 8, 9)

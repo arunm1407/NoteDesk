@@ -1,7 +1,6 @@
 package com.example.notedesk.presentation.createNote
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.Context
@@ -14,7 +13,6 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.speech.RecognizerIntent
-import android.util.Log
 import android.util.Patterns
 import android.view.*
 import android.widget.*
@@ -22,7 +20,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
@@ -57,10 +54,7 @@ import com.example.notedesk.presentation.home.HomeFragment
 import com.example.notedesk.presentation.home.listener.FragmentNavigationLisenter
 import com.example.notedesk.presentation.home.listener.SettingsLisenter
 import com.example.notedesk.presentation.home.enums.MenuActions
-import com.example.notedesk.presentation.util.BackStack
-import com.example.notedesk.presentation.util.PriorityList
-import com.example.notedesk.presentation.util.hideKeyboard
-import com.example.notedesk.presentation.util.initRecyclerView
+import com.example.notedesk.presentation.util.*
 import com.example.notedesk.util.date.DateUtil.getDateAndTime
 import com.example.notedesk.util.keys.Constants
 import com.example.notedesk.util.keys.Keys
@@ -93,11 +87,10 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
     companion object {
         fun newInstance(data: Note?, res: MenuActions) =
-            CreateNotesFragment().apply {
-                val bundle = Bundle()
-                bundle.putSerializable(Keys.MENU_ACTION, res)
-                bundle.putParcelable(Keys.SAVED_NOTES, data)
-                arguments = bundle
+            CreateNotesFragment().withArgs {
+                putSerializable(Keys.MENU_ACTION, res)
+                putParcelable(Keys.SAVED_NOTES, data)
+
             }
     }
 
@@ -128,12 +121,11 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
     private fun getArgumentParcelable() {
 
         val bundle: Bundle = requireArguments()
-        if (viewModel.action == null) {
+        if (viewModel.action.checkNull()) {
             viewModel.setMenuAction(bundle[Keys.MENU_ACTION] as MenuActions)
         }
 
         viewModel.notes = (bundle.getParcelable(Keys.SAVED_NOTES) as Note?) ?: Note()
-        Log.i("file ", "${viewModel.notes}")
         if (validateIsEdit(viewModel.notes)) {
             lifecycleScope.launch()
             {
@@ -143,7 +135,6 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
                         viewModel.notes.id,
                         (requireActivity() as MainActivity).getUserID()
                     )
-                    Log.i("origin", "${viewModel.originalList}")
                     if (viewModel.fileName.value!!.isEmpty()) {
                         launch(Dispatchers.Main) {
                             viewModel.updateFileNameList(viewModel.originalList)
@@ -169,8 +160,6 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCreateNotesBinding.inflate(layoutInflater, container, false)
-        setupCustomSpinner()
-        initializeMenu()
         return binding.root
 
     }
@@ -186,6 +175,8 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
                 position: Int,
                 id: Long
             ) {
+
+
                 when (position) {
                     0 -> viewModel.setPriority(Keys.GREEN)
                     1 -> viewModel.setPriority(Keys.YELLOW)
@@ -220,7 +211,6 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
                 return when (menuItem.itemId) {
                     R.id.menu_done -> {
-
                         createNotes()
                         true
                     }
@@ -243,24 +233,23 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initializeToolBar()
+        initialization()
+        eventHandler()
+    }
+
+    private fun eventHandler() {
         if (viewModel.isEdit) {
             restoreDataToView()
             otherOptionsListener()
-            binding.myToolbar.myToolbar.title = Keys.EDIT_NOTE_TITLE
+            binding.myToolbar.myToolbar.updateTitle(Keys.EDIT_NOTE_TITLE)
         }
         if (viewModel.selectedNoteColor != Keys.SELECTED_NOTED_COLOR) {
             setSubtitleIndicatorColor()
         }
-        initAttachmentTitle()
+
         if (!viewModel.isEdit) {
             triggerRecyclerView()
         }
-
-        bottomNavigationListener()
-        setDateInBottomNavBar()
-        observeUrl()
-        backPressed()
 
         when (viewModel.action) {
             MenuActions.ATTACH -> showDialogFragment(AddImageDailog())
@@ -270,20 +259,35 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
             }
         }
+        clearError()
+    }
 
+    private fun clearError() {
+        binding.inputNote.setOnClickListener {
+            binding.inputNote.clearText()
+        }
+        binding.inputNoteTitle.setOnClickListener {
+
+            binding.inputNoteTitle.clearText()
+        }
     }
 
 
+    private fun initialization() {
+        initializeToolBar()
+        setupCustomSpinner()
+        initializeMenu()
+        bottomNavigationListener()
+        setDateInBottomNavBar()
+        observeUrl()
+        initAttachmentTitle()
+        backPressed()
+    }
+
     private fun initializeToolBar() {
         val toolbar: androidx.appcompat.widget.Toolbar = requireView().findViewById(R.id.my_toolbar)
-        toolbar.title = Constants.CREATE_NOTE_FRAGMENT_TITLE
-        (activity as AppCompatActivity).apply {
-            this.setSupportActionBar(toolbar)
-            this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            this.supportActionBar!!.setDisplayShowHomeEnabled(true)
-        }
-        toolbar.navigationIcon =
-            ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_arrow_back_24)
+        toolbar.setup(requireActivity(), Constants.CREATE_NOTE_FRAGMENT_TITLE)
+
 
     }
 
@@ -315,8 +319,7 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
 
     private fun setSubtitleIndicatorColor() {
-
-        binding.create.setBackgroundColor(Color.parseColor(viewModel.selectedNoteColor))
+        binding.create.setBackgroundColor(viewModel.selectedNoteColor.toColor())
     }
 
 
@@ -389,15 +392,13 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
             .setPositiveButton(
                 getString(R.string.url_dailog_ok), null
             )
-        val alert: AlertDialog = builder.create()
-
-
-        alert.getButton(DialogInterface.BUTTON_NEGATIVE)
-            .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
-        alert.getButton(DialogInterface.BUTTON_POSITIVE)
-            .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
-
-
+        builder.create().apply {
+            show()
+            getButton(DialogInterface.BUTTON_NEGATIVE)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+            getButton(DialogInterface.BUTTON_POSITIVE)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+        }
     }
 
 
@@ -406,21 +407,15 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
         dialog.activity?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show(childFragmentManager, "2")
 
-
     }
 
 
-    @SuppressLint("SetTextI18n")
     private fun initAttachmentTitle() {
 
 
         viewModel.fileName.observe(viewLifecycleOwner)
         {
             viewModel.setTempList(viewModel.fileName.value!!.toMutableList())
-
-            Log.i("dis", "${viewModel.tempList}")
-
-
             if (viewModel.tempList.isNotEmpty()) {
                 binding.tvAttachmentTitle.visibility = View.VISIBLE
                 binding.tvAttachmentTitle.text =
@@ -441,8 +436,6 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
     private fun triggerRecyclerView() {
         hideRv()
         displayAttachment(viewModel.tempList)
-
-
     }
 
 
@@ -567,9 +560,9 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
                     {
                         applyChanges()
                         withContext(Dispatchers.Main) {
-                            toastMessage(getString(R.string.saved_succes))
-                            delay(2000)
+                            delay(500)
                             dialog.dismiss()
+                            toastMessage(getString(R.string.saved_succes))
                             navigateHome()
                         }
 
@@ -578,7 +571,6 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
 
             }
-            Log.i("arun", "after edit ${viewModel.notes.userID}")
 
 
         } else {
@@ -607,7 +599,7 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
                             )
                         }
                         toastMessage(getString(R.string.note_saved))
-                        delay(2000)
+                        delay(500)
                         dialog.dismiss()
                         navigateHome()
                     }
@@ -627,7 +619,6 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
     private fun navigateHome() {
 
-
         fragmentNavigationLisenter!!.navigate(
             HomeFragment(),
             BackStack.HOME
@@ -641,6 +632,7 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
             true
         } else if (notes.title.trim().isEmpty() && notes.noteText.trim().isNotEmpty()) {
+            binding.inputNoteTitle.error = getString(R.string.title_compulsory)
             binding.inputNoteTitle.error = getString(R.string.title_compulsory)
             false
 
@@ -658,9 +650,9 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
 
     private fun saveNotes(): Note {
-        val title = binding.inputNoteTitle.text.toString()
-        val subtitle = binding.inputNoteSubtitle.text.toString()
-        val noteText = binding.inputNote.text.toString()
+        val title = binding.inputNoteTitle.getString()
+        val subtitle = binding.inputNoteSubtitle.getString()
+        val noteText = binding.inputNote.getString()
         val createdDate = Calendar.getInstance().timeInMillis
 
         viewModel.notes = Note(
@@ -676,9 +668,6 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
         viewModel.notes.favorite = binding.like.isChecked
         viewModel.notes.attachmentCount = viewModel.tempList.size
         viewModel.notes.userID = (requireActivity() as MainActivity).getUserID()
-
-
-        Log.i("arun", "after save ${viewModel.notes.userID}")
         return viewModel.notes
 
     }
@@ -686,17 +675,19 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
     private fun shareNotes() {
 
-        val content: String = binding.inputNoteTitle.text.toString().trim() + "\n\n" +
-                binding.inputNoteSubtitle.text.toString().trim() + "\n\n" +
-                binding.inputNote.text.toString().trim()
-        val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.type = Keys.SHARE_TYPE
-        shareIntent.putExtra(
-            Intent.EXTRA_SUBJECT,
-            binding.inputNoteSubtitle.text.toString().trim()
-        )
-        shareIntent.putExtra(Intent.EXTRA_TEXT, content)
-        startActivity(Intent.createChooser(shareIntent, Keys.SHARE_TYPE))
+        val content: String = binding.inputNoteTitle.getString() + "\n\n" +
+                binding.inputNoteSubtitle.getString() + "\n\n" +
+                binding.inputNote.getString()
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = Keys.SHARE_TYPE
+            putExtra(
+                Intent.EXTRA_SUBJECT,
+                binding.inputNoteSubtitle.getString()
+            )
+            putExtra(Intent.EXTRA_TEXT, content)
+        }
+
+        (Intent.createChooser(shareIntent, Keys.SHARE_TYPE))
 
     }
 
@@ -794,152 +785,71 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
         imageColor1.setOnClickListener {
             viewModel.setSelectedNoteColor(COLOR_1)
+            removeAllSelectedColors(bottomSheetDialog)
             imageColor1.setImageResource(R.drawable.ic_done)
-            imageColor2.setImageResource(0)
-            imageColor3.setImageResource(0)
-            imageColor4.setImageResource(0)
-            imageColor5.setImageResource(0)
-            imageColor6.setImageResource(0)
-            imageColor7.setImageResource(0)
-            imageColor8.setImageResource(0)
-            imageColor9.setImageResource(0)
-            imageColor10.setImageResource(0)
             setSubtitleIndicatorColor()
 
         }
 
         imageColor2.setOnClickListener {
             viewModel.setSelectedNoteColor(COLOR_2)
-
-            imageColor1.setImageResource(0)
+            removeAllSelectedColors(bottomSheetDialog)
             imageColor2.setImageResource(R.drawable.ic_done)
-            imageColor3.setImageResource(0)
-            imageColor4.setImageResource(0)
-            imageColor5.setImageResource(0)
-            imageColor6.setImageResource(0)
-            imageColor7.setImageResource(0)
-            imageColor8.setImageResource(0)
-            imageColor9.setImageResource(0)
-            imageColor10.setImageResource(0)
             setSubtitleIndicatorColor()
 
         }
         imageColor3.setOnClickListener {
             viewModel.setSelectedNoteColor(COLOR_3)
-            imageColor1.setImageResource(0)
-            imageColor2.setImageResource(0)
+            removeAllSelectedColors(bottomSheetDialog)
             imageColor3.setImageResource(R.drawable.ic_done)
-            imageColor4.setImageResource(0)
-            imageColor5.setImageResource(0)
-            imageColor6.setImageResource(0)
-            imageColor7.setImageResource(0)
-            imageColor8.setImageResource(0)
-            imageColor9.setImageResource(0)
-            imageColor10.setImageResource(0)
             setSubtitleIndicatorColor()
 
         }
         imageColor4.setOnClickListener {
             viewModel.setSelectedNoteColor(COLOR_4)
-            imageColor1.setImageResource(0)
-            imageColor2.setImageResource(0)
-            imageColor3.setImageResource(0)
+            removeAllSelectedColors(bottomSheetDialog)
             imageColor4.setImageResource(R.drawable.ic_done)
-            imageColor5.setImageResource(0)
-            imageColor6.setImageResource(0)
-            imageColor7.setImageResource(0)
-            imageColor8.setImageResource(0)
-            imageColor9.setImageResource(0)
-            imageColor10.setImageResource(0)
             setSubtitleIndicatorColor()
 
         }
         imageColor5.setOnClickListener {
             viewModel.setSelectedNoteColor(COLOR_5)
-            imageColor1.setImageResource(0)
-            imageColor2.setImageResource(0)
-            imageColor3.setImageResource(0)
-            imageColor4.setImageResource(0)
+            removeAllSelectedColors(bottomSheetDialog)
             imageColor5.setImageResource(R.drawable.ic_done)
-            imageColor6.setImageResource(0)
-            imageColor7.setImageResource(0)
-            imageColor8.setImageResource(0)
-            imageColor9.setImageResource(0)
-            imageColor10.setImageResource(0)
             setSubtitleIndicatorColor()
 
         }
         imageColor6.setOnClickListener {
             viewModel.setSelectedNoteColor(COLOR_6)
-            imageColor1.setImageResource(0)
-            imageColor2.setImageResource(0)
-            imageColor3.setImageResource(0)
-            imageColor4.setImageResource(0)
-            imageColor5.setImageResource(0)
+            removeAllSelectedColors(bottomSheetDialog)
             imageColor6.setImageResource(R.drawable.ic_done)
-            imageColor7.setImageResource(0)
-            imageColor8.setImageResource(0)
-            imageColor9.setImageResource(0)
-            imageColor10.setImageResource(0)
             setSubtitleIndicatorColor()
 
         }
         imageColor7.setOnClickListener {
             viewModel.setSelectedNoteColor(COLOR_7)
-            imageColor1.setImageResource(0)
-            imageColor2.setImageResource(0)
-            imageColor3.setImageResource(0)
-            imageColor4.setImageResource(0)
-            imageColor5.setImageResource(0)
-            imageColor6.setImageResource(0)
+            removeAllSelectedColors(bottomSheetDialog)
             imageColor7.setImageResource(R.drawable.ic_done)
-            imageColor8.setImageResource(0)
-            imageColor9.setImageResource(0)
-            imageColor10.setImageResource(0)
             setSubtitleIndicatorColor()
 
         }
         imageColor8.setOnClickListener {
             viewModel.setSelectedNoteColor(COLOR_8)
-            imageColor1.setImageResource(0)
-            imageColor2.setImageResource(0)
-            imageColor3.setImageResource(0)
-            imageColor4.setImageResource(0)
-            imageColor5.setImageResource(0)
-            imageColor6.setImageResource(0)
-            imageColor7.setImageResource(0)
+            removeAllSelectedColors(bottomSheetDialog)
             imageColor8.setImageResource(R.drawable.ic_done)
-            imageColor9.setImageResource(0)
-            imageColor10.setImageResource(0)
             setSubtitleIndicatorColor()
 
         }
         imageColor9.setOnClickListener {
             viewModel.setSelectedNoteColor(COLOR_9)
-            imageColor1.setImageResource(0)
-            imageColor2.setImageResource(0)
-            imageColor3.setImageResource(0)
-            imageColor4.setImageResource(0)
-            imageColor5.setImageResource(0)
-            imageColor6.setImageResource(0)
-            imageColor7.setImageResource(0)
-            imageColor8.setImageResource(0)
+            removeAllSelectedColors(bottomSheetDialog)
             imageColor9.setImageResource(R.drawable.ic_done)
-            imageColor10.setImageResource(0)
             setSubtitleIndicatorColor()
 
         }
         imageColor10.setOnClickListener {
             viewModel.setSelectedNoteColor(COLOR_10)
-            imageColor1.setImageResource(0)
-            imageColor2.setImageResource(0)
-            imageColor3.setImageResource(0)
-            imageColor4.setImageResource(0)
-            imageColor5.setImageResource(0)
-            imageColor6.setImageResource(0)
-            imageColor7.setImageResource(0)
-            imageColor8.setImageResource(0)
-            imageColor9.setImageResource(0)
+            removeAllSelectedColors(bottomSheetDialog)
             imageColor10.setImageResource(R.drawable.ic_done)
             setSubtitleIndicatorColor()
 
@@ -965,7 +875,7 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
     private fun validateUrl(dialogBottomSheetDialog: BottomSheetDialog) {
         val etURL = dialogBottomSheetDialog.findViewById<EditText>(R.id.etUrl)!!
-        val url = etURL.text.toString().trim()
+        val url = etURL.getString().trim()
         if (isValidURL(url)) {
             dialogBottomSheetDialog.dismiss()
             if (viewModel.webUrl.value!!.size <= 5) {
@@ -999,18 +909,23 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
 
     private fun maximumLimitExceed() {
-        val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity())
-        builder.setTitle(getString(R.string.url_dailog_title))
-            .setMessage(getString(R.string.url_daiolog_message))
-            .setPositiveButton(
-                getString(R.string.url_dailog_ok), null
-            )
-        val alert: AlertDialog = builder.create()
-        alert.show()
-        alert.getButton(DialogInterface.BUTTON_NEGATIVE)
-            .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
-        alert.getButton(DialogInterface.BUTTON_POSITIVE)
-            .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+        val builder: AlertDialog.Builder = AlertDialog.Builder(requireActivity()).apply {
+            setTitle(getString(R.string.url_dailog_title))
+                .setMessage(getString(R.string.url_daiolog_message))
+                .setPositiveButton(
+                    getString(R.string.url_dailog_ok), null
+                )
+        }
+
+        builder.create().apply {
+            show()
+            getButton(DialogInterface.BUTTON_NEGATIVE)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+            getButton(DialogInterface.BUTTON_POSITIVE)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+
+        }
+
 
     }
 
@@ -1035,12 +950,13 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
                 }
             }
             .setNegativeButton(getString(R.string.delte_dailog_pnegative), null)
-        val alert: AlertDialog = builder.create()
-        alert.show()
-        alert.getButton(DialogInterface.BUTTON_NEGATIVE)
-            .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
-        alert.getButton(DialogInterface.BUTTON_POSITIVE)
-            .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+        builder.create().apply {
+            show()
+            getButton(DialogInterface.BUTTON_NEGATIVE)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+            getButton(DialogInterface.BUTTON_POSITIVE)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+        }
 
     }
 
@@ -1051,7 +967,7 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
                 requireContext(),
                 LinearLayoutManager.VERTICAL,
                 false
-            ), UrlAdaptor(list, this, true), true
+            ), UrlAdaptor(list, this, true)
         )
 
     }
@@ -1084,13 +1000,10 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
         dialogBottomSheetDialog.findViewById<TextView>(R.id.btnCancel)?.setOnClickListener()
         {
             hideKeyBoard(view)
-
             dialogBottomSheetDialog.dismiss()
-
         }
         dialogBottomSheetDialog.findViewById<TextView>(R.id.btnSubmit)?.setOnClickListener()
         {
-
             validateUrl(dialogBottomSheetDialog)
         }
     }
@@ -1107,7 +1020,7 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
     }
 
     fun displayExitDialog() {
-        if (binding.inputNoteTitle.text.isEmpty() && binding.inputNoteSubtitle.text.isEmpty() && binding.inputNote.text.isEmpty() && viewModel.tempList.isEmpty()) {
+        if (binding.inputNoteTitle.checkEmpty() && binding.inputNoteSubtitle.checkEmpty() && binding.inputNote.checkEmpty() && viewModel.tempList.isEmpty()) {
             Toast.makeText(
                 requireContext(),
                 getString(R.string.blank_note_discarded),
@@ -1129,12 +1042,14 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
                 }
                 .setNegativeButton(getString(R.string.negative), null)
-            val alert: AlertDialog = builder.create()
-            alert.show()
-            alert.getButton(DialogInterface.BUTTON_NEGATIVE)
-                .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
-            alert.getButton(DialogInterface.BUTTON_POSITIVE)
-                .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+            builder.create().apply {
+                show()
+                getButton(DialogInterface.BUTTON_NEGATIVE)
+                    .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+                getButton(DialogInterface.BUTTON_POSITIVE)
+                    .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+
+            }
         }
 
 
@@ -1170,8 +1085,6 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
 
     private fun hideRv() {
-
-
         binding.rvAttachmentProgress.visibility = View.VISIBLE
         binding.rvAttachment.visibility = View.GONE
         binding.bottomNavBar.visibility = View.GONE
@@ -1234,10 +1147,8 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
 
     override fun onAttachmentClicked(name: String) {
-
         val fragment = AttachmentPerviewFragment.newInstance(name)
         hideKeyBoard(view)
-
         fragmentNavigationLisenter!!.navigate(fragment, BackStack.ATTACHMENT_PREVIEW)
     }
 
@@ -1271,6 +1182,7 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
             AddImage.CHOOSE_PHOTO -> {
                 chooseImage()
             }
+            else -> {}
         }
     }
 
@@ -1406,6 +1318,7 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
     }
 
 
+
     private fun setProgressDialog(): AlertDialog {
 
 
@@ -1444,8 +1357,14 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
         builder.setCancelable(true)
         builder.setView(linearLayout)
 
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
+        val dialog: AlertDialog = builder.create().apply {
+            show()
+            getButton(DialogInterface.BUTTON_NEGATIVE)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+            getButton(DialogInterface.BUTTON_POSITIVE)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+        }
+
 
 
         val window: Window? = dialog.window
@@ -1464,5 +1383,7 @@ class CreateNotesFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
     }
 
 }
+
+
 
 

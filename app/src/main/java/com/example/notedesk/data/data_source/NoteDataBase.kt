@@ -10,6 +10,8 @@ import com.example.notedesk.data.convertor.StringConvertor
 abstract class NoteDataBase: RoomDatabase() {
 
     abstract fun getNotesDao(): NoteDao
+    abstract fun getUserDao():UserDao
+
 
 
     companion object
@@ -31,6 +33,11 @@ abstract class NoteDataBase: RoomDatabase() {
                 instance
             }
         }
+
+
+
+
+
     }
 
 }

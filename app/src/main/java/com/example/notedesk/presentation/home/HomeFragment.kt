@@ -4,9 +4,8 @@ package com.example.notedesk.presentation.home
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
+import android.content.DialogInterface
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -17,7 +16,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -33,12 +31,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notedesk.R
+import com.example.notedesk.data.util.presenter
 import com.example.notedesk.databinding.FragmentHomeBinding
 import com.example.notedesk.domain.model.Note
 import com.example.notedesk.domain.usecase.FilterList.filterListByChoice
 import com.example.notedesk.domain.usecase.SortList.sortList
+import com.example.notedesk.presentation.model.NotesRvItem
 import com.example.notedesk.presentation.activity.MainActivity
 import com.example.notedesk.presentation.activity.NotesRVViewHolder
+import com.example.notedesk.presentation.attachmentPreview.AttachmentPerviewFragment
 import com.example.notedesk.presentation.createNote.CreateNotesFragment
 import com.example.notedesk.presentation.home.adptor.NotesAdaptor
 import com.example.notedesk.presentation.home.dailog.FilterDailog
@@ -50,8 +51,7 @@ import com.example.notedesk.presentation.policy.PolicyFragment
 import com.example.notedesk.presentation.previewNote.PreviewFragment
 import com.example.notedesk.presentation.profilePage.ProfileFragment
 import com.example.notedesk.presentation.search.SearchFragment
-import com.example.notedesk.presentation.util.BackStack
-import com.example.notedesk.presentation.util.getSelectedCount
+import com.example.notedesk.presentation.util.*
 import com.example.notedesk.util.keys.Constants
 import com.example.notedesk.util.keys.Keys
 import com.example.notedesk.util.keys.Keys.BACKGROUND_COLOR
@@ -143,21 +143,20 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
     }
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        colorDrawableBackground = ColorDrawable(Color.parseColor(BACKGROUND_COLOR))
-        deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.avd_delete)!!
-    }
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
+        initializeData()
         return binding.root
 
 
+    }
+
+    private fun initializeData() {
+        colorDrawableBackground = ColorDrawable(BACKGROUND_COLOR.toColor())
+        deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.avd_delete)!!
     }
 
 
@@ -217,7 +216,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                     navigationOnFragment(PolicyFragment(), BackStack.POLICY)
 
                 }
-                R.id.menu_sign_out-> {
+                R.id.menu_sign_out -> {
                     signOut()
                 }
                 R.id.menu_profile -> {
@@ -234,32 +233,68 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         lifecycleScope.launch(Dispatchers.IO)
         {
             withContext(Dispatchers.IO) {
-                image = viewModel. getProfileImage((requireActivity() as MainActivity).getUserID().toLong())
+                image = viewModel.getProfileImage(
+                    (requireActivity() as MainActivity).getUserID().toLong()
+                )
                 name = viewModel.getFullName((requireActivity() as MainActivity).getUserID())
                 bitmap = image?.let {
                     Storage.getPhotosFromInternalStorage(
                         requireActivity(),
                         it
                     )
+
                 }
+
 
             }
 
             withContext(Dispatchers.Main)
             {
+                binding.mainNavigationMenu.getHeaderView(0)
+                    .findViewById<ImageView>(R.id.ivProfilePicture).setOnClickListener {
+
+                        if (bitmap != null) {
+                            fragmentNavigationLisenter?.navigate(
+                                AttachmentPerviewFragment.newInstance(bitmap!!.name),
+                                BackStack.ATTACHMENT_PREVIEW
+                            )
+                        } else {
+
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.pls_Set_profile_image),
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+
+                        }
+
+
+                    }
+
                 name?.let {
                     binding.mainNavigationMenu.getHeaderView(0)
                         .findViewById<TextView>(R.id.appName).text = it
 
                 }
-                image?.let {
 
+                if (bitmap == null) {
+                    binding.mainNavigationMenu.getHeaderView(0)
+                        .findViewById<ImageView>(R.id.ivProfilePicture)
+                        .setImageResource(
+                            R.drawable.ic_profile_picture
+                        )
+
+
+                } else {
                     binding.mainNavigationMenu.getHeaderView(0)
                         .findViewById<ImageView>(R.id.ivProfilePicture)
                         .setImageBitmap(
                             bitmap?.bmp
                         )
                 }
+
+
             }
         }
 
@@ -273,7 +308,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
             withContext(Dispatchers.IO)
             {
                 fragmentNavigationLisenter?.navigate(
-                    ProfileFragment.newInstance(viewModel.getUser((requireActivity() as MainActivity).getUserID())),
+                    ProfileFragment.newInstance((requireActivity() as MainActivity).getUserID()),
                     BackStack.PROFILE
                 )
             }
@@ -284,21 +319,26 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
     private fun signOut() {
 
         val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Are you sure ?")
+        builder.setTitle(getString(R.string.are_your_sure))
             .setIcon(R.drawable.ic_login)
-            .setMessage("Do you want SignOut from NoteDesk")
+            .setMessage(getString(R.string.sign_out))
             .setPositiveButton(
-                "Yes"
+                getString(R.string.yes)
 
             ) { _, _ ->
-                startActivity(Intent(requireContext(),LoginActivity()::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                })
-                requireActivity().finish()
+                SharedPreference(requireActivity()).putIntSharePreferenceInt(Keys.USER_ID, 0)
+                fragmentNavigationLisenter?.navigateActivity(LoginActivity()::class.java)
             }
-            .setNegativeButton("No", null)
-        val alert: AlertDialog = builder.create()
-        alert.show()
+            .setNegativeButton(getString(R.string.no), null)
+            .setCancelable(false)
+        builder.create().apply {
+            show()
+            getButton(DialogInterface.BUTTON_NEGATIVE)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+            getButton(DialogInterface.BUTTON_POSITIVE)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary))
+        }
+
 
     }
 
@@ -313,7 +353,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
 
     private fun displayNotes() {
         if (viewModel.currentMode == LIST_VIEW) {
-            setAdaptor(null, LinearLayoutManager(requireContext()), true, emptyList())
+            setAdaptor(null, LinearLayoutManager(requireContext()), true, viewModel.displayList)
             activity
 
         } else if (viewModel.currentMode == STAGGERED_GRID) {
@@ -321,7 +361,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                 StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL),
                 null,
                 false,
-                emptyList()
+                viewModel.displayList
             )
         }
 
@@ -353,7 +393,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         adapter =
             NotesAdaptor(
                 requireActivity(),
-                list, this
+                list.toPresenterList(), this
             )
 
 
@@ -451,12 +491,15 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
-                val deletedNotes: Note = adapter.getNotesAtPosition(viewHolder.adapterPosition)
+                val deletedNotes: NotesRvItem.UNotes =
+                    adapter.getNotesAtPosition(viewHolder.adapterPosition)
                 val position = viewHolder.adapterPosition
                 adapter.removeNoteAtPosition(viewHolder.adapterPosition)
                 adapter.notifyItemRemoved(viewHolder.adapterPosition)
                 Snackbar.make(
-                    binding.root, "Note   ${deletedNotes.title} Deleted ", Snackbar.LENGTH_SHORT
+                    binding.root,
+                    "Note   ${deletedNotes.note.title} Deleted ",
+                    Snackbar.LENGTH_SHORT
                 )
 
                     .apply {
@@ -468,7 +511,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                             adapter.addNotes(position, deletedNotes)
                             lifecycleScope.launch(Dispatchers.IO)
                             {
-                                viewModel.addNotes(deletedNotes)
+                                viewModel.addNotes(deletedNotes.note)
                             }
 
                             adapter.notifyItemInserted(position)
@@ -476,7 +519,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
 
                     }.show()
                 viewModel.deleteNote(
-                    deletedNotes.id,
+                    deletedNotes.note.id,
                     (requireActivity() as MainActivity).getUserID()
                 )
 
@@ -570,11 +613,23 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
 
         binding.sort.sort.setOnClickListener()
         {
-            displaySortDailog()
+            if (viewModel.oldMyNotes.size > 1) {
+                displaySortDailog()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Notes is Insufficient to Sort",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
         }
         binding.sort.filter.setOnClickListener()
         {
+
             displayFilterDailog()
+
+
         }
     }
 
@@ -727,7 +782,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                         binding.filterEmptyImage.visibility = View.GONE
                         binding.filterEmptyText.visibility = View.GONE
                     }
-                    adapter.setData(viewModel.displayList)
+                    adapter.setData(viewModel.displayList.toPresenterList())
 
 
                 }
@@ -787,16 +842,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun initializeToolBar() {
         val toolbar: androidx.appcompat.widget.Toolbar = requireView().findViewById(R.id.my_toolbar)
-        toolbar.title = Constants.HOME_FRAGMENT_TITLE
-        (activity as AppCompatActivity).apply {
-            this.setSupportActionBar(toolbar)
-
-            this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            this.supportActionBar!!.setDisplayShowHomeEnabled(true)
-
-        }
-        toolbar.navigationIcon =
-            ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_arrow_back_24)
+        toolbar.setup(requireActivity(), Constants.HOME_FRAGMENT_TITLE)
 
 
     }
@@ -810,7 +856,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         viewModel.filterList =
             filterListByChoice(viewModel.oldMyNotes, viewModel.filterChoiceSelected.value!!)
         viewModel.displayList = sortList(sortValues, viewModel.sortBy, viewModel.filterList)
-        adapter.setData(viewModel.displayList.toMutableList())
+        adapter.setData(viewModel.displayList.toPresenterList())
     }
 
 
@@ -827,7 +873,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
             binding.filterEmptyText.visibility = View.GONE
         }
 
-        adapter.setData(viewModel.filterList)
+        adapter.setData(viewModel.filterList.toPresenterList())
     }
 
 
@@ -850,9 +896,9 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         val holder: RecyclerView.ViewHolder =
             binding.recyclerView.findViewHolderForAdapterPosition(pos)!!
         if (isEnable()) {
-            clickItem(holder, adapter.getNotesAtPosition(pos))
+            clickItem(holder, adapter.getNotesAtPosition(pos).toDomainLayer())
         } else {
-            onClicked(adapter.getNotesAtPosition(pos))
+            onClicked(adapter.getNotesAtPosition(pos).toDomainLayer())
         }
     }
 
@@ -923,8 +969,24 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                                 { _, _ ->
                                     mode!!.finish()
                                 }
-                            val alert: AlertDialog = builder.create()
-                            alert.show()
+                            builder.create().apply {
+                                show()
+                                getButton(DialogInterface.BUTTON_NEGATIVE)
+                                    .setTextColor(
+                                        ContextCompat.getColor(
+                                            requireContext(),
+                                            R.color.color_primary
+                                        )
+                                    )
+                                getButton(DialogInterface.BUTTON_POSITIVE)
+                                    .setTextColor(
+                                        ContextCompat.getColor(
+                                            requireContext(),
+                                            R.color.color_primary
+                                        )
+                                    )
+                            }
+
                         }
 
 
@@ -939,7 +1001,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                         } else {
                             adapter.setIsAllSelected(true)
                             viewModel.clearSelectedList()
-                            viewModel.addListToSelectedList(adapter.note)
+                            viewModel.addListToSelectedList(adapter.note.toDomainList())
                             viewModel.setText(viewModel.selectList.size.toString())
 
 
@@ -989,7 +1051,10 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                         menu: Menu?
                     ): Boolean {
                         viewModel.setIsEnable(true)
-                        clickItem(holder, adapter.getNotesAtPosition(holder.adapterPosition))
+                        clickItem(
+                            holder,
+                            adapter.getNotesAtPosition(holder.adapterPosition).toDomainLayer()
+                        )
                         viewModel.text.observeForever {
                             mode?.title = "$it Selected"
                         }
@@ -1037,8 +1102,24 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                                         { _, _ ->
                                             mode!!.finish()
                                         }
-                                    val alert: AlertDialog = builder.create()
-                                    alert.show()
+                                    builder.create().apply {
+                                        show()
+                                        getButton(DialogInterface.BUTTON_NEGATIVE)
+                                            .setTextColor(
+                                                ContextCompat.getColor(
+                                                    requireContext(),
+                                                    R.color.color_primary
+                                                )
+                                            )
+                                        getButton(DialogInterface.BUTTON_POSITIVE)
+                                            .setTextColor(
+                                                ContextCompat.getColor(
+                                                    requireContext(),
+                                                    R.color.color_primary
+                                                )
+                                            )
+                                    }
+
                                 }
 
 
@@ -1053,7 +1134,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                                 } else {
                                     adapter.setIsAllSelected(true)
                                     viewModel.clearSelectedList()
-                                    viewModel.addListToSelectedList(adapter.note)
+                                    viewModel.addListToSelectedList(adapter.note.toDomainList())
                                     viewModel.setText(viewModel.selectList.size.toString())
 
                                 }
@@ -1079,7 +1160,10 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                 requireActivity().startActionMode(callback)
 
             } else {
-                clickItem(holder, adapter.getNotesAtPosition(holder.adapterPosition))
+                clickItem(
+                    holder,
+                    adapter.getNotesAtPosition(holder.adapterPosition).toDomainLayer()
+                )
                 setText()
             }
 
@@ -1171,4 +1255,34 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
     }
 
 
+    private fun List<Note>.toPresenterList(): List<NotesRvItem.UNotes> {
+
+        val list = mutableListOf<NotesRvItem.UNotes>()
+        forEach {
+
+            list.add(it.presenter())
+
+        }
+        return list.toMutableList()
+
+    }
+
+
 }
+
+private fun List<NotesRvItem.UNotes>.toDomainList(): List<Note> {
+
+    val list = mutableListOf<Note>()
+
+    forEach {
+
+        list.add(it.note)
+
+
+    }
+    return list.toMutableList()
+
+
+}
+
+

@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background_miscellanous"
-    app:layout_behavior="@string/bottom_sheet_behavior"
     app:behavior_peekHeight="0dp">
 
     <View

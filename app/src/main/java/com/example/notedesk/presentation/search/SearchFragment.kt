@@ -3,10 +3,8 @@ package com.example.notedesk.presentation.search
 import android.content.Context
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -16,7 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.notedesk.domain.model.Note
-import com.example.notedesk.presentation.Model.NotesRvItem
+import com.example.notedesk.presentation.model.NotesRvItem
 import com.example.notedesk.domain.usecase.FilterList
 import com.example.notedesk.domain.usecase.SortList
 import com.example.notedesk.presentation.activity.MainActivity
@@ -209,15 +207,7 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
 
     private val initializeToolBar = {
         val toolbar: Toolbar = requireView().findViewById(R.id.my_toolbar)
-        toolbar.title = ""
-        (activity as AppCompatActivity).apply {
-            this.setSupportActionBar(toolbar)
-            this.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            this.supportActionBar!!.setDisplayShowHomeEnabled(true)
-
-        }
-        toolbar.navigationIcon =
-            ContextCompat.getDrawable(requireActivity(), R.drawable.ic_baseline_arrow_back_24)
+        toolbar.setup(requireActivity(), "")
 
 
     }
@@ -345,8 +335,8 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
 
     }
 
-    override fun onClickedNote(notes: Note) {
-        navigationOnFragment(PreviewFragment.newInstance(notes))
+    override fun onClickedNote(notes: NotesRvItem.UNotes) {
+        navigationOnFragment(PreviewFragment.newInstance(notes.note))
     }
 
     override fun onFilterClickDone(choice: FilterChoiceSelected) {
@@ -452,6 +442,12 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
     override fun onDetach() {
         super.onDetach()
         fragmentNavigationLisenter = null
+    }
+
+
+    override fun onDestroyView() {
+        viewModel.setSearchQuery("")
+        super.onDestroyView()
     }
 
 

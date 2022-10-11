@@ -1,11 +1,10 @@
 package com.example.notedesk.domain.usecase
 
 import android.util.Patterns
-import com.example.notedesk.presentation.signup.SignUpViewModel
 
 object ValidateEmail {
 
-    suspend fun execute(email: String, viewModel: SignUpViewModel): ValidationResult {
+    suspend fun execute(email: String,validateEmail  :suspend (email:String)->Boolean): ValidationResult {
 
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             return ValidationResult(
@@ -14,7 +13,7 @@ object ValidateEmail {
             )
         }
 
-        if(viewModel.isExistingEmail(email)) {
+        if(validateEmail(email)) {
             return ValidationResult(
                 successful = false,
                 errorMessage = "The email already exist"

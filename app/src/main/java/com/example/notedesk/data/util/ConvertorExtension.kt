@@ -2,10 +2,10 @@ package com.example.notedesk.data.util
 
 import com.example.notedesk.data.data_source.Notes
 import com.example.notedesk.domain.model.Note
-import com.example.notedesk.presentation.Model.NotesRvItem
+import com.example.notedesk.presentation.model.NotesRvItem
 
 
-fun Notes.toDomain(): Note {
+fun Notes.domainLayer(): Note {
     return Note(
         title,
         subtitle,
@@ -22,7 +22,7 @@ fun Notes.toDomain(): Note {
     )
 }
 
-fun Note.fromDomain(): Notes {
+fun Note.dataLayer(): Notes {
     return Notes(
         title,
         subtitle,
@@ -58,6 +58,7 @@ fun Note.presenter(): NotesRvItem.UNotes {
         )
     )
 }
+
 
 
 

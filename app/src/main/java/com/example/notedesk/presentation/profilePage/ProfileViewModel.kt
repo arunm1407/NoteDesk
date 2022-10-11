@@ -5,12 +5,18 @@ import com.example.notedesk.data.data_source.User
 import com.example.notedesk.presentation.activity.NotesViewModel
 
 
+
 class ProfileViewModel(application: Application) : NotesViewModel(application) {
-    lateinit var user: User
+     var userId: Int=0
+     var user: User= User()
     var oldImagePath: String? = null
 
 
-    suspend fun updateData(user: User) {
-        repo.updateUser(user)
+    suspend fun getUser(userId:Int):User
+    {
+       return repo.getUser(userId.toLong())
     }
+
+
+
 }

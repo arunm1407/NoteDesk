@@ -8,23 +8,24 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notedesk.R
 import com.example.notedesk.databinding.ItemContainerBinding
-import com.example.notedesk.domain.model.Note
+import com.example.notedesk.presentation.model.NotesRvItem
 import com.example.notedesk.presentation.activity.MyDiffUtil
 import com.example.notedesk.presentation.home.listener.NotesListener
 import com.example.notedesk.presentation.activity.NotesRVViewHolder
 
 
+
 class NotesAdaptor(
     private val context: FragmentActivity,
-    notes: List<Note>,
+    notes: List<NotesRvItem.UNotes>,
     private val notesListener: NotesListener
 ) :
     RecyclerView.Adapter<NotesRVViewHolder>() {
 
 
     private var isAllSelected: Boolean = false
-    private var _notes: MutableList<Note> = notes.toMutableList()
-    val note: List<Note>
+    private var _notes: MutableList<NotesRvItem.UNotes> = notes.toMutableList()
+    val note: List<NotesRvItem.UNotes>
         get() = _notes
 
 
@@ -34,7 +35,7 @@ class NotesAdaptor(
     }
 
 
-    fun setData(note: List<Note>) {
+    fun setData(note: List<NotesRvItem.UNotes>) {
         val diffUtil = MyDiffUtil(_notes, note.toMutableList())
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         _notes = note.toMutableList()
@@ -59,7 +60,7 @@ class NotesAdaptor(
 
         if (holder is NotesRVViewHolder.NotesViewHolder) {
 
-            holder.bind(_notes[position])
+            holder.bind(_notes[position] )
             holder.itemView.setOnClickListener {
                 notesListener.onClick(position)
 
@@ -81,7 +82,7 @@ class NotesAdaptor(
         }
 
       notesListener.getSelectedNote().forEach {
-            if (it == note[holder.adapterPosition]) {
+            if (it == note[holder.adapterPosition].note) {
                 holder.itemView.findViewById<ImageView>(R.id.checkbox).visibility = View.VISIBLE
                 holder.itemView.foreground =
                     getDrawable(context, R.drawable.foreground_selected_note)
@@ -105,12 +106,12 @@ class NotesAdaptor(
         _notes.removeAt(position)
     }
 
-    fun getNotesAtPosition(position: Int): Note {
+    fun getNotesAtPosition(position: Int): NotesRvItem.UNotes {
         return _notes[position]
     }
 
 
-    fun addNotes(position: Int, notes: Note) {
+    fun addNotes(position: Int, notes: NotesRvItem.UNotes) {
         _notes.add(position, notes)
     }
 

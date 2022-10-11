@@ -1,10 +1,9 @@
 package com.example.notedesk.presentation.signup
 
 import android.Manifest
-import android.app.DatePickerDialog
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
@@ -20,7 +19,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.core.app.ActivityCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.notedesk.domain.usecase.ValidateMobileNumber
@@ -34,9 +32,16 @@ import com.example.notedesk.presentation.signup.listener.Navigate
 import com.example.notedesk.util.storage.Storage
 import com.example.notedesk.R
 import com.example.notedesk.databinding.FragmentPersonalDetailBinding
-import com.google.android.material.textfield.TextInputLayout
+import com.example.notedesk.presentation.util.checkNull
+import com.example.notedesk.presentation.util.clearError
+import com.example.notedesk.presentation.util.getString
+import com.example.notedesk.presentation.util.setErrorMessage
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.shuhart.stepview.StepView
-import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
 import java.util.*
 
 
@@ -44,8 +49,6 @@ class PersonalDetailFragment : Fragment(), DialogLisenter {
 
     private lateinit var binding: FragmentPersonalDetailBinding
     private var navigationLisenter: Navigate? = null
-    private lateinit var myCalendar: Calendar
-    private lateinit var date: DatePickerDialog.OnDateSetListener
     private val viewModel: SignUpViewModel by lazy { ViewModelProvider(requireActivity())[SignUpViewModel::class.java] }
 
 
@@ -71,50 +74,54 @@ class PersonalDetailFragment : Fragment(), DialogLisenter {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         eventHandler()
+        removeError()
         setUpFocusChangeListeners()
         setupProfilePicture()
+        dropDownIntialization()
+    }
 
+    private fun removeError() {
+        binding.tilMobile.clearError()
+        binding.tilEtMobile.setOnClickListener {
+            binding.tilMobile.clearError()
+        }
     }
 
     private fun eventHandler() {
         stepViewAction()
         nextListener()
-        dropDownIntialization()
-        dateEvent()
+        dateListener()
+
+    }
+
+
+    private fun dateListener() {
         binding.tilEtDOB.setOnClickListener {
             initializeDatePicker()
-            binding.tilEtDOB.setOnFocusChangeListener()
-            { _, hasFocus ->
-
-                setIconColor(binding.tilDOB, hasFocus)
-            }
-
         }
     }
 
-    private fun dateEvent() {
-        myCalendar = Calendar.getInstance()
-        date =
-            DatePickerDialog.OnDateSetListener { _, year, month, day ->
-                myCalendar[Calendar.YEAR] = year
-                myCalendar[Calendar.MONTH] = month
-                myCalendar[Calendar.DAY_OF_MONTH] = day
-                updateLabel()
-            }
-
-    }
 
     private fun dropDownIntialization() {
         val languages = resources.getStringArray(R.array.gender)
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown, languages)
         binding.autoCompleteTextView.setAdapter(arrayAdapter)
+
+        binding.autoCompleteTextView.setOnItemClickListener { _, _, _, _ ->
+            binding.tilEtDOB.requestFocus()
+
+
+        }
+
+
     }
 
     private fun nextListener() {
         binding.btnNext.setOnClickListener {
 
             if (validateData())
-                navigationLisenter?.navigate(AddressFragment())
+            { removeError()
+                navigationLisenter?.navigate(AddressFragment()) }
 
 
         }
@@ -125,27 +132,38 @@ class PersonalDetailFragment : Fragment(), DialogLisenter {
     }
 
 
+    @SuppressLint("ResourceAsColor")
     private fun initializeDatePicker() {
-        DatePickerDialog(
-            requireActivity(),
-            date,
-            myCalendar.get(Calendar.YEAR),
-            myCalendar.get(Calendar.MONTH),
-            myCalendar.get(Calendar.DAY_OF_MONTH)
-        ).show()
+
+        val constraints =
+            CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now())
+
+        val picker = MaterialDatePicker.Builder.datePicker().also {
+            it.setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+            it.setTitleText("select date")
+            it.setCalendarConstraints(constraints.build())
+        }
+
+        val builder = picker.build()
+        builder.show(parentFragmentManager, "date picker")
+        builder.addOnPositiveButtonClickListener {
+            val dob = Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+            binding.tilEtDOB.setText(dob.toString())
+
+        }
     }
 
     private fun validateData(): Boolean {
-        val mobileNumber = binding.tilEtMobile.text.toString()
-        val bio = binding.tilEtBio.text.toString()
-        val gender = binding.autoCompleteTextView.text.toString()
-        val date = binding.tilEtDOB.text.toString()
+        val mobileNumber = binding.tilEtMobile.getString()
+        val bio = binding.tilEtBio.getString()
+        val gender = binding.autoCompleteTextView.getString()
+        val date = binding.tilEtDOB.getString()
 
 
         if (mobileNumber.isNotEmpty()) {
             val res = ValidateMobileNumber.execute(mobileNumber)
             if (!res.successful) {
-                binding.tilMobile.error = res.errorMessage
+                binding.tilMobile.setErrorMessage(res.errorMessage)
                 return false
             }
         }
@@ -159,11 +177,9 @@ class PersonalDetailFragment : Fragment(), DialogLisenter {
             this.gender = gender
             this.dob = date
             this.mobileNumber = mobileNumber
-            if (this.image!=null)
-            {
+            if (!viewModel.imageFileName.checkNull()) {
                 this.image = "${viewModel.imageFileName}.jpg"
             }
-
 
 
         }
@@ -193,18 +209,12 @@ class PersonalDetailFragment : Fragment(), DialogLisenter {
         return when (gender) {
             resources.getStringArray(R.array.gender)[0] -> Gender.MEN
             resources.getStringArray(R.array.gender)[1] -> Gender.WOMEN
-            else -> Gender.NOT_INTERESTED
+            else -> Gender.NOT_SPECIFIED
 
         }
 
     }
 
-
-    private fun updateLabel() {
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.US)
-        binding.tilEtDOB.setText(dateFormat.format(myCalendar.time))
-
-    }
 
     override fun choice(choice: AddImage) {
         when (choice) {
@@ -213,6 +223,9 @@ class PersonalDetailFragment : Fragment(), DialogLisenter {
             }
             AddImage.CHOOSE_PHOTO -> {
                 chooseImage()
+            }
+            else -> {
+
             }
         }
     }
@@ -243,10 +256,10 @@ class PersonalDetailFragment : Fragment(), DialogLisenter {
                 val filename = UUID.randomUUID().toString()
                 val isSavedSuccessfully =
                     Storage.savePhotoToInternalStorage(filename, bitmap, requireActivity())
-                binding.ivProfilePicture.setImageBitmap(bitmap)
-                viewModel.imageFileName = filename
-                if (isSavedSuccessfully) {
 
+                if (isSavedSuccessfully) {
+                    binding.ivProfilePicture.setImageBitmap(bitmap)
+                    viewModel.imageFileName = filename
                     Toast.makeText(
                         requireContext(),
                         getString(R.string.upload_success),
@@ -272,10 +285,10 @@ class PersonalDetailFragment : Fragment(), DialogLisenter {
                 it?.let { it1 ->
                     Storage.savePhotoToInternalStorage(filename, it1, requireActivity())
                 }
-            binding.ivProfilePicture.setImageBitmap(it)
-            viewModel.imageFileName = filename
-            if (isSavedSuccessfully == true) {
 
+            if (isSavedSuccessfully == true) {
+                binding.ivProfilePicture.setImageBitmap(it)
+                viewModel.imageFileName = filename
                 Toast.makeText(
                     requireContext(),
                     getString(R.string.saved_success),
@@ -328,42 +341,21 @@ class PersonalDetailFragment : Fragment(), DialogLisenter {
 
 
         binding.tilEtBio.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) binding.tilBio.error = null
-            setIconColor(
-                binding.tilDOB,
-                hasFocus
-            )
+            if (hasFocus) binding.tilBio.clearError()
         }
 
 
-        binding.tilEtDOB.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) binding.tilDOB.error = null
-            setIconColor(
-                binding.tilDOB,
-                hasFocus
-            )
-        }
-
-
-
-
-        binding.tilDOB.setOnFocusChangeListener()
-        { _, b ->
-            setIconColor(
-                binding.tilDOB,
-                b
-            )
+        binding.tilEtMobile.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) binding.tilMobile.clearError()
 
         }
 
-        binding.tilGender.setOnFocusChangeListener { _, b ->
 
-            setIconColor(
-                binding.tilGender,
-                b
-            )
-
+        binding.tilGender.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) binding.tilMobile.clearError()
+            binding.autoCompleteTextView.showDropDown()
         }
+
     }
 
     private fun checkAndRequestCameraPermissions(): Boolean {
@@ -389,14 +381,6 @@ class PersonalDetailFragment : Fragment(), DialogLisenter {
             if (isGranted) takePhoto.launch()
             else showDialogFragment(CameraSettingDailog())
         }
-
-
-    private fun setIconColor(textInputLayout: TextInputLayout, hasFocus: Boolean) {
-        val colorFocussed = ResourcesCompat.getColor(resources, R.color.color_primary, null)
-        val colorNonFocussed = ResourcesCompat.getColor(resources, R.color.unselected, null)
-        val color = if (hasFocus) colorFocussed else colorNonFocussed
-        textInputLayout.setStartIconTintList(ColorStateList.valueOf(color))
-    }
 
 
     private fun backPressed() {

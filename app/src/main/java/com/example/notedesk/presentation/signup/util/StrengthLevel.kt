@@ -1,4 +1,4 @@
-package com.example.notedesk.presentation.signup
+package com.example.notedesk.presentation.signup.util
 
 enum class StrengthLevel {
     WEAK,

@@ -2,7 +2,6 @@ package com.example.notedesk.util.keys
 
 
 object Keys {
-const val ONBOARDING="onboarding"
     const val FILTER_VALUES = "filterable"
     const val CURRENT_MODE = "currentMode"
     const val SORT_ORDER = "sortBy"
@@ -22,7 +21,7 @@ const val ONBOARDING="onboarding"
     const val SORT_VALUES = "sort_values"
     const val SORT_BY = "sot_by"
     const val SAVED_NOTES = "notes"
-    const val IS_LOGIN="login"
+
     const val USER_ID="user_id"
     const val SELECTED_NOTED_COLOR = "#FFFFFF"
     const val EDIT_NOTE_TITLE = "Edit Note"

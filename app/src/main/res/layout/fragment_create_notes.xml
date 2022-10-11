@@ -50,10 +50,11 @@
                 android:background="@drawable/edit_text"
                 android:fontFamily="@font/poppins_medium"
                 android:hint="@string/note_title"
-                android:imeOptions="actionDone"
+                android:imeOptions="actionNext"
                 android:importantForAutofill="no"
                 android:includeFontPadding="false"
                 android:inputType="text"
+                android:nextFocusDown="@id/inputNoteSubtitle"
                 android:padding="10dp"
                 android:textColor="?attr/colorPrimaryVariant"
                 android:textColorHint="@color/colorTextHint"
@@ -124,9 +125,10 @@
                 android:background="@drawable/edit_text"
                 android:fontFamily="@font/poppins_medium"
                 android:hint="@string/note_subtitle"
+                android:imeOptions="actionNext"
                 android:importantForAutofill="no"
-                android:inputType="textMultiLine"
-
+                android:inputType="text"
+                android:nextFocusDown="@id/inputNote"
                 android:padding="10dp"
                 android:textColor="?attr/colorPrimaryVariant"
                 android:textColorHint="@color/colorTextHint"
@@ -189,6 +191,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:gravity="top"
                 android:hint="@string/type_note_here"
+                android:imeOptions="actionDone"
                 android:importantForAutofill="no"
                 android:includeFontPadding="false"
                 android:inputType="textMultiLine"
@@ -267,8 +270,8 @@
                 android:layout_margin="@dimen/margin_large"
                 android:layout_marginBottom="60dp"
                 android:drawableStart="@drawable/ic_baseline_date_range_24"
-                android:text="@string/today"
                 android:drawablePadding="20dp"
+                android:text="@string/today"
                 android:textColor="?attr/colorPrimaryVariant"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -276,8 +279,6 @@
                 app:layout_constraintTop_toBottomOf="@id/updated_time"
 
                 tools:ignore="UseCompatTextViewDrawableXml" />
-
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -290,31 +291,23 @@
         android:layout_height="match_parent">
 
 
-
-
         <ProgressBar
             android:id="@+id/animationView"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:visibility="gone"
             android:backgroundTint="@color/color_secondary_variant"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintVertical_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
 
-       />
-
-
-
+            />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -327,13 +320,12 @@
 
 
         <View
-            android:padding="5dp"
             android:id="@+id/divider4"
             android:layout_width="match_parent"
             android:layout_height="2dp"
+            android:padding="5dp"
             android:theme="@style/Widget.Material3.MaterialDivider"
-            app:layout_constraintTop_toTopOf="parent"
-           />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/create_note_add_actions"

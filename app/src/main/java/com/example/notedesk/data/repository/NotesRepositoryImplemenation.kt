@@ -3,8 +3,8 @@ package com.example.notedesk.data.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.example.notedesk.data.data_source.*
-import com.example.notedesk.data.util.fromDomain
-import com.example.notedesk.data.util.toDomain
+import com.example.notedesk.data.util.dataLayer
+import com.example.notedesk.data.util.domainLayer
 import com.example.notedesk.domain.model.Note
 import com.example.notedesk.domain.repository.NotesRepository
 
@@ -16,7 +16,7 @@ class NotesRepositoryImplemenation(private val notesDao: NoteDao) : NotesReposit
         return Transformations.map(notesDao.getAllNotes(userId)) { list ->
 
             list.map { Notes ->
-                Notes.toDomain()
+                Notes.domainLayer()
             }
         }
 
@@ -39,34 +39,12 @@ class NotesRepositoryImplemenation(private val notesDao: NoteDao) : NotesReposit
         notesDao.deleteHistory(name,userId)
     }
 
-    override suspend fun isExistingEmail(name: String):Int {
-       return notesDao.isExistingEmail(name)
-    }
 
-    override suspend fun createUser(user: User) {
-        notesDao.createUser(user)
-    }
-
-    override suspend fun validatePassword(email: String, password: String):Int {
-        return notesDao.validatePassword(email,password)
-    }
-
-    override suspend fun getUserId(emailId: String): Long {
-        return notesDao.getUserId(emailId)
-    }
-
-    override suspend fun getUser(userId: Long): User {
-        return notesDao.getUser(userId)
-    }
-
-    override suspend fun updateUser(user: User) {
-        notesDao.updateUser(user)
-    }
 
 
     override suspend fun insert(note: Note): Long {
 
-        return notesDao.insert(note.fromDomain())
+        return notesDao.insert(note.dataLayer())
     }
 
     override suspend fun delete(id: Int,userId: Int) {
@@ -74,7 +52,7 @@ class NotesRepositoryImplemenation(private val notesDao: NoteDao) : NotesReposit
     }
 
     override suspend fun update(note: Note) {
-        notesDao.update(note.fromDomain())
+        notesDao.update(note.dataLayer())
     }
 
     override suspend fun insertFileName(fileName: FileName): Long {
