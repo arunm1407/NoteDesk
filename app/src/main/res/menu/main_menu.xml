@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/menu_add_note"
+            android:title="@string/add_note"
+            android:icon="@drawable/ic_add_outline"
+            android:iconTint="?attr/colorOnPrimary"
+            android:orderInCategory="1"/>
+
+        <item
+            android:id="@+id/menu_add_image"
+            android:title="@string/add_image"
+            android:icon="@drawable/ic_image"
+            android:iconTint="?attr/colorOnPrimary"
+            android:orderInCategory="2"/>
+
+        <item
+            android:id="@+id/menu_add_voice"
+            android:title="@string/add_voice_note"
+            android:icon="@drawable/ic_voice"
+            android:iconTint="?attr/colorOnPrimary"
+            android:orderInCategory="3"/>
+
+
+
+        <item
+            android:id="@+id/menu_url"
+            android:title="@string/add_url"
+            android:icon="@drawable/ic_web_link"
+            android:iconTint="?attr/colorOnPrimary"
+            android:orderInCategory="4"/>
+
+        <item
+            android:id="@+id/menu_app_info"
+            android:icon="@drawable/ic_info"
+            android:iconTint="?attr/colorOnPrimary"
+            android:orderInCategory="5"
+            android:title="@string/app_info" />
+
+        <item
+            android:id="@+id/menu_privacy"
+            android:title="@string/privacy"
+            android:icon="@drawable/ic_menu_policy"
+            android:iconTint="?attr/colorOnPrimary"
+            android:orderInCategory="6"/>
+
+
+
+        <item
+            android:id="@+id/menu_profile"
+            android:title="@string/profile"
+            android:icon="@drawable/profile"
+            android:iconTint="?attr/colorOnPrimary"
+            android:orderInCategory="6"/>
+
+
+        <item
+            android:id="@+id/menu_sign_out"
+            android:title="@string/signout"
+            android:icon="@drawable/ic_login"
+            android:iconTint="?attr/colorOnPrimary"
+            android:orderInCategory="6"/>
+    </group>
+
+</menu>

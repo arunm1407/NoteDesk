@@ -1,0 +1,283 @@
+<resources>
+    <string name="app_name">NoteDesk</string>
+
+
+    <string name="noteWorks">NoteWorks</string>
+    <string name="developed_by">Developed By</string>
+    <string name="notedesk1">NoteDesk</string>
+
+
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="already_have_an_account">"Already have an account? "</string>
+    <string name="signup">SignUp</string>
+    <string name="don_t_have_an_account">"Don\'t have an account? "</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="email">Email</string>
+    <string name="notedesk">NoteDesk</string>
+
+
+    <string name="img">image/*</string>
+    <string name="skip">SKIP</string>
+    <string name="next">NEXT</string>
+
+
+    <string name="welcome_to_notedesk">Welcome To NoteDesk</string>
+    <string name="keep_notes">Keep Notes</string>
+    <string name="we_that_we_don_t_have_access_to_user_s_personal_data_and_information_in_general_and_we_don_t_collect_and_save_the_same_but_for_a_better_experience_and_for_some_functionalities_of_the_application_we_ll_need_some_run_time_permission_on_the_user_s_device">We that we don\'t have access to user\'s personal data and information in general and we don\'t collect and save the same. But, for a better experience and for some functionalities of the application, we\'ll need some run-time permission on the user\'s device.</string>
+    <string name="getting_started">Get Started</string>
+
+
+    <string name="your_account_has_been_created_successfully">Your account has been created successfully</string>
+    <string name="get_started">Get Started</string>
+
+
+    <string name="note_subtitle_optional">Note_SubTitle(Optional)</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="new_note">New Note</string>
+    <string name="written_by">Written By</string>
+    <string name="last_update">Last update</string>
+    <string name="tags">Tags</string>
+    <string name="name">Name</string>
+    <string name="_4_jun_9_01_am">4 Jun ,9.01 AM</string>
+    <string name="enter_the_title">Enter the Title</string>
+    <string name="enter_the_description">Enter the Description</string>
+    <string name="description">Description</string>
+    <string name="title_optional">Title(Optional)</string>
+    <string name="done">Done</string>
+    <string name="menu_one">Menu One</string>
+    <string name="menu_2">menu_2</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="notes">MY NOTES</string>
+    <string name="whoa_you_don_t_have_any_saved_notes_yet">You don\'t have any notes in here! \n Click on the + to Add Notes\n </string>
+    <string name="type_your_note_here">Type your note Here ..........</string>
+    <string name="life_is_too_fast_dont_forgot_anything_just_note_it">life_is_too_fast_dont_forgot_anything_just_note_it</string>
+    <string name="search_notes">Search Notes</string>
+    <string name="note_title">Title…</string>
+    <string name="note_subtitle">Subtitle…</string>
+    <string name="type_note_here">Notes… </string>
+    <string name="miscellaneous">Miscellaneous</string>
+    <string name="pick_color">Pick Color</string>
+    <string name="add_image">Add Image</string>
+    <string name="add_url">Add URL</string>
+    <string name="enter_the_url">Enter the Url</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="subtitle_optional">SubTitle (Optional)</string>
+    <string name="arunkumar_m">ArunKumar M</string>
+    <string name="update_note">Update Note</string>
+    <string name="attach">attach</string>
+    <string name="don_t_bother_remembering">Don\'t Bother Remembering!</string>
+    <string name="dailog_box">Dailog Box</string>
+    <string name="enter_the_url_here">Enter the URl Here....</string>
+    <string name="https_www_google_com">https://www.google.com</string>
+    <string name="enter_note_description">Enter Note Description</string>
+    <string name="www_google_com">WWW.google.com</string>
+    <string name="today">Today</string>
+    <string name="my_notes">MY NOTES</string>
+    <string name="grid">Grid</string>
+    <string name="list">List</string>
+    <string name="dont_think_just_read">Dont think just read</string>
+    <string name="select_all">select all</string>
+    <string name="delete">Delete</string>
+    <string name="voice">Voice</string>
+    <string name="dont_remember_just_note_it">Dont Remember Just Note It</string>
+    <string name="add_note">Add Note</string>
+    <string name="add_voice_note">Add Voice To Text</string>
+    <string name="share">Share</string>
+    <string name="color">color</string>
+    <string name="filter">filter</string>
+    <string name="sort">Sort</string>
+    <string name="search">Search</string>
+    <string name="filename">FileName</string>
+    <string name="attachment">Attachment</string>
+    <string name="read_note">Read Note</string>
+    <string name="share_note">Share Note</string>
+    <string name="pick_color_for_note">Pick Color For Note</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_image">Choose image</string>
+    <string name="yes">YES</string>
+    <string name="are_you_sure_want_to_exit">Are you sure want to exit?</string>
+    <string name="confirm_exit">Confirm Exit</string>
+    <string name="no">NO</string>
+    <string name="modification_date">Modification Date</string>
+    <string name="sort_notes">Sort Notes</string>
+    <string name="creationdate">CreationDate</string>
+    <string name="reminder_date">Reminder Date</string>
+    <string name="alphabetically">Alphabetically</string>
+    <string name="favorites_on_top">Favorites on top</string>
+    <string name="ascending">ASCENDING</string>
+    <string name="descending">DESCENDING</string>
+    <string name="alphabetically_title">Alphabetically(Title)</string>
+    <string name="alphabetically_sub_title">Alphabetically(Sub-Title)</string>
+    <string name="quit_without_saving">Quit without saving</string>
+    <string name="are_you_sure">Are you Sure</string>
+    <string name="to_use_this_feature_you_need_to_allow_notebook_to_access_your_camera_you_can_update_this_permission_is_settings">To use this feature ,you need to allow Notebook to access your CAMERA .You can update this permission is settings</string>
+    <string name="go_to_settings">Go To Settings</string>
+    <string name="Settings_Storage">To use this feature ,you need to allow Notebook to access your STORAGE .You can update this permission is settings</string>
+    <string name="priority">Priority</string>
+    <string name="favorites">Favorites</string>
+    <string name="image">Image</string>
+    <string name="voice_note">Voice Note</string>
+    <string name="web_link">Web Link</string>
+    <string name="do_you_want_the_arun_to_read_the_note_for_you">Do you want the Arun to read the note for you?</string>
+    <string name="settings">Settings</string>
+    <string name="privacy">Privacy</string>
+    <string name="app_info">App Info</string>
+    <string name="priority_red">Priority (RED)</string>
+    <string name="priority_blue">Priority (Blue)</string>`
+    <string name="priority_yellow">Priority (Yellow)</string>
+    <string name="priority_green">Priority (Green)</string>
+    <string name="privacy_policy">PRIVACY POLICY</string>
+    <string name="content">1. NoteDesk app which is currently not supporting Ads but might do in future. This service is provided by NoteDesk at no cost and is intended for use as it Is. \n\n 2. This page is used to inform users regarding our policies with the collection, use, and disclosure of personal information if anyone decides to use NoteDesk. \n\n 3. We want to assure our users here that NoteDesk doesn\'t collect any kind of personal information and doesn\'t have access to user\'s personal data preventing it from data breach of its users. NoteDesk also doesn\'t have access to user-created notes in the app. \n\n 4. It doesn\'t have access to any kind of images used during note creation and sharing. There\'re features in the app which might mislead the users for data breaching by us but we at NoteDesk takes full responsibility of this thing and assure you that we don\'t save any kind of your personal data or information in general.</string>
+    <string name="collection_content">1. As we informed above that we don\'t have access to user\'s personal data and information in general and we don\'t collect and save the same. But, for a better experience and for some functionalities of the application, we\'ll need some run-time permission on the user\'s device. We also might need some identifiable information that will be retained on user\'s device and will not be collected by us in any way. \n\n 2. We\'ll have the user\'s device information once he/she install the application as this information is required by us and Google Play Services to generate analytics and crash reports. \n\n 3. Link to privacy policy of Google Play Services used by the app to generate reports</string>
+    <string name="search_result_not_found">Search Result Not Found</string>
+    <string name="title">Title</string>
+    <string name="edit">Edit</string>
+    <string name="low">Low</string>
+
+    <string name="_1">(1)</string>
+    <string name="information_collection_use"><![CDATA[INFORMATION COLLECTION & USE]]></string>
+    <string name="filter_notes">Filter Notes</string>
+    <string name="clear_filter">Clear Filter</string>
+    <string name="sort_title">(Title)</string>
+    <string name="sort_subtitle">(Sub-Title)</string>
+    <string name="sort_modified">(Modified)</string>
+    <string name="sort_creation">(Creation)</string>
+    <string name="sort_priority">(Priority)</string>
+    <string name="saved_succes">Note is updated Successfully</string>
+    <string name="title_empty">Title is Empty</string>
+    <string name="des_empty">Description is Empty</string>
+    <string name="both_title_subtitle_empty">Both title and description is Empty</string>
+    <string name="note_saved">Note is Saved Successfully</string>
+    <string name="invalid_url">Pls Enter the Valid URL</string>
+    <string name="url_dailog_title">\ Maximum Limit Exceeds… \</string>
+    <string name="url_daiolog_message">\ Sorry, Pls try to remove Existing URL  \</string>
+    <string name="url_dailog_ok">OK</string>
+    <string name="delete_dailog_title">\ Confirm Delete \</string>
+    <string name="delete_dailog_message">\ Are you Sure Want to Delete Note \ </string>
+    <string name="delte_dailog_positive">Yes</string>
+    <string name="delte_dailog_pnegative">No</string>
+    <string name="no_result_found_from_your_search">Sorry..No search result found…  </string>
+    <string name="notes_does_not_match_your_choice_selected_in_filter">Notes does not match your Filter Constraint</string>
+    <string name="viewall">ViewAll</string>
+    <string name="selectedCount">(%d)</string>
+    <string name="createdtime">Created  Time : %s</string>
+    <string name="updatedTime">Updated  Time : %s</string>
+    <string name="attachmentCount">Attachment (%d)</string>
+    <string name="count">(%d)</string>
+    <string name="attachmentName">Img-%s</string>
+    <string name="search_your_notes_here">Search your notes here....</string>
+    <string name="blank_note_discarded">Blank Note is Discarded</string>
+    <string name="voice_to_text">Speak to text</string>
+    <string name="are_you_sure_Title">Are you sure?</string>
+    <string name="without_saving_subtitle">Do you want to Exit without Saving ?</string>
+    <string name="positive">Yes</string>
+    <string name="negative">No</string>
+    <string name="upload_success">Photo Upload Successfully</string>
+    <string name="failed_to_save">Failed To Save Photo</string>
+    <string name="saved_success">Photo Saved Successfully</string>
+    <string name="failed_to_save_photo">Failed to take photo</string>
+    <string name="cannot_save">Couldn\'t save bitmap.</string>
+    <string name="fileFormat">%s.jpg</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Submit">Submit</string>
+
+    <string name="add_image1">Add image</string>
+    <string name="add_url1">Add URL</string>
+    <string name="developed_by1">Developed By</string>
+    <string name="noteWorks1">NoteWorks</string>
+    <string name="count1">(1)</string>
+    <string name="maximum_limit">\ Maximum Limit Exceeds… \</string>
+    <string name="count_message"><![CDATA[\ Sorry, Pls try to remove attachment & Try again  \]]></string>
+    <string name="title_compulsory">Title Compulsory</string>
+    <string name="description_compuslory">Description Compulsory</string>
+
+
+    <string name="start_text_advice">By continuing on this application you agree to our Terms of Use and Privacy Policy</string>
+    <string name="start">start</string>
+    <string name="finish">finish</string>
+    <string name="back">back</string>
+    <string name="SORT">SORT</string>
+    <string name="FILTER">FILTER</string>
+    <string name="loading">Loading ...</string>
+    <string name="password_doesnt_match">Password does not match</string>
+    <string name="password_min_character">Password must contains atleast 8 characters</string>
+    <string name="not_a_mobile">Invalid mobile number</string>
+    <string name="not_an_email">Invalid email address</string>
+
+    <string name="mobile_number">Mobile Number</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="profile_picture">Profile picture</string>
+    <string name="firstname">FirstName</string>
+    <string name="lastname">LastName</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="address_line_1">Address Line 1</string>
+    <string name="address_line_2">Address Line 2</string>
+    <string name="city">City</string>
+    <string name="pincode">PinCode</string>
+    <string name="date_format">MM/dd/yyyy</string>
+    <string name="gender">Gender</string>
+    <string name="bio">Bio</string>
+    <string name="lowercase_letters">Lowercase Letters</string>
+    <string name="uppercase_letters">Uppercase Letters</string>
+    <string name="digits">Digits</string>
+    <string name="special_characters">Special Characters</string>
+    <string name="create_a_account">Create Account</string>
+    <string name="loading1">Loading ...</string>
+    <string name="account">Account</string>
+    <string name="personal">Personal</string>
+    <string name="address">Address</string>
+    <string name="password1">Password</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="contact">Contact</string>
+    <string name="colon">:</string>
+    <string name="arunkumar">ARUNKUMAR</string>
+    <string name="emoji">&#128072;</string>
+    <string name="none">-</string>
+    <string name="user_details">USER DETAILS</string>
+    <string name="about_me">About Me</string>
+
+    <string name="dateforamt">dd/MM/yyyy</string>
+    <string name="password_does_not_match">The Password does not match</string>
+    <string name="not_valid_email">That\'s not a valid email</string>
+    <string name="mail_does_not_exist">The email does not exist</string>
+    <string name="invalid_mobile">The mobile number is invalid</string>
+    <string name="email_already_exist">The email already exist</string>
+    <string name="invlaid_pincode">The pinCode is Invalid</string>
+    <string name="updating_data">Updating the Data</string>
+    <string name="delete_image">Delete Image</string>
+    <string name="profile">Profile</string>
+    <string name="signout">SignOut</string>
+    <string name="are_your_sure">Are you sure ?</string>
+    <string name="sign_out">Do you want SignOut from NoteDesk</string>
+    <string name="arunji12345_ak_gmail_com">arunji12345.ak@gmail.com</string>
+    <string name="select_date">Select date</string>
+    <string name="date_picker">date picker</string>
+    <string name="edit_profile_page">Edit Profile Page</string>
+    <string name="confirm_to_update">Confirm to Update ?</string>
+    <string name="sure_Want_to_update">Are you want Update the Profile</string>
+    <string name="confirm_to_exit">Confirm to Exit ?</string>
+    <string name="sure_to_Exit">Are you sure want to Exit without saving </string>
+    <string name="pls_Set_profile_image">Pls set the Profile Image</string>
+    <string name="select_your_gender">Select your Gender</string>
+    <string name="undo">UNDO</string>
+    <string name="insufficent">Notes is Insufficient to Sort</string>
+    <string name="areyoursure">Are you sure?</string>
+    <string name="deletenote">Do you want to Delete the Notes ?</string>
+    <string name="no_selection_made">No Selection is made</string>
+    <string name="first_name">FirstName</string>
+    <string name="last_name">LastName</string>
+    <string name="pls_set_profile_Data">Pls set the Profile Image</string>
+
+
+    <string-array name="gender">
+        <item>MEN</item>
+        <item>WOMEN</item>
+        <item>NOT SPECIFIED</item>
+    </string-array>
+
+
+</resources>

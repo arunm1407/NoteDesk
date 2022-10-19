@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources  xmlns:tools="http://schemas.android.com/tools">
+    <color name="color_primary">#1565C0</color>
+    <color name="color_primary_variant">#0D47A1</color>
+    <color name="color_secondary">#00838F</color>
+    <color name="color_secondary_variant">#006064</color>
+    <color name="color_background">#ffffff</color>
+    <color name="color_surface">#ffffff</color>
+    <color name="color_error">#B71C1C</color>
+    <color name="color_on_primary">#ffffff</color>
+    <color name="color_on_secondary">#ffffff</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="color_on_background">#000000</color>
+    <color name="color_on_surface">#515151</color>
+    <color name="color_on_error">#ffffff</color>
+    <color name="color_on_highlight">#000000</color>
+    <color name="customIconColor">#414A4C</color>
+    <color name="black">#000000</color>
+    <color name="profile_background">#B4D5EF</color>
+    <color name="color_primary_night">#222222</color>
+    <color name="profile_bg">#f2f3f5</color>
+    <color name="datepicker_color">#009688</color>
+    <color name="success">#9FCD69</color>
+    <color name="error">#DA6361</color>
+    <color name="darkAccent">#1976D2</color>
+    <color name="profileBg">#B4D5EF</color>
+
+
+
+
+
+    <color name="colorPrimary">#1565C0</color>
+    <color name="unselected">#929595</color>
+    <color name="colorPrimaryDark">#FFB400</color>
+    <color name="colorAccent">#FFC845</color>
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="background">#f2f0f4</color>
+    <color name="errorColor">#B71C1C</color>
+    <color name="infoColor">#0F4C81</color>
+    <color name="colorQuickActionsBackground">#EFEFEF</color>
+    <color name="colorIcons">#0E0E0E</color>
+    <color name="colorTextSubtitle">#2E2E2E</color>
+    <color name="colorDefaultNoteColor">#F1F1F1</color>
+    <color name="colorNoteSubtitleText">#292929</color>
+    <color name="colorMiscellaneousBackground">#FAFAFA</color>
+    <color name="colorText">#000000</color>
+    <color name="colorNotecolor2">#fcada8</color>
+    <color name="colorNotecolor3">#f19f71</color>
+    <color name="colorNotecolor4">#EAC78C</color>
+    <color name="colorNotecolor5">#b4ddd4</color>
+    <color name="colorNotecolor6">#d3bed7</color>
+    <color name="colorNotecolor7">#ECB680</color>
+    <color name="colorNotecolor8">#81DDD3</color>
+    <color name="colorNotecolor9">#A4ADE4</color>
+    <color name="colorNotecolor10">#F57777</color>
+    <color name="colorDelete">#FF4842</color>
+    <color name="colorSearchBackground">#EFEFEF</color>
+    <color name="colorTextHint">#8A8A8A</color>
+    <color name="sortAppBarColor">#B3B3B3</color>
+    <color name="colorMiscellanousBackground">#1F1F1F</color>
+    <color name="colorWhite">#e3e6e8</color>
+    <color name="RED">#b00020</color>
+    <color name="GREEN">#5EB511</color>
+    <color name="YELLOW">#FFC845</color>
+    <color name="BLUE">#344BE1</color>
+    <color name="btnfocused" tools:ignore="MissingDefaultResource">#0288D1</color>
+    <color name="buttonpressed">#e3e6e8</color>
+    <color name="colorGrey">#dddddd</color>
+    <color name="dailogButton">#4487e1</color>
+    <color name="md_grey_900">#212121</color>
+    <color name="dark_grey">#333333</color>
+    <color name="light_grey">#ABABAB</color>
+    <color name="md_white_1000">#ffffff</color>
+    <color name="md_blue_100">#BBDEFB</color>
+
+
+
+
+    <color name="lightGray">#E3E3E3</color>
+    <color name="darkGray">#959595</color>
+    <color name="weak">#FF4646</color>
+    <color name="medium">#ff8f00</color>
+    <color name="strong">#FCCA3F</color>
+    <color name="green">#00c853</color>
+
+
+</resources>

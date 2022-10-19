@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/create"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:visibility="visible">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:paddingHorizontal="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/MyCustomToolBarTheme"
+        app:titleTextColor="?attr/colorOnPrimary"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_marginBottom="50dp"
+        android:clipToPadding="false"
+        android:paddingBottom="10dp"
+        app:layout_anchor="@+id/scrollView2"
+        app:layout_anchorGravity="center">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+
+            <EditText
+                android:id="@+id/inputNoteTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_small"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/edit_text"
+                android:fontFamily="@font/poppins_medium"
+                android:hint="@string/note_title"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:includeFontPadding="false"
+                android:inputType="text"
+                android:nextFocusDown="@id/inputNoteSubtitle"
+                android:padding="10dp"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textColorHint="@color/colorTextHint"
+                android:textCursorDrawable="@null"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@id/inputNoteSubtitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <CheckBox
+                android:id="@+id/like"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/like_icon"
+                android:button="@null"
+                android:checked="false"
+                android:stateListAnimator="@animator/scale"
+                app:layout_constraintBottom_toBottomOf="@id/dropdown"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.6"
+                app:layout_constraintStart_toEndOf="@id/dropdown"
+                app:layout_constraintTop_toTopOf="@id/dropdown"
+                app:layout_constraintVertical_bias="0.5" />
+
+
+            <FrameLayout
+                android:id="@+id/favoriteImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/dropdown"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/dropdown"
+                app:layout_constraintTop_toTopOf="@id/dropdown">
+
+                <ImageView
+                    android:id="@+id/yes_a_favorite"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_favorite"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/not_a_Favorite"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_heart"
+                    android:visibility="visible" />
+
+            </FrameLayout>
+
+
+            <EditText
+                android:id="@+id/inputNoteSubtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_small"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/edit_text"
+                android:fontFamily="@font/poppins_medium"
+                android:hint="@string/note_subtitle"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:nextFocusDown="@id/inputNote"
+                android:padding="10dp"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textColorHint="@color/colorTextHint"
+                android:textCursorDrawable="@null"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/inputNoteTitle" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_small"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="@dimen/margin_small"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/inputNote"
+                app:layout_constraintTop_toBottomOf="@id/inputNote" />
+
+
+            <TextView
+                android:id="@+id/priority1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_small"
+                android:fontFamily="@font/poppins_medium"
+                android:padding="5dp"
+                android:text="@string/priority"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/rv_url"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/inputNoteSubtitle"
+                app:layout_constraintVertical_bias="0.0" />
+
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/dropdown"
+                android:layout_width="200dp"
+                android:layout_height="30dp"
+                android:layout_marginVertical="10dp"
+                android:backgroundTint="@color/black"
+                android:popupBackground="?attr/colorOnPrimary"
+                app:layout_constraintHorizontal_bias="0.2"
+                app:layout_constraintBottom_toBottomOf="@id/priority1"
+                app:layout_constraintEnd_toStartOf="@id/favoriteImage"
+                app:layout_constraintStart_toEndOf="@id/priority1"
+                app:layout_constraintTop_toTopOf="@id/priority1" />
+
+            <EditText
+                android:id="@+id/inputNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_small"
+                android:background="@drawable/edit_text"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="top"
+                android:hint="@string/type_note_here"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:includeFontPadding="false"
+                android:inputType="textMultiLine"
+                android:minHeight="200dp"
+                android:padding="10dp"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textColorHint="@color/colorTextHint"
+                android:textCursorDrawable="@null"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/priority1"
+                app:layout_constraintVertical_bias="0.0"
+                tools:layout_editor_absoluteX="5dp" />
+
+            <TextView
+                android:id="@+id/tv_attachment_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:padding="@dimen/padding_small"
+                android:text="@string/attachment"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/rv_attachment_progress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_url" />
+
+
+            <ProgressBar
+                android:id="@+id/rv_attachment_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:layout_marginVertical="@dimen/margin_small"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_attachment_title" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_attachment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:layout_marginVertical="@dimen/margin_small"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_attachment_title" />
+
+
+            <TextView
+                android:id="@+id/updated_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_large"
+                android:drawableStart="@drawable/ic_baseline_date_range_24"
+                android:drawablePadding="20dp"
+                android:text="@string/today"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_attachment_progress"
+                app:layout_constraintVertical_bias="0.3"
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+
+            <TextView
+                android:id="@+id/createdTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_large"
+                android:layout_marginBottom="60dp"
+                android:drawableStart="@drawable/ic_baseline_date_range_24"
+                android:drawablePadding="20dp"
+                android:text="@string/today"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/updated_time"
+
+                tools:ignore="UseCompatTextViewDrawableXml" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ProgressBar
+            android:id="@+id/animationView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/color_secondary_variant"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_nav_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:background="?attr/colorOnSecondary"
+        android:elevation="8dp">
+
+
+        <View
+            android:id="@+id/divider4"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:padding="5dp"
+            android:theme="@style/Widget.Material3.MaterialDivider"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/create_note_add_actions"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/app_name"
+            android:focusable="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_add_actions"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorAccent" />
+
+
+        <ImageButton
+            android:id="@+id/pick_a_color"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="18dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/app_name"
+            android:focusable="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_baseline_color_lens_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/create_note_add_actions"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorAccent" />
+
+
+        <ImageButton
+            android:id="@+id/other_options"
+            android:layout_width="30dp"
+            android:layout_height="26dp"
+            android:layout_margin="@dimen/margin_small"
+            android:layout_marginEnd="25dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="false"
+            android:contentDescription="@string/app_name"
+            android:focusable="false"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_options_menu"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorAccent"
+
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+

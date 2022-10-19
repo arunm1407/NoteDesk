@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/preview"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/colorBackground"
+android:clickable="true"
+android:focusable="true"
+tools:context=".presentation.previewNote.NotePreviewFragment">
+
+
+<include
+    android:id="@+id/my_toolbar"
+    layout="@layout/toolbar" />
+
+
+<androidx.core.widget.NestedScrollView
+    android:id="@+id/scrollView2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="55dp"
+    android:layout_marginBottom="10dp"
+    android:clipToPadding="false"
+    android:paddingBottom="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout1"
+        android:animateLayoutChanges="true">
+
+
+        <TextView
+            android:id="@+id/inputNoteTitle"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_margin="@dimen/margin_small"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/edit_text"
+            android:focusable="false"
+            android:fontFamily="@font/poppins_medium"
+            android:hint="@string/note_title"
+            android:textSize="20sp"
+
+            android:padding="@dimen/padding_small"
+            android:textColor="?attr/colorSecondaryVariant"
+            android:textColorHint="@color/colorTextHint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <CheckBox
+            android:id="@+id/like"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/like_icon"
+            android:button="@null"
+            android:checked="false"
+            android:clickable="false"
+            android:enabled="false"
+            android:focusable="false"
+            app:layout_constraintBottom_toBottomOf="@id/priority"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.714"
+            app:layout_constraintStart_toEndOf="@id/priority"
+            app:layout_constraintTop_toTopOf="@id/priority"
+            app:layout_constraintVertical_bias="0.562" />
+
+        <TextView
+            android:id="@+id/inputNoteSubtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/edit_text"
+            android:fontFamily="@font/poppins_medium"
+            android:hint="@string/note_subtitle_optional"
+            android:importantForAutofill="no"
+            android:includeFontPadding="false"
+            android:padding="@dimen/padding_small"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textColor="@color/colorTextSubtitle"
+            android:textColorHint="@color/colorTextHint"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/inputNoteTitle" />
+
+
+        <LinearLayout
+            android:id="@+id/priority"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:orientation="horizontal"
+            android:paddingVertical="@dimen/padding_small"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/inputNoteSubtitle"
+
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:text="@string/priority"
+                android:textColor="?attr/colorSecondaryVariant"
+                android:textSize="18sp"
+                android:textStyle="bold"
+
+                />
+
+            <ImageView
+                android:id="@+id/green"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/priority_green"
+                android:contentDescription="@string/app_name"
+                android:scaleType="center"
+                android:src="@drawable/ic_done" />
+
+
+            <ImageView
+                android:id="@+id/yellow"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/priority_yellow"
+                android:scaleType="center"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/red"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/priority_red"
+                android:contentDescription="@string/app_name"
+                android:scaleType="center" />
+
+
+        </LinearLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="@dimen/margin_small"
+            android:visibility="gone"
+            android:nestedScrollingEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/inputNote"
+            app:layout_constraintTop_toBottomOf="@id/inputNote" />
+
+        <TextView
+            android:id="@+id/inputNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:background="@drawable/edit_text"
+            android:fontFamily="@font/poppins_medium"
+            android:gravity="top"
+            android:hint="@string/type_note_here"
+            android:importantForAutofill="no"
+            android:includeFontPadding="false"
+            android:minHeight="200dp"
+            android:padding="10dp"
+            android:textColor="@color/color_on_highlight"
+            android:textColorHint="@color/colorTextHint"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/priority"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="5dp" />
+
+
+        <TextView
+            android:id="@+id/tv_attachment_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/poppins_semibold"
+            android:padding="@dimen/padding_small"
+            android:layout_marginTop="20dp"
+            android:text="@string/attachment"
+            android:textColor="?attr/colorSecondaryVariant"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/rv_attachment_progress"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_url" />
+
+        <ProgressBar
+            android:id="@+id/rv_attachment_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="@dimen/margin_small"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_attachment_title" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_attachment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_small"
+            android:layout_marginVertical="@dimen/margin_small"
+            android:visibility="gone"
+            android:nestedScrollingEnabled="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_attachment_title" />
+
+
+        <TextView
+            android:id="@+id/updated_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_large"
+            android:text="@string/today"
+            android:drawablePadding="20dp"
+            android:drawableStart="@drawable/ic_baseline_date_range_24"
+            android:textColor="@color/color_on_highlight"
+            android:textSize="14sp"
+            app:layout_constraintVertical_bias="0.3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_attachment_progress" />
+
+
+        <TextView
+            android:id="@+id/createdTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_large"
+            android:layout_marginBottom="60dp"
+            android:text="@string/today"
+            android:drawablePadding="20dp"
+            android:drawableStart="@drawable/ic_baseline_date_range_24"
+            android:textColor="@color/color_on_highlight"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/updated_time"
+
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.core.widget.NestedScrollView>
+
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

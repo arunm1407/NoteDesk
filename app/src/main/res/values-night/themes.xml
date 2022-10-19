@@ -1,0 +1,100 @@
+<resources>
+
+    <style name="Theme.Version2" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/color_primary_night</item>
+        <item name="colorPrimaryVariant">@color/color_primary_night</item>
+        <item name="colorOnPrimary">@color/colorWhite</item>
+        <item name="colorSecondary">@color/colorWhite</item>
+        <item name="colorSecondaryVariant">@color/color_on_highlight</item>
+        <item name="colorOnSecondary">@color/customIconColor</item>
+
+        <item name="colorAccent">@color/colorWhite</item>
+        <item name="colorSecondaryContainer">@color/white</item>
+        <item name="background">@color/color_primary_night</item>
+        <item name="android:statusBarColor">@color/color_primary_night</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="bottomAppBarStyle">@style/BottomAppBar</item>
+        <item name="navigationIconTint">@color/colorWhite</item>
+        <item name="android:actionOverflowMenuStyle">?attr/colorOnPrimary</item>
+        <item name="actionModeStyle">@style/MyActionMode</item>
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="colorOnBackground">@color/colorAccent</item>
+        <item name="android:editTextColor">@android:color/white</item>
+        <item name="colorBackgroundFloating">#00838F</item>
+        <item name="colorPrimaryDark">@color/color_on_highlight</item>
+        <item name="colorSurface">#1f2c34</item>
+        <item name="colorControlActivated">#3b3b3b</item>
+        <item name="materialCalendarTheme">@style/MaterialCalendarTheme</item>
+
+
+    </style>
+
+
+    <style name="BottomAppBar">
+        <item name="colorControlNormal">@color/colorWhite</item>
+    </style>
+
+
+    <style name="MyActionMode" parent="@style/Widget.AppCompat.ActionMode">
+
+
+        <item name="background">?attr/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorWhite</item>
+        <item name="iconTint">?attr/colorOnPrimary</item>
+        <item name="android:textColor">@color/color_on_primary</item>
+        <item name="colorOnPrimary">?attr/colorOnPrimary</item>
+        <item name="colorOnSecondary">@color/color_on_primary</item>
+        <item name="navigationIconTint">@color/color_on_primary</item>
+
+
+    </style>
+
+
+    <style name="NavigationTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="colorPrimary">#222222</item>
+        <item name="colorControlHighlight">@color/colorWhite</item>
+
+    </style>
+
+    <style name="NavigationMenuTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="background">?attr/colorPrimary</item>
+    </style>
+
+
+    <style name="Heading" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/poppins_bold</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="paddingStart">2dp</item>
+        <item name="paddingEnd">2dp</item>
+
+    </style>
+
+
+    <style name="Theme.Version2.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <style name="MyDarkToolbarStyle" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">
+        <item name="background">?android:selectableItemBackground</item>
+        <item name="android:popupBackground">?attr/colorOnPrimary</item>
+        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
+        <item name="android:divider">@color/color_on_highlight</item>
+        <item name="android:overlapAnchor">true</item>
+
+    </style>
+
+
+    <style name="DialogStyle" parent="Theme.AppCompat.Dialog" >
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="colorAccent">@color/colorWhite</item>
+    </style>
+
+</resources>

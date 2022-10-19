@@ -1,0 +1,42 @@
+
+
+
+buildscript {
+    ext.kotlin_version = '1.5.31'
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url "https://jitpack.io"
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.2.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
+
+
+    }
+}
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url "https://jitpack.io"
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    activityVersion = '1.4.0'
+    appCompatVersion = '1.4.0'
+    constraintLayoutVersion = '2.1.2'
+    coroutines = '1.5.2'
+    lifecycleVersion = '2.5.0'
+    roomVersion = '2.4.2'
+
+}

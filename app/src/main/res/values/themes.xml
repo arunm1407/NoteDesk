@@ -1,0 +1,151 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.Version2" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryVariant">@color/color_on_highlight</item>
+        <item name="colorOnPrimary">@color/color_on_primary</item>
+        <item name="colorSecondary">@color/color_on_primary</item>
+        <item name="colorSecondaryVariant">@color/color_on_highlight</item>
+        <item name="colorOnSecondary">@color/color_on_primary</item>
+        <item name="background">@color/colorWhite</item>
+        <item name="colorSecondaryContainer">@color/color_primary</item>
+        <item name="colorAccent">@color/color_on_highlight</item>
+        <item name="android:statusBarColor">@color/color_primary_variant</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="colorBackgroundFloating">@color/color_primary</item>
+        <item name="navigationIconTint">@color/colorWhite</item>
+        <item name="colorControlNormal">@color/color_on_primary</item>
+        <item name="android:actionOverflowMenuStyle">@color/colorWhite</item>
+        <item name="actionModeStyle">@style/MyActionMode</item>
+        <item name="colorOnBackground">@color/color_on_highlight</item>
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:editTextColor">@android:color/white</item>
+        <item name="android:actionModeCloseDrawable">@drawable/ic_baseline_arrow_back_24</item>
+        <item name="colorPrimaryDark">@color/background</item>
+        <item name="colorSurface">@color/background</item>
+        <item name="colorControlActivated">#dcdcdc</item>
+        <item name="materialCalendarTheme">@style/MaterialCalendarTheme</item>
+
+
+    </style>
+
+    <style name="MyCustomToolBarTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/poppins_bold</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="paddingStart">2dp</item>
+        <item name="paddingEnd">2dp</item>
+        <item name="android:textColorPrimary">@color/colorWhite</item>
+        <item name="android:textColorSecondary">@color/colorWhite</item>
+        <item name="colorOnPrimary">@color/colorWhite</item>
+        <item name="colorControlNormal">@color/color_on_primary</item>
+        <item name="selectableItemBackground">@style/SelectableItemBackground</item>
+    </style>
+
+
+    <style name="MyActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">?attr/colorPrimary</item>
+        <item name="colorControlNormal">@color/color_on_primary</item>
+        <item name="iconTint">@color/colorWhite</item>
+        <item name="titleTextStyle">@style/MyActionBarTextStyle</item>
+        <item name="colorOnPrimary">@color/colorWhite</item>
+        <item name="colorOnSecondary">@color/color_on_primary</item>
+        <item name="navigationIconTint">@color/color_on_primary</item>
+        <item name="navigationIcon">@drawable/ic_baseline_arrow_back_24</item>
+
+
+    </style>
+
+
+    <style name="MyActionBarTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/color_on_primary</item>
+
+
+    </style>
+
+
+    <style name="NavigationTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorControlHighlight">@color/color_on_primary</item>
+
+    </style>
+
+    <style name="NavigationMenuTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/poppins</item>
+    </style>
+
+
+    <style name="Heading" parent="TextAppearance.AppCompat">
+
+
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/poppins_bold</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="paddingStart">2dp</item>
+        <item name="paddingEnd">2dp</item>
+
+    </style>
+
+
+    <style name="Theme.Version2.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <style name="SelectableItemTheme">
+        <item name="colorControlHighlight">@color/color_on_primary</item>
+    </style>
+
+
+    <style name="SelectableItemBackground">
+        <item name="android:theme">@style/SelectableItemTheme</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+
+    <style name="DialogStyle" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="colorAccent">@color/color_on_highlight</item>
+    </style>
+
+
+    <style name="ErrorAlert" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Theme.Version2.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Version2.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="MaterialCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+
+        <!-- Header panel -->
+        <item name="materialCalendarHeaderLayout">@style/MaterialCalendar.HeaderLayout1</item>
+        <!-- Buttons -->
+        <item name="buttonBarPositiveButtonStyle">@style/TextButton.Dialog1</item>
+        <item name="buttonBarNegativeButtonStyle">@style/TextButton.Dialog1</item>
+    </style>
+
+
+    <style name="MaterialCalendar.HeaderLayout1" parent="Widget.MaterialComponents.MaterialCalendar.HeaderLayout">
+        <!--<item name="android:background">?attr/colorPrimary</item>-->
+        <item name="android:background">@color/datepicker_color</item>
+    </style>
+
+    <style name="TextButton.Dialog1" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/datepicker_color</item>
+        >
+    </style>
+
+
+</resources>
