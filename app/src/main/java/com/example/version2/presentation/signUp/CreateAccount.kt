@@ -1,20 +1,24 @@
 package com.example.version2.presentation.signUp
 
+
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.version2.R
 import com.example.version2.databinding.ActivityCreateAccountBinding
-import com.example.version2.presentation.login.listener.Navigation
+import com.example.version2.presentation.login.activity.LoginActivity
 import com.example.version2.presentation.signUp.listener.Navigate
 import com.example.version2.presentation.util.BackStack
 import com.example.version2.presentation.util.inTransaction
+import com.example.version2.presentation.util.keys.Keys
 import com.example.version2.presentation.util.openActivity
 import com.shuhart.stepview.StepView
 
-class CreateAccount : AppCompatActivity(), Navigate, Navigation {
+class CreateAccount : AppCompatActivity(), Navigate {
 
     private lateinit var binding: ActivityCreateAccountBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,11 +46,58 @@ class CreateAccount : AppCompatActivity(), Navigate, Navigation {
         }
     }
 
-    override fun navigate(fragment: Fragment) {
+    private fun navigate(fragment: Fragment) {
 
         supportFragmentManager.inTransaction(BackStack.HOME) {
             replace(R.id.fragmentContainerView, fragment)
         }
+    }
+
+
+    private fun startNavigation(name: String) {
+        when (name) {
+
+            BackStack.PASSWORD_PAGE -> navigate(PasswordFragment())
+            BackStack.ADDRESS_PAGE -> navigate(AddressFragment())
+            BackStack.PERSONAL_INFO -> navigate(PersonalInfoFragment())
+            else -> navigate(AccountInfoFragment())
+
+        }
+
+
+    }
+
+    override fun navigateToPersonalPage() {
+        startNavigation(BackStack.PERSONAL_INFO)
+    }
+
+    override fun navigateToAddressPage() {
+        startNavigation(BackStack.ADDRESS_PAGE)
+    }
+
+    override fun navigateToPasswordPage() {
+        startNavigation(BackStack.PASSWORD_PAGE)
+    }
+
+
+    override fun navigateToLoginScreen() {
+        openActivity(
+            Intent(
+                this,
+                LoginActivity::class.java
+            ).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        )
+        finish()
+    }
+
+    override fun navigateToPreviousScreen() {
+        supportFragmentManager.popBackStack()
+    }
+
+    override fun navigateToSettingScreen() {
+        openAppSettings()
     }
 
 
@@ -86,9 +137,14 @@ class CreateAccount : AppCompatActivity(), Navigate, Navigation {
 
     }
 
-    override fun navigate(intent: Intent) {
-        openActivity(intent)
-        finish()
+
+    private fun openAppSettings() {
+
+
+        startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            data = Uri.fromParts(Keys.PACKAGE, packageName, null)
+        })
     }
 
 }

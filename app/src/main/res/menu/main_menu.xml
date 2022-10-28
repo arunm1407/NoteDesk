@@ -40,7 +40,7 @@
             android:title="@string/app_info" />
 
         <item
-            android:id="@+id/menu_privacy"
+            android:id="@+id/menu_policy"
             android:title="@string/privacy"
             android:icon="@drawable/ic_menu_policy"
             android:iconTint="?attr/colorOnPrimary"
@@ -58,7 +58,7 @@
 
         <item
             android:id="@+id/menu_sign_out"
-            android:title="@string/signout"
+            android:title="@string/signOut"
             android:icon="@drawable/ic_login"
             android:iconTint="?attr/colorOnPrimary"
             android:orderInCategory="6"/>

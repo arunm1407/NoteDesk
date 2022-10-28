@@ -1,27 +1,26 @@
 package com.example.version2.presentation.splashScreen
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.version2.presentation.util.keys.Keys
-import com.example.version2.presentation.util.sharedPreference.SharedPreference
 import com.example.version2.R
 import com.example.version2.databinding.ActivityFlashScreen1Binding
-import com.example.version2.presentation.common.NotesApplication
 import com.example.version2.presentation.common.NoteScreen
+import com.example.version2.presentation.common.NotesApplication
 import com.example.version2.presentation.login.LoginViewModel
 import com.example.version2.presentation.login.activity.LoginActivity
 import com.example.version2.presentation.onBoarding.activity.BoardingScreen
+import com.example.version2.presentation.util.keys.Keys
 import com.example.version2.presentation.util.openActivity
+import com.example.version2.presentation.util.sharedPreference.SharedPreference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+
 
 class FlashScreen : AppCompatActivity() {
     private lateinit var appLogo: ImageView
@@ -31,7 +30,6 @@ class FlashScreen : AppCompatActivity() {
     private lateinit var topAnimation: Animation
     private lateinit var bottomAnimation: Animation
     private lateinit var binding: ActivityFlashScreen1Binding
-    private lateinit var handler: Handler
     private val viewModel: LoginViewModel by lazy {
         ViewModelProvider(
             this,
@@ -67,8 +65,25 @@ class FlashScreen : AppCompatActivity() {
         tv1.animation = bottomAnimation
         tv2.animation = bottomAnimation
 
+        topAnimation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(p0: Animation?) {
+            }
+
+            override fun onAnimationEnd(p0: Animation?) {
+                nextAction()
+            }
+
+            override fun onAnimationRepeat(p0: Animation?) {
+
+            }
+
+        })
 
 
+    }
+
+
+    private fun nextAction() {
         if (checkIsLogin() != 0 && checkOnBoardingCompleted()) {
             startActivityNavigation(Intent(this, NoteScreen::class.java))
 
@@ -77,8 +92,6 @@ class FlashScreen : AppCompatActivity() {
         } else {
             startActivityNavigation(Intent(this, LoginActivity::class.java))
         }
-
-
     }
 
 
@@ -88,12 +101,10 @@ class FlashScreen : AppCompatActivity() {
     }
 
     private fun startActivityNavigation(intent: Intent) {
-        handler = Handler(Looper.getMainLooper()).apply {
-            postDelayed({
-                openActivity(intent)
-                finish()
-            }, 2000)
-        }
+
+        openActivity(intent)
+        finish()
+
     }
 
 
@@ -107,10 +118,5 @@ class FlashScreen : AppCompatActivity() {
 
     }
 
-
-    override fun onDestroy() {
-        handler.removeCallbacksAndMessages(null)
-        super.onDestroy()
-    }
 
 }

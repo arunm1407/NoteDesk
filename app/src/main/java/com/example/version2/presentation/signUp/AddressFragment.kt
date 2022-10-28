@@ -11,12 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.version2.R
 import com.example.version2.databinding.FragmentAddressBinding
 import com.example.version2.domain.model.User
+import com.example.version2.domain.usecase.ValidationResult
 import com.example.version2.presentation.common.NotesApplication
 import com.example.version2.presentation.signUp.listener.Navigate
-import com.example.version2.presentation.util.clearError
-import com.example.version2.presentation.util.getPinCode
-import com.example.version2.presentation.util.getString
-import com.example.version2.presentation.util.setErrorMessage
+import com.example.version2.presentation.util.*
 import com.shuhart.stepview.StepView
 
 
@@ -46,13 +44,13 @@ class AddressFragment : Fragment() {
     ): View {
 
         binding = FragmentAddressBinding.inflate(inflater)
-        backPressedListener()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpFocusChangeListeners()
+        backPressedListener()
         eventHandler()
         removeError()
 
@@ -69,7 +67,7 @@ class AddressFragment : Fragment() {
             if (validateData()) {
                 removeError()
 
-                navigationLisenter?.navigate(PasswordFragment())
+                navigationLisenter?.navigateToPasswordPage()
             }
 
 
@@ -89,13 +87,53 @@ class AddressFragment : Fragment() {
 
     private fun validateData(): Boolean {
         val pinCode = binding.tilEtPinCode.getString()
-        if (pinCode.isNotEmpty()) {
-            val res = viewModel.validatePinCode(pinCode)
-            if (!res.successful) {
-                binding.tilPinCode.setErrorMessage(res.errorMessage)
-                binding.tilEtPinCode.clearFocus()
-                return false
+        val address1 = binding.tilEtaddress1.getString()
+        val address2 = binding.tilEtaddress2.getString()
+        var flag = true
+
+
+        if (address1.isNotEmpty()) {
+            when (val res = viewModel.validateString(address1, 40, "Address")) {
+                is ValidationResult.Error -> {
+                    binding.tilAddressLine1.setErrorMessage(res.message)
+                    binding.tilEtaddress1.clearFocus()
+                    flag = false
+                }
+                ValidationResult.Successful -> {
+
+
+                }
             }
+
+        }
+
+        if (address2.isNotEmpty()) {
+            when (val res = viewModel.validateString(address2, 40, "Address")) {
+                is ValidationResult.Error -> {
+                    binding.tilAddressLine2.setErrorMessage(res.message)
+                    binding.tilEtaddress2.clearFocus()
+                    flag = false
+                }
+                ValidationResult.Successful -> {
+
+
+                }
+            }
+
+        }
+
+        if (pinCode.isNotEmpty()) {
+            when (val res = viewModel.validatePinCode(pinCode)) {
+                is ValidationResult.Error -> {
+                    binding.tilPinCode.setErrorMessage(res.message)
+                    binding.tilEtPinCode.clearFocus()
+                    flag = false
+                }
+                ValidationResult.Successful -> {
+
+                }
+            }
+
         }
 
 
@@ -116,7 +154,7 @@ class AddressFragment : Fragment() {
             false
         )
         viewModel.userData = user
-        return true
+        return flag
 
     }
 
@@ -147,7 +185,7 @@ class AddressFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    parentFragmentManager.popBackStack()
+                    navigationLisenter?.navigateToPreviousScreen()
 
                 }
             })

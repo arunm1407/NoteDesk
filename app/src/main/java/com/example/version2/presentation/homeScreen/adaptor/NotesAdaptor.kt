@@ -61,13 +61,13 @@ class NotesAdaptor(
 
         if (holder is NotesRVViewHolder.NotesViewHolder) {
 
-            holder.bind(_notes[position])
+            holder.bind(_notes[holder.adapterPosition])
             holder.itemView.setOnClickListener {
-                notesListener.onClick(position)
+                notesListener.onClick(holder.adapterPosition)
 
             }
             holder.itemView.setOnLongClickListener {
-                notesListener.onLongClicked(position)
+                notesListener.onLongClicked(holder.adapterPosition)
                 true
             }
         }

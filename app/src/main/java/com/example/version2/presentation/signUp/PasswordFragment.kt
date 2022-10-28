@@ -1,7 +1,6 @@
 package com.example.version2.presentation.signUp
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -19,16 +18,14 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.version2.presentation.util.keys.Keys
-import com.example.version2.presentation.util.sharedPreference.SharedPreference
 import com.example.version2.R
 import com.example.version2.databinding.FragmentPasswordBinding
 import com.example.version2.domain.model.User
+import com.example.version2.domain.usecase.ValidationResult
 import com.example.version2.presentation.common.NotesApplication
-import com.example.version2.presentation.login.activity.LoginActivity
-import com.example.version2.presentation.login.listener.Navigation
 import com.example.version2.presentation.signUp.dialog.ConfirmationDialog
 import com.example.version2.presentation.signUp.listener.ConfirmationListener
+import com.example.version2.presentation.signUp.listener.Navigate
 import com.example.version2.presentation.signUp.util.PasswordStrengthCalculator
 import com.example.version2.presentation.signUp.util.StrengthLevel
 import com.example.version2.presentation.util.*
@@ -50,14 +47,14 @@ class PasswordFragment : Fragment(), ConfirmationListener {
         )[SignUpViewModel::class.java]
     }
     private lateinit var passwordStrengthCalculator: PasswordStrengthCalculator
-    private lateinit var navigationListener: Navigation
+    private lateinit var navigationListener: Navigate
 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         val parent = parentFragment ?: context
-        if (parent is Navigation)
+        if (parent is Navigate)
             navigationListener = parent
     }
 
@@ -104,7 +101,7 @@ class PasswordFragment : Fragment(), ConfirmationListener {
         {
             displayPasswordSuggestions(it, binding.digitImg, binding.digitTxt)
         }
-        passwordStrengthCalculator.digit.observe(viewLifecycleOwner)
+        passwordStrengthCalculator.specialChar.observe(viewLifecycleOwner)
         {
             displayPasswordSuggestions(it, binding.specialCharImg, binding.specialCharTxt)
         }
@@ -149,16 +146,16 @@ class PasswordFragment : Fragment(), ConfirmationListener {
                         requireActivity().findViewById<StepView>(R.id.stepView).done(true)
                         showDialogFragment(ConfirmationDialog())
                     } else {
-                        binding.tilCPassword.setErrorMessage("password does not match")
+                        binding.tilCPassword.setErrorMessage(getString(R.string.password_does_not_match1))
                     }
                 }
 
 
             } else {
                 if (binding.tilEtPassword.getString().isBlank()) {
-                    binding.tilPassword.setErrorMessage(" password is empty ")
+                    binding.tilPassword.setErrorMessage(getString(R.string.password_empty))
                 } else if (binding.tilEtCPassword.getString().isBlank()) {
-                    binding.tilCPassword.setErrorMessage(" Confirm password is empty ")
+                    binding.tilCPassword.setErrorMessage(getString(R.string.confirm_password_empty))
                 }
 
             }
@@ -183,11 +180,16 @@ class PasswordFragment : Fragment(), ConfirmationListener {
     private suspend fun validateDate(): Boolean {
         val password = binding.tilEtPassword.getString()
         val confirmPassword = binding.tilEtCPassword.getString()
-        val res = viewModel.validatePassword(password, confirmPassword)
-        if (!res.successful) {
-            binding.tilCPassword.error = res.errorMessage
-            return false
+        when (val res = viewModel.validatePassword(password, confirmPassword)) {
+            is ValidationResult.Error -> {
+                binding.tilCPassword.error = res.message
+                return false
+            }
+            ValidationResult.Successful -> {
+
+            }
         }
+
         updateData(password)
         withContext(Dispatchers.IO)
         {
@@ -298,8 +300,7 @@ class PasswordFragment : Fragment(), ConfirmationListener {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-
-                    parentFragmentManager.popBackStack()
+                    navigationListener.navigateToPreviousScreen()
 
                 }
             })
@@ -309,32 +310,13 @@ class PasswordFragment : Fragment(), ConfirmationListener {
 
         lifecycleScope.launch()
         {
-            withContext(Dispatchers.IO)
+            withContext(Dispatchers.Main)
             {
-                SharedPreference(requireActivity()).putIntSharePreferenceInt(
-                    Keys.USER_ID,
-                    viewModel.userID
-                )
-
-
-
-                launch(Dispatchers.Main) {
-
-                    navigationListener.navigate(
-                        Intent(
-                            requireContext(),
-                            LoginActivity::class.java
-                        )
-                    )
-
-
-                }
-
-
+                navigationListener.navigateToLoginScreen()
             }
+
+
         }
-
-
     }
 
 

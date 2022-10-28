@@ -1,6 +1,8 @@
 package com.example.version2.presentation.common
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import com.example.version2.data.db.DataBase
 import com.example.version2.data.db.dao.NotesDao
@@ -13,11 +15,27 @@ import com.example.version2.domain.repository.NoteRepository
 import com.example.version2.domain.repository.SuggestionRepository
 import com.example.version2.domain.repository.UserRepository
 import com.example.version2.domain.usecase.*
+import com.example.version2.presentation.homeScreen.HomeUseCaseWrapper
+import com.example.version2.presentation.login.LoginUseCaseWrapper
+import com.example.version2.presentation.profile.FormUseCaseWrapper
+import com.example.version2.presentation.signUp.SignUpUseCaseWrapper
 import com.example.version2.presentation.viewModelFactory.*
 
 class NotesApplication : Application() {
 
 
+
+
+    companion object{
+        @SuppressLint("StaticFieldLeak")
+        var context: Context? = null
+    }
+
+
+    override fun onCreate() {
+        super.onCreate()
+        context = applicationContext
+    }
     private val userDao: UserDao by lazy {
         DataBase.getDatabase(this).getUserDao()
     }
@@ -43,29 +61,29 @@ class NotesApplication : Application() {
         SuggestionRepositoryImplmentation(suggestionDao)
     }
 
-    private val loginUseCase: LoginUseCase by lazy {
-        LoginUseCase(ValidateNewEmail(userRepository), CheckUserAuthentication(userRepository))
+    private val loginUseCaseWrapper: LoginUseCaseWrapper by lazy {
+        LoginUseCaseWrapper(ValidateNewEmail(userRepository), CheckUserAuthentication(userRepository))
     }
 
 
-    private val signUpUseCase: SignUpUseCase by lazy {
+    private val signUpUseCaseWrapper: SignUpUseCaseWrapper by lazy {
 
-        SignUpUseCase(
+        SignUpUseCaseWrapper(
             CheckEmailExist(userRepository), ValidateMobileNumber(),
-            ValidatePinCode(), ValidatePassword()
+            ValidatePinCode(), ValidatePassword(),ValidateString()
         )
     }
 
-    private val formUseCase: FormUseCase by lazy {
+    private val formUseCaseWrapper: FormUseCaseWrapper by lazy {
 
-        FormUseCase(
+        FormUseCaseWrapper(
             CheckField(),
-            ValidateMobileNumber(), ValidatePinCode()
+            ValidateMobileNumber(), ValidatePinCode(),ValidateString()
         )
     }
 
-    private val homeUseCase: HomeUseCase by lazy {
-        HomeUseCase(
+    private val homeUseCaseWrapper: HomeUseCaseWrapper by lazy {
+        HomeUseCaseWrapper(
             SortList(),
             FilterList()
         )
@@ -73,17 +91,17 @@ class NotesApplication : Application() {
     }
 
     val loginFactory: ViewModelProvider.Factory by lazy {
-        LoginViewModelFactory(userRepository, loginUseCase)
+        LoginViewModelFactory(userRepository, loginUseCaseWrapper)
     }
 
 
     val signUpFactory: ViewModelProvider.Factory by lazy {
-        SignUpViewModelFactory(userRepository, signUpUseCase)
+        SignUpViewModelFactory(userRepository, signUpUseCaseWrapper)
     }
 
 
     val homeFactory: ViewModelProvider.Factory by lazy {
-        HomeViewModelFactory(notesRepository, userRepository, homeUseCase)
+        HomeViewModelFactory(notesRepository, userRepository, homeUseCaseWrapper)
     }
 
 
@@ -96,16 +114,16 @@ class NotesApplication : Application() {
     }
 
     val profilePreview: ViewModelProvider.Factory by lazy {
-        ProfilePreviewViewModelFactory(userRepository, loginUseCase)
+        ProfilePreviewViewModelFactory(userRepository, loginUseCaseWrapper)
     }
 
     val searchFactory: ViewModelProvider.Factory by lazy {
 
-        SearchViewModelFactory(suggestionRepository, notesRepository, homeUseCase)
+        SearchViewModelFactory(suggestionRepository, notesRepository, homeUseCaseWrapper)
     }
 
     val editProfileFactory: ViewModelProvider.Factory by lazy {
 
-        EditProfileViewModelFactory(userRepository, formUseCase)
+        EditProfileViewModelFactory(userRepository, formUseCaseWrapper)
     }
 }

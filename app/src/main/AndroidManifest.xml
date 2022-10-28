@@ -26,13 +26,19 @@
 
         <activity
             android:name=".presentation.onBoarding.activity.BoardingScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+            />
         <activity
             android:name=".presentation.login.activity.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.splashScreen.FlashScreen"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

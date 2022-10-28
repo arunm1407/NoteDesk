@@ -110,7 +110,7 @@
             android:id="@+id/creationDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="@dimen/padding_small"
+           android:padding="4dp"
             android:text="@string/today"
             android:textAlignment="viewEnd"
             android:textColor="@color/color_on_highlight"
@@ -118,6 +118,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/rv_favoriteImage"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="0.5"
             app:layout_constraintStart_toEndOf="@id/rv_favoriteImage"
             app:layout_constraintTop_toTopOf="@id/rv_favoriteImage" />
 

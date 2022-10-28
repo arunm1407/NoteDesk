@@ -2,11 +2,11 @@
 
     <style name="Theme.Version2" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/color_primary_night</item>
-        <item name="colorPrimaryVariant">@color/color_primary_night</item>
+        <item name="colorPrimaryVariant">@color/customIconColor</item>
         <item name="colorOnPrimary">@color/colorWhite</item>
         <item name="colorSecondary">@color/colorWhite</item>
         <item name="colorSecondaryVariant">@color/color_on_highlight</item>
-        <item name="colorOnSecondary">@color/customIconColor</item>
+        <item name="colorOnSecondary">@color/color_primary_night</item>
 
         <item name="colorAccent">@color/colorWhite</item>
         <item name="colorSecondaryContainer">@color/white</item>

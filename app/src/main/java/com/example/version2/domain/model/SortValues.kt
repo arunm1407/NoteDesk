@@ -1,4 +1,4 @@
-package com.example.version2.presentation.homeScreen.enums
+package com.example.version2.domain.model
 
 enum class SortValues {
     MODIFICATION_DATE,CREATION_DATE,ALPHABETICALLY_TITLE,ALPHABETICALLY_SUBTITLE,PRIORITY

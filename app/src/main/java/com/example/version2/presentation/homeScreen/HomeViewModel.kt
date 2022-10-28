@@ -6,17 +6,16 @@ import com.example.version2.presentation.util.keys.Keys
 import com.example.version2.domain.model.Note
 import com.example.version2.domain.repository.NoteRepository
 import com.example.version2.domain.repository.UserRepository
-import com.example.version2.domain.usecase.HomeUseCase
 import com.example.version2.presentation.common.NotesViewModel
 import com.example.version2.presentation.homeScreen.enums.FilterChoiceSelected
-import com.example.version2.presentation.homeScreen.enums.SortBy
-import com.example.version2.presentation.homeScreen.enums.SortValues
+import com.example.version2.domain.model.SortBy
+import com.example.version2.domain.model.SortValues
 
 
 class HomeViewModel(
     noteRepository: NoteRepository,
     private val userRepository: UserRepository,
-    private val homeUseCase: HomeUseCase
+    private val homeUseCaseWrapper: HomeUseCaseWrapper
 ) :
     NotesViewModel(noteRepository) {
 
@@ -30,7 +29,6 @@ class HomeViewModel(
     fun setUserId(id: Int) {
         _userId = id
     }
-
 
 
     private val _contextual: MutableLiveData<Boolean> = MutableLiveData()
@@ -91,41 +89,35 @@ class HomeViewModel(
 
     private var _currentMode: Int = Keys.LIST_VIEW
 
-    val currentMode:Int
-     get() = _currentMode
+    val currentMode: Int
+        get() = _currentMode
 
 
-     fun setCurrentMode(mode:Int)
-    {
-        _currentMode=mode
+    fun setCurrentMode(mode: Int) {
+        _currentMode = mode
     }
 
 
     private var _currentSortOptions: SortValues = SortValues.ALPHABETICALLY_TITLE
 
 
-
-    val currentSortOptions:SortValues
+    val currentSortOptions: SortValues
         get() = _currentSortOptions
 
 
-    fun setCurrentSortOptions(options:SortValues)
-    {
-        _currentSortOptions=options
+    fun setCurrentSortOptions(options: SortValues) {
+        _currentSortOptions = options
     }
 
 
-
-   private var _sortBy: SortBy = SortBy.DESCENDING
-
+    private var _sortBy: SortBy = SortBy.DESCENDING
 
 
-    val sortBy:SortBy
-     get() = _sortBy
+    val sortBy: SortBy
+        get() = _sortBy
 
-    fun setSortBy(sort:SortBy)
-    {
-        _sortBy=sort
+    fun setSortBy(sort: SortBy) {
+        _sortBy = sort
     }
 
 
@@ -169,11 +161,20 @@ class HomeViewModel(
 
 
     fun sortChoiceByList(list: List<Note>, sortBy: SortBy, sortValues: SortValues): List<Note> {
-        return homeUseCase.sortList(sortValues, sortBy, list)
+        return homeUseCaseWrapper.sortList(sortValues, sortBy, list)
     }
 
-    fun filterListByChoice(list: List<Note>, filterChoiceSelected: FilterChoiceSelected): List<Note> {
-        return homeUseCase.filterList(list, filterChoiceSelected)
+    fun filterListByChoice(
+        list: List<Note>,
+        filterChoiceSelected: FilterChoiceSelected
+    ): List<Note> {
+        return homeUseCaseWrapper.filterList(
+            list,
+            filterChoiceSelected.isFavorite,
+            filterChoiceSelected.isPriority_red,
+            filterChoiceSelected.isPriority_yellow,
+            filterChoiceSelected.isPriority_green
+        )
 
 
     }

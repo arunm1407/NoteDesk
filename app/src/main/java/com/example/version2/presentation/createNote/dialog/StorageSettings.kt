@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.example.version2.databinding.SettingStorageDialogBinding
-import com.example.version2.presentation.createNote.CreateNoteFragment
 import com.example.version2.presentation.createNote.enums.ExitSettingsAction
 import com.example.version2.presentation.createNote.listener.ExitDailogLisenter
 
@@ -21,8 +20,9 @@ class StorageSettings : DialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val parent = parentFragment ?: context
-        if (parent is CreateNoteFragment)
-            lisenter = (parentFragment as CreateNoteFragment)
+        if (parent is ExitDailogLisenter)
+            lisenter = (parentFragment as ExitDailogLisenter)
+
     }
 
 
@@ -54,6 +54,7 @@ class StorageSettings : DialogFragment() {
 
     private fun positiveActionListener() {
         binding.yes.setOnClickListener {
+
             lisenter?.onClickYes(ExitSettingsAction.STORAGE)
             dismiss()
         }

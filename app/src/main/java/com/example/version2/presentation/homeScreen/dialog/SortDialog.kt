@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import com.example.version2.presentation.util.keys.Keys
 import com.example.version2.databinding.SortdialogBinding
-import com.example.version2.presentation.homeScreen.enums.SortBy
-import com.example.version2.presentation.homeScreen.enums.SortValues
+import com.example.version2.domain.model.SortBy
+import com.example.version2.domain.model.SortValues
 import com.example.version2.presentation.homeScreen.listener.SortLisenter
 import com.example.version2.presentation.util.withArgs
 
@@ -60,7 +61,7 @@ class SortDialog : DialogFragment() {
             val width = ViewGroup.LayoutParams.MATCH_PARENT
             val height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.window?.setLayout(width, height)
-
+            it.window?.addFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH)
         }
     }
 
@@ -70,7 +71,6 @@ class SortDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = SortdialogBinding.inflate(inflater, container, false)
-        retrievedChoiceToView()
         return binding.root
     }
 
@@ -78,6 +78,7 @@ class SortDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         eventHandler()
+        retrievedChoiceToView()
 
 
     }
@@ -93,6 +94,9 @@ class SortDialog : DialogFragment() {
             dismiss()
         }
     }
+
+
+
 
     private fun cancelListener() {
         binding.done.setOnClickListener()

@@ -1,6 +1,5 @@
 package com.example.version2.presentation.createNote
 
-import com.example.version2.presentation.homeScreen.HomeFragment
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
@@ -50,7 +49,6 @@ import com.example.version2.domain.model.Color.Companion.COLOR_9
 import com.example.version2.domain.model.Color.Companion.getValues
 import com.example.version2.domain.model.Note
 import com.example.version2.domain.model.Priority
-import com.example.version2.presentation.attachmentPreview.AttachmentPreviewFragment
 import com.example.version2.presentation.attachmentPreview.adaptor.AttachmentAdaptor
 import com.example.version2.presentation.attachmentPreview.listener.AttachmentLisenter
 import com.example.version2.presentation.common.NoteScreen
@@ -67,7 +65,6 @@ import com.example.version2.presentation.createNote.listener.ExitDailogLisenter
 import com.example.version2.presentation.createNote.listener.UrlListener
 import com.example.version2.presentation.homeScreen.enums.MenuActions
 import com.example.version2.presentation.homeScreen.listener.FragmentNavigationLisenter
-import com.example.version2.presentation.homeScreen.listener.SettingsLisenter
 import com.example.version2.presentation.util.*
 import com.example.version2.presentation.util.keys.Constants
 import com.example.version2.presentation.util.keys.Keys
@@ -104,7 +101,6 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
         )[CreateNoteViewModel::class.java]
     }
     private var fragmentNavigationLisenter: FragmentNavigationLisenter? = null
-    private var settingsLisenter: SettingsLisenter? = null
 
 
     override fun onAttach(context: Context) {
@@ -112,15 +108,14 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
         if (context is FragmentNavigationLisenter) {
             fragmentNavigationLisenter = context
         }
-        if (context is SettingsLisenter) {
-            settingsLisenter = context
-        }
+
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getArgumentParcelable()
+
     }
 
 
@@ -130,13 +125,13 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
     ): View {
 
         binding = FragmentCreateNoteBinding.inflate(layoutInflater, container, false)
-        fetchData()
         return binding.root
 
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        fetchData()
         initialization()
         eventHandler()
     }
@@ -144,6 +139,20 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
     override fun onStop() {
         viewModel.setMenuAction(MenuActions.NOACTION)
+        val note = viewModel.notes
+        viewModel.notes =
+            Note(
+                note.title,
+                note.subtitle,
+                note.createdTime,
+                note.modifiedTime,
+                note.noteText,
+                viewModel.selectedNoteColor.getValues(),
+                note.weblink,
+                note.priority,
+                note.favorite,
+                note.attachments,
+            )
         super.onStop()
 
     }
@@ -152,7 +161,6 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
     override fun onDestroy() {
         super.onDestroy()
         fragmentNavigationLisenter = null
-        settingsLisenter = null
 
 
     }
@@ -199,7 +207,7 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
 
     private fun setupCustomSpinner() {
-        val priorityList= mutableListOf(
+        val priorityList = mutableListOf(
             com.example.version2.presentation.model.Priority(Keys.LOW, R.drawable.priority_green),
             com.example.version2.presentation.model.Priority(
                 Keys.MEDIUM,
@@ -308,7 +316,6 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
             }
         }
     }
-
 
 
     private fun setBackGroundColor() {
@@ -456,6 +463,7 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
         dialog.activity?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show(childFragmentManager, "2")
 
+
     }
 
 
@@ -574,7 +582,8 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
                     }
 
                     view?.hideKeyboard()
-                    fragmentNavigationLisenter?.navigate(HomeFragment(), BackStack.HOME)
+                    fragmentNavigationLisenter?.navigateToHomeScreen()
+
                 }
             }
             .setNegativeButton(getString(R.string.delte_dailog_pnegative), null)
@@ -937,7 +946,7 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
                 getString(R.string.blank_note_discarded),
                 Toast.LENGTH_SHORT
             ).show()
-            parentFragmentManager.popBackStack()
+            fragmentNavigationLisenter?.navigateToPreviousScreen()
 
 
         } else {
@@ -948,8 +957,7 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
                     getString(R.string.positive)
 
                 ) { _, _ ->
-
-                    parentFragmentManager.popBackStack()
+                    fragmentNavigationLisenter?.navigateToPreviousScreen()
 
                 }
                 .setNegativeButton(getString(R.string.negative), null)
@@ -980,10 +988,7 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
     override fun onAttachmentClicked(name: String) {
         view?.hideKeyboard()
-        fragmentNavigationLisenter!!.navigate(
-            AttachmentPreviewFragment.newInstance(name),
-            BackStack.ATTACHMENT_PREVIEW
-        )
+        fragmentNavigationLisenter?.navigateToAttachmentPreviewScreen(name)
     }
 
     override fun onDelete(name: String, position: Int) {
@@ -1008,7 +1013,7 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
         when (action) {
             ExitSettingsAction.CAMERA, ExitSettingsAction.STORAGE -> {
                 view?.hideKeyboard()
-                settingsLisenter?.settings()
+                fragmentNavigationLisenter?.navigateToSettingsPage()
             }
             ExitSettingsAction.NO_ACTION -> {
             }
@@ -1124,7 +1129,8 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
         }
 
 
-    private val takePhoto = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
+    private val takePhoto =
+        registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
             val filename = UUID.randomUUID().toString()
 
             val isSavedSuccessfully =
@@ -1233,10 +1239,8 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
 
     private fun navigateHome() {
 
-        fragmentNavigationLisenter?.navigate(
-            HomeFragment(),
-            BackStack.HOME
-        )
+        fragmentNavigationLisenter?.navigateToHomeScreen()
+
     }
 
     private fun saveNotes(): Note {
@@ -1340,7 +1344,6 @@ class CreateNoteFragment : Fragment(), DialogLisenter, ExitDailogLisenter,
         }
         return dialog
     }
-
 
 
 }

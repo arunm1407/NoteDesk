@@ -8,14 +8,10 @@ class ValidateMobileNumber {
 
 
         if (!mobileCheck(mobile)) {
-            return ValidationResult(
-                successful = false,
-                errorMessage = "The mobile number is invalid"
-            )
+            return ValidationResult.Error("The mobile number is invalid")
         }
-        return ValidationResult(
-            successful = true
-        )
+        return ValidationResult.Successful
+
     }
 
 

@@ -5,7 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.version2.data.db.convertor.Convertor
+import com.example.version2.data.db.convertor.AttachmentConvertor
+import com.example.version2.data.db.convertor.StringConvertor
 import com.example.version2.data.db.dao.NotesDao
 import com.example.version2.data.db.dao.SuggestionDao
 import com.example.version2.data.db.dao.UserDao
@@ -15,7 +16,7 @@ import com.example.version2.data.db.entity.DbUser
 
 
 @Database(entities = [DbNotes::class,DbSuggestionHistory::class,DbUser::class], version = 1, exportSchema = true)
-@TypeConverters(Convertor::class )
+@TypeConverters(StringConvertor::class,AttachmentConvertor::class )
 abstract class DataBase : RoomDatabase() {
 
 

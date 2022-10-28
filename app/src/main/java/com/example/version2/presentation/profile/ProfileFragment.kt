@@ -6,24 +6,22 @@ import android.view.*
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.version2.presentation.util.keys.Keys
-import com.example.version2.presentation.util.storage.Storage
 import com.example.version2.R
 import com.example.version2.databinding.FragmentProfileBinding
-import com.example.version2.presentation.common.NotesApplication
 import com.example.version2.presentation.common.NoteScreen
-import com.example.version2.presentation.attachmentPreview.AttachmentPreviewFragment
+import com.example.version2.presentation.common.NotesApplication
 import com.example.version2.presentation.homeScreen.listener.FragmentNavigationLisenter
 import com.example.version2.presentation.profile.preview.AccountFragment
 import com.example.version2.presentation.profile.preview.PersonalFragment
-import com.example.version2.presentation.util.BackStack
+import com.example.version2.presentation.util.keys.Keys
 import com.example.version2.presentation.util.setup
+import com.example.version2.presentation.util.storage.Storage
 import com.example.version2.presentation.util.toPincode
 import com.example.version2.presentation.util.withArgs
 import kotlinx.coroutines.Dispatchers
@@ -89,10 +87,7 @@ class ProfileFragment : Fragment() {
 
             val name = viewModel.user.image
             if (name != null) {
-                fragmentNavigationLisenter?.navigate(
-                    AttachmentPreviewFragment.newInstance(name),
-                    BackStack.ATTACHMENT_PREVIEW
-                )
+                fragmentNavigationLisenter?.navigateToAttachmentPreviewScreen(name)
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -115,44 +110,44 @@ class ProfileFragment : Fragment() {
     private fun initializeTableLayout() {
         val mViewPager = binding.viewPager2
         binding.tabLayout.setupWithViewPager(mViewPager)
-        val titleList = mutableListOf("Account", "Personal")
+        val titleList = mutableListOf(getString(R.string.account_name), getString(R.string.personal_title))
 
         val accountList = ArrayList<ProfileDetails>(
         ).apply {
 
-            add(ProfileDetails(R.drawable.ic_name, "First Name", viewModel.user.firstName))
-            add(ProfileDetails(R.drawable.ic_name, "Last Name", viewModel.user.lastName))
-            add(ProfileDetails(R.drawable.ic_baseline_email_24, "Email ID", viewModel.user.email))
-            add(ProfileDetails(R.drawable.ic_bio, "Bio ", viewModel.user.bio))
-            add(ProfileDetails(R.drawable.ic_gender, "Gender ", viewModel.user.gender.toString()))
-            add(ProfileDetails(R.drawable.ic_dob, "Date of Birth ", viewModel.user.dob))
+            add(ProfileDetails(R.drawable.ic_name, getString(R.string.first_name1), viewModel.user.firstName))
+            add(ProfileDetails(R.drawable.ic_name, getString(R.string.last_name_1), viewModel.user.lastName))
+            add(ProfileDetails(R.drawable.ic_baseline_email_24, getString(R.string.email_id), viewModel.user.email))
+            add(ProfileDetails(R.drawable.ic_bio, getString(R.string.bio_1), viewModel.user.bio))
+            add(ProfileDetails(R.drawable.ic_gender, getString(R.string.gender_id), viewModel.user.gender.toString()))
+            add(ProfileDetails(R.drawable.ic_dob, getString(R.string.date_birth), viewModel.user.dob))
             add(
                 ProfileDetails(
                     R.drawable.ic_baseline_phone_android_24,
-                    "Mobile Number ",
+                    getString(R.string.mobile_number1),
                     viewModel.user.mobileNumber
                 )
             )
             add(
                 ProfileDetails(
                     R.drawable.ic_baseline_home_24,
-                    "Address Line 1 ",
+                    getString(R.string.addline1),
                     viewModel.user.addressLine1
                 )
             )
             add(
                 ProfileDetails(
                     R.drawable.ic_baseline_home_24,
-                    "Address Line 2 ",
+                    getString(R.string.addline2),
                     viewModel.user.addressLine2
                 )
             )
-            add(ProfileDetails(R.drawable.ic_baseline_location_on_24, "City ", viewModel.user.city))
+            add(ProfileDetails(R.drawable.ic_baseline_location_on_24, getString(R.string.city_1), viewModel.user.city))
 
             add(
                 ProfileDetails(
                     R.drawable.ic_baseline_location_on_24,
-                    "Pincode ",
+                    getString(R.string.pincode_1),
                     viewModel.user.pinCode.toPincode()
                 )
             )
@@ -164,13 +159,13 @@ class ProfileFragment : Fragment() {
             (add(
                 ProfileDetails(
                     R.drawable.ic_baseline_verified_user_24,
-                    "USER ID",
+                    getString(R.string.id),
                     "NOTEDESK0100${viewModel.userId}"
                 )
             ))
-            add(ProfileDetails(R.drawable.ic_name, "First Name", viewModel.user.firstName))
-            add(ProfileDetails(R.drawable.ic_name, "Last Name", viewModel.user.lastName))
-            add(ProfileDetails(R.drawable.ic_baseline_email_24, "Email ID", viewModel.user.email))
+            add(ProfileDetails(R.drawable.ic_name, getString(R.string.first_name1), viewModel.user.firstName))
+            add(ProfileDetails(R.drawable.ic_name, getString(R.string.last_name_1), viewModel.user.lastName))
+            add(ProfileDetails(R.drawable.ic_baseline_email_24, getString(R.string.email_id), viewModel.user.email))
 
 
         }
@@ -201,11 +196,8 @@ class ProfileFragment : Fragment() {
 
                 return when (menuItem.itemId) {
                     R.id.menu_edit -> {
-                        fragmentNavigationLisenter?.navigate(
-                            EditProfileFragment.newInstance(
-                                viewModel.user
-                            ), BackStack.PROFILE_EDIT
-                        )
+                        fragmentNavigationLisenter?.navigateToEditProfilePage(viewModel.user)
+
                         true
                     }
                     else -> false
@@ -268,7 +260,7 @@ class ProfileFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    parentFragmentManager.popBackStack()
+                    fragmentNavigationLisenter?.navigateToPreviousScreen()
 
                 }
             })

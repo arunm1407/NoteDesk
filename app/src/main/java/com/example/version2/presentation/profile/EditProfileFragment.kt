@@ -30,10 +30,11 @@ import com.example.version2.presentation.util.keys.Keys
 import com.example.version2.presentation.util.storage.Storage
 import com.example.version2.R
 import com.example.version2.databinding.FragmentEditProfileBinding
+import com.example.version2.domain.model.Gender
 import com.example.version2.domain.model.User
+import com.example.version2.domain.usecase.ValidationResult
 import com.example.version2.presentation.common.NotesApplication
 import com.example.version2.presentation.common.NoteScreen
-import com.example.version2.presentation.attachmentPreview.AttachmentPreviewFragment
 import com.example.version2.presentation.createNote.dialog.CameraSettingsDialog
 import com.example.version2.presentation.createNote.dialog.StorageSettings
 import com.example.version2.presentation.createNote.enums.AddImage
@@ -106,11 +107,13 @@ class EditProfileFragment : Fragment(), DialogLisenter {
     }
 
     private fun initialization() {
+
         initializeToolBar()
+        setUpFocusChangeListeners()
         initializeMenu()
         backPressed()
         setupProfilePicture()
-        dropDownIntialization()
+        setupCustomSpinner()
         removeError()
         binding.tilEtPinCode.actionDone()
     }
@@ -122,15 +125,11 @@ class EditProfileFragment : Fragment(), DialogLisenter {
             val name = viewModel.user.image
             if (name != "") {
                 if (name != null) {
-                    AttachmentPreviewFragment.newInstance(name)
-                    fragmentNavigationLisenter?.navigate(
-                        AttachmentPreviewFragment.newInstance(name),
-                        BackStack.ATTACHMENT_PREVIEW
-                    )
+                    fragmentNavigationLisenter?.navigateToAttachmentPreviewScreen(name)
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        "Pls set the Profile Image",
+                        getString(R.string.pls_Set_profile),
                         Toast.LENGTH_SHORT
                     )
                         .show()
@@ -141,10 +140,61 @@ class EditProfileFragment : Fragment(), DialogLisenter {
     }
 
 
+    private fun retrieveGenderToView(gender: Gender) {
+        viewModel.gender = gender
+        when (gender) {
+            Gender.MEN -> {
+                binding.tilGender.setSelection(0)
+            }
+
+            Gender.WOMEN -> {
+                binding.tilGender.setSelection(1)
+
+            }
+            Gender.NOT_SPECIFIED -> {
+                binding.tilGender.setSelection(2)
+            }
+
+
+        }
+    }
+
+
+    private fun setUpFocusChangeListeners() {
+
+
+        binding.tilEtLastName.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) binding.tilLastName.clearError()
+
+        }
+        binding.tilEtFirstName.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) binding.tilFirstName.clearError()
+        }
+        binding.tilEtBio.setOnFocusChangeListener{ _, hasFocus ->
+            if (hasFocus) binding.tilBio.clearError()
+        }
+        binding.tilEtMobile.setOnFocusChangeListener{ _, hasFocus ->
+            if (hasFocus) binding.tilMobile.clearError()
+        }
+
+        binding.tilEtaddress1.setOnFocusChangeListener{ _, hasFocus ->
+            if (hasFocus) binding.tilAddressLine1.clearError()
+        }
+        binding.tilEtaddress2.setOnFocusChangeListener{ _, hasFocus ->
+            if (hasFocus) binding.tilAddressLine2.clearError()
+        }
+        binding.tilEtcity.setOnFocusChangeListener{ _, hasFocus ->
+            if (hasFocus) binding.tilCity.clearError()
+        }
+        binding.tilEtPinCode.setOnFocusChangeListener{ _, hasFocus ->
+            if (hasFocus) binding.tilPinCode.clearError()
+        }
+    }
     @SuppressLint("ResourceAsColor")
     private fun initializeDatePicker() {
 
-        val constraints = CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now())
+        val constraints =
+            CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now())
 
         val picker = MaterialDatePicker.Builder.datePicker().also {
             it.setSelection(MaterialDatePicker.todayInUtcMilliseconds())
@@ -161,18 +211,51 @@ class EditProfileFragment : Fragment(), DialogLisenter {
         }
     }
 
-    private fun dropDownIntialization() {
-        val languages = resources.getStringArray(R.array.gender)
-        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdowntext, languages)
-        binding.autoCompleteTextView.setAdapter(arrayAdapter)
-    }
-
 
     private fun removeError() {
         binding.tilEtFirstName.clearErrorOnClick(binding.tilFirstName)
         binding.tilEtLastName.clearErrorOnClick(binding.tilLastName)
         binding.tilEtMobile.clearErrorOnClick(binding.tilMobile)
         binding.tilEtPinCode.clearErrorOnClick(binding.tilPinCode)
+        binding.tilEtBio.clearErrorOnClick(binding.tilBio)
+        binding.tilEtMobile.clearErrorOnClick(binding.tilMobile)
+        binding.tilEtaddress1.clearErrorOnClick(binding.tilAddressLine1)
+        binding.tilEtaddress2.clearErrorOnClick(binding.tilAddressLine2)
+        binding.tilEtcity.clearErrorOnClick(binding.tilCity)
+        binding.tilEtPinCode.clearErrorOnClick(binding.tilPinCode)
+
+    }
+
+
+    private fun setupCustomSpinner() {
+
+
+        val languages = resources.getStringArray(R.array.gender)
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdowntext, languages)
+        binding.tilGender.adapter = arrayAdapter
+
+        binding.tilGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+
+
+                when (position) {
+
+                    0 -> viewModel.gender = Gender.MEN
+                    1 -> viewModel.gender = Gender.WOMEN
+                    2 -> viewModel.gender = Gender.NOT_SPECIFIED
+
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
 
 
     }
@@ -184,7 +267,7 @@ class EditProfileFragment : Fragment(), DialogLisenter {
             binding.tilEtLastName.setText(lastName)
             binding.tilEtEmail.setText(email)
             binding.tilEtBio.setText(bio)
-            binding.autoCompleteTextView.setText(gender.toString())
+            retrieveGenderToView(gender)
             binding.tilEtDOB.setText(dob)
             binding.tilEtMobile.setText(mobileNumber)
             binding.tilEtaddress1.setText(addressLine1)
@@ -235,7 +318,10 @@ class EditProfileFragment : Fragment(), DialogLisenter {
 
                 return when (menuItem.itemId) {
                     R.id.menu_done -> {
-                        if (validateForm()) updateData()
+                        if (validateForm())
+                        {
+                            updateData()
+                        }
                         true
                     }
                     else -> false
@@ -245,32 +331,105 @@ class EditProfileFragment : Fragment(), DialogLisenter {
 
     }
 
+
+
     private fun validateForm(): Boolean {
         var flag = true
-        var res = viewModel.validateField(binding.tilEtFirstName.text.toString(), getString(R.string.first_name))
-        if (!res.successful) {
-            binding.tilFirstName.setErrorMessage(res.errorMessage)
-            flag = false
-        }
-        res = viewModel.validateField(binding.tilEtLastName.text.toString(), getString(R.string.last_name))
-        if (!res.successful) {
-            binding.tilLastName.setErrorMessage(res.errorMessage)
-            flag = false
-        }
-        val mobile = binding.tilEtMobile.getString()
-        if (mobile.isNotEmpty()) {
-            res = viewModel.validateMobileNumber(mobile)
-            if (!res.successful) {
-                binding.tilMobile.setErrorMessage(res.errorMessage)
+        when (val res = viewModel.validateField(
+            binding.tilEtFirstName.text.toString(),
+            getString(R.string.first_name)
+        )) {
+            is ValidationResult.Error -> {
+
+                binding.tilFirstName.setErrorMessage(res.message)
+                binding.tilEtFirstName.clearFocus()
                 flag = false
+
+            }
+            ValidationResult.Successful -> {
+
             }
         }
+
+
+        when (val res = viewModel.validateField(
+            binding.tilEtLastName.text.toString(),
+            getString(R.string.last_name)
+        )) {
+            is ValidationResult.Error -> {
+
+                binding.tilLastName.setErrorMessage(res.message)
+                binding.tilEtLastName.clearFocus()
+
+                flag = false
+
+            }
+            ValidationResult.Successful -> {
+
+            }
+        }
+
+
+        val mobile = binding.tilEtMobile.getString()
+        if (mobile.isNotEmpty()) {
+
+            when (val res = viewModel.validateMobileNumber(mobile)) {
+                is ValidationResult.Error -> {
+                    binding.tilMobile.setErrorMessage(res.message)
+                    flag = false
+                }
+                ValidationResult.Successful -> {
+
+                }
+            }
+
+
+        }
+
+        val address1 = binding.tilEtaddress1.getString()
+
+        if (address1.isNotEmpty()) {
+            when (val res = viewModel.validateString(address1, 40, "Address")) {
+                is ValidationResult.Error -> {
+                    binding.tilAddressLine1.setErrorMessage(res.message)
+                    binding.tilEtaddress1.clearFocus()
+                    flag = false
+                }
+                ValidationResult.Successful -> {
+
+
+                }
+            }
+
+        }
+        val address2 = binding.tilEtaddress2.getString()
+        if (address2.isNotEmpty()) {
+            when (val res = viewModel.validateString(address2, 40, "Address")) {
+                is ValidationResult.Error -> {
+                    binding.tilAddressLine2.setErrorMessage(res.message)
+                    binding.tilEtaddress2.clearFocus()
+                    flag = false
+                }
+                ValidationResult.Successful -> {
+
+
+                }
+            }
+
+        }
+
         val pincode = binding.tilEtPinCode.getString()
         if (pincode.isNotEmpty()) {
-            res = viewModel.validatePinCode(pincode)
-            if (!res.successful) {
-                binding.tilPinCode.setErrorMessage(res.errorMessage)
-                flag = false
+
+
+            when (val res = viewModel.validatePinCode(pincode)) {
+                is ValidationResult.Error -> {
+                    binding.tilPinCode.setErrorMessage(res.message)
+                    flag = false
+
+                }
+                ValidationResult.Successful -> {
+                }
             }
         }
         return flag
@@ -304,7 +463,7 @@ class EditProfileFragment : Fragment(), DialogLisenter {
                             )
                         }
                         alertDialog.dismiss()
-                        fragmentNavigationLisenter?.navigate(ProfileFragment(), BackStack.PROFILE)
+                        fragmentNavigationLisenter?.navigateToProfileScreen((requireActivity() as NoteScreen).getUserID())
 
                     }
 
@@ -332,7 +491,7 @@ class EditProfileFragment : Fragment(), DialogLisenter {
             firstName = binding.tilEtFirstName.getString(),
             lastName = binding.tilEtLastName.getString(),
             bio = binding.tilEtBio.getString(),
-            gender = binding.autoCompleteTextView.getString().getGender(),
+            gender = viewModel.gender,
             dob = binding.tilEtDOB.getString(),
             mobileNumber = binding.tilEtMobile.getString(),
             addressLine1 = binding.tilEtaddress1.getString(),
@@ -425,7 +584,7 @@ class EditProfileFragment : Fragment(), DialogLisenter {
         dialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
         dialog.activity?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show(childFragmentManager, "2")
-
+dialog.isCancelable=false
 
     }
 
@@ -602,7 +761,7 @@ class EditProfileFragment : Fragment(), DialogLisenter {
 
                         )
                         { _, _ ->
-                            parentFragmentManager.popBackStack()
+                            fragmentNavigationLisenter?.navigateToPreviousScreen()
                         }
                         .setNegativeButton(getString(R.string.no), null)
 

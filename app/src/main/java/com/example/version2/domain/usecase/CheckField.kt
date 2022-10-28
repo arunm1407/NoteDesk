@@ -7,14 +7,9 @@ class CheckField {
 
 
         if (field.isBlank()) {
-            return ValidationResult(
-                successful = false,
-                errorMessage = "The $fieldName is Empty"
-            )
+            return ValidationResult.Error("The $fieldName is Empty")
         }
-        return ValidationResult(
-            successful = true
-        )
+        return ValidationResult.Successful
     }
 
 }

@@ -9,10 +9,10 @@ import android.graphics.ImageDecoder
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -20,32 +20,42 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.version2.presentation.util.storage.Storage
+import androidx.lifecycle.lifecycleScope
 import com.example.version2.R
 import com.example.version2.databinding.FragmentPersonalInfoBinding
 import com.example.version2.domain.model.Gender
 import com.example.version2.domain.model.User
+import com.example.version2.domain.usecase.ValidationResult
 import com.example.version2.presentation.common.NotesApplication
 import com.example.version2.presentation.createNote.dialog.CameraSettingsDialog
 import com.example.version2.presentation.createNote.dialog.StorageSettings
 import com.example.version2.presentation.createNote.enums.AddImage
+import com.example.version2.presentation.createNote.enums.ExitSettingsAction
 import com.example.version2.presentation.createNote.listener.DialogLisenter
+import com.example.version2.presentation.createNote.listener.ExitDailogLisenter
 import com.example.version2.presentation.profile.EditProfileImageDialog
 import com.example.version2.presentation.signUp.listener.Navigate
 import com.example.version2.presentation.util.clearError
 import com.example.version2.presentation.util.getString
+import com.example.version2.presentation.util.hideKeyboard
 import com.example.version2.presentation.util.setErrorMessage
+import com.example.version2.presentation.util.storage.InternalStoragePhoto
+import com.example.version2.presentation.util.storage.Storage
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.shuhart.stepview.StepView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.ZoneId
 import java.util.*
 
 
-class PersonalInfoFragment : Fragment(), DialogLisenter {
+class PersonalInfoFragment : Fragment(), DialogLisenter, ExitDailogLisenter {
 
 
     private lateinit var binding: FragmentPersonalInfoBinding
@@ -72,7 +82,6 @@ class PersonalInfoFragment : Fragment(), DialogLisenter {
 
 
         binding = FragmentPersonalInfoBinding.inflate(inflater)
-        backPressedListener()
         return binding.root
     }
 
@@ -80,7 +89,30 @@ class PersonalInfoFragment : Fragment(), DialogLisenter {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         eventHandler()
+        restoreDataToView()
+        backPressedListener()
         dropDownIntialization()
+    }
+
+    private fun restoreDataToView() {
+        if (viewModel.imageFileName != null) {
+            var res: InternalStoragePhoto
+            lifecycleScope.launch(Dispatchers.IO)
+            {
+                withContext(Dispatchers.IO)
+                {
+                    res = Storage.getPhotosFromInternalStorage(
+                        requireActivity(),
+                        viewModel.imageFileName!!
+                    )!!
+                }
+                launch(Dispatchers.Main) {
+                    binding.ivProfilePicture.setImageBitmap(res.bmp)
+                }
+
+            }
+
+        }
     }
 
     private fun removeError() {
@@ -111,14 +143,30 @@ class PersonalInfoFragment : Fragment(), DialogLisenter {
     private fun dropDownIntialization() {
         val languages = resources.getStringArray(R.array.gender)
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdowntext, languages)
-        binding.autoCompleteTextView.setAdapter(arrayAdapter)
+        binding.tilGender.adapter = arrayAdapter
 
-        binding.autoCompleteTextView.setOnItemClickListener { _, _, _, _ ->
-            binding.tilEtDOB.requestFocus()
+        binding.tilGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
 
 
+                when (position) {
+
+                    0 -> viewModel.gender = Gender.MEN
+                    1 -> viewModel.gender = Gender.WOMEN
+                    2 -> viewModel.gender = Gender.NOT_SPECIFIED
+
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
         }
-
 
     }
 
@@ -127,7 +175,7 @@ class PersonalInfoFragment : Fragment(), DialogLisenter {
 
             if (validateData()) {
                 removeError()
-                navigationLisenter?.navigate(AddressFragment())
+                navigationLisenter?.navigateToAddressPage()
             }
 
 
@@ -147,12 +195,12 @@ class PersonalInfoFragment : Fragment(), DialogLisenter {
 
         val picker = MaterialDatePicker.Builder.datePicker().also {
             it.setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-            it.setTitleText("select date")
+            it.setTitleText(getString(R.string.select_date1))
             it.setCalendarConstraints(constraints.build())
         }
 
         val builder = picker.build()
-        builder.show(parentFragmentManager, "date picker")
+        builder.show(childFragmentManager, getString(R.string.date_picker1))
         builder.addOnPositiveButtonClickListener {
             val dob = Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
             binding.tilEtDOB.setText(dob.toString())
@@ -163,16 +211,22 @@ class PersonalInfoFragment : Fragment(), DialogLisenter {
     private fun validateData(): Boolean {
         val mobileNumber = binding.tilEtMobile.getString()
         val bio = binding.tilEtBio.getString()
-        val gender = binding.autoCompleteTextView.getString()
+        val gender = viewModel.gender.toString()
         val date = binding.tilEtDOB.getString()
 
-
         if (mobileNumber.isNotEmpty()) {
-            val res = viewModel.validateMobileNumber(mobileNumber)
-            if (!res.successful) {
-                binding.tilMobile.setErrorMessage(res.errorMessage)
-                return false
+
+            when (val res = viewModel.validateMobileNumber(mobileNumber)) {
+                is ValidationResult.Error -> {
+                    binding.tilMobile.setErrorMessage(res.message)
+                    return false
+                }
+                ValidationResult.Successful -> {
+
+
+                }
             }
+
         }
         updateData(bio, validateGender(gender), date, mobileNumber)
         return true
@@ -373,7 +427,6 @@ class PersonalInfoFragment : Fragment(), DialogLisenter {
 
         binding.tilGender.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) binding.tilMobile.clearError()
-            binding.autoCompleteTextView.showDropDown()
         }
 
     }
@@ -407,10 +460,25 @@ class PersonalInfoFragment : Fragment(), DialogLisenter {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    parentFragmentManager.popBackStack()
+                    navigationLisenter?.navigateToPreviousScreen()
 
                 }
             })
+    }
+
+    override fun onClickYes(action: ExitSettingsAction) {
+
+
+        when (action) {
+            ExitSettingsAction.CAMERA, ExitSettingsAction.STORAGE -> {
+                view?.hideKeyboard()
+
+                navigationLisenter?.navigateToSettingScreen()
+            }
+            ExitSettingsAction.NO_ACTION -> {
+            }
+        }
+
     }
 
 

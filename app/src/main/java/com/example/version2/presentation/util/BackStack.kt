@@ -15,4 +15,7 @@ object BackStack {
     const val PROFILE_EDIT="profile_edit"
     const val LOGIN="login"
     const val ACCOUNT_INFO="account_info"
+    const val ADDRESS_PAGE="address"
+    const val PASSWORD_PAGE="password_page"
+    const val PERSONAL_INFO="personal_info"
 }

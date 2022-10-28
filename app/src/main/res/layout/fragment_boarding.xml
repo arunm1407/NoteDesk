@@ -43,6 +43,7 @@
         android:layout_below="@id/text_onboarding_title"
         android:layout_marginBottom="30dp"
         android:alpha="0.65"
+
         android:fontFamily="@font/poppins"
         android:gravity="center"
         android:textColor="?attr/colorAccent"

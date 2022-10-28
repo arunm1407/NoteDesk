@@ -4,13 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.version2.domain.usecase.ValidationResult
 import com.example.version2.domain.repository.UserRepository
-import com.example.version2.domain.usecase.LoginUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 open class LoginViewModel(
     val userRepository: UserRepository,
-    private val loginUseCase: LoginUseCase
+    private val loginUseCaseWrapper: LoginUseCaseWrapper
 ) : ViewModel() {
 
     private var _userId: Int = 0
@@ -47,11 +46,11 @@ open class LoginViewModel(
     }
 
     suspend fun validateEmail(email: String): ValidationResult {
-        return loginUseCase.validateEmail.execute(email)
+        return loginUseCaseWrapper.validateEmail.execute(email)
     }
 
 
     suspend fun checkUserAuth(email: String, password: String): ValidationResult {
-        return loginUseCase.checkAuth.invoke(email, password)
+        return loginUseCaseWrapper.checkAuth.invoke(email, password)
     }
 }

@@ -82,7 +82,7 @@
             android:layout_marginHorizontal="@dimen/margin_large"
             android:backgroundTint="?attr/colorAccent"
             android:hint="@string/bio"
-            android:textCursorDrawable="?attr/colorAccent"
+            android:textCursorDrawable="@null"
             app:boxStrokeColor="@color/textview"
             app:hintTextColor="@color/colorPrimary"
             app:layout_constraintBottom_toTopOf="@id/tilGender"
@@ -90,8 +90,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/clProfilePicture"
             app:layout_constraintVertical_bias="0.5"
-            app:startIconTint="@color/icon"
-            app:startIconDrawable="@drawable/ic_baseline_supervised_user_circle_24">
+            app:startIconDrawable="@drawable/ic_baseline_supervised_user_circle_24"
+            app:startIconTint="@color/icon">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tilEtBio"
@@ -99,41 +99,31 @@
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 android:minHeight="100dp"
-                android:textCursorDrawable="@null"
-                android:textColor="?attr/colorAccent" />
+                android:textColor="?attr/colorAccent"
+                android:textCursorDrawable="@null" />
 
 
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/tilGender"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:layout_marginHorizontal="@dimen/margin_large"
             android:layout_marginTop="32dp"
             android:backgroundTint="?attr/colorAccent"
-            app:endIconTint="?attr/colorAccent"
+            android:foreground="@drawable/gender_bg"
+            android:inputType="text"
+            android:text="@string/select_your_gender"
+            android:textColor="?attr/colorAccent"
+            android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@id/tilDOB"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilBio"
-            app:startIconDrawable="@drawable/profile">
-
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/autoCompleteTextView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:imeOptions="actionNext"
-                android:inputType="none"
-                android:nextFocusDown="@id/tilEtDOB"
-                android:text="Select your Gender"
-                android:textCursorDrawable="@null"
-                android:textColor="?attr/colorAccent"
-                android:textSize="14sp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            app:startIconDrawable="@drawable/profile" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilDOB"
@@ -144,7 +134,7 @@
             android:layout_marginHorizontal="@dimen/margin_large"
             android:backgroundTint="?attr/colorAccent"
             android:hint="@string/date_of_birth"
-            android:textCursorDrawable="?attr/colorAccent"
+            android:textCursorDrawable="@null"
             app:boxStrokeColor="@color/textview"
             app:hintTextColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
@@ -158,15 +148,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clickable="false"
-                android:cursorVisible="true"
+                android:cursorVisible="false"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:imeOptions="actionNext"
                 android:inputType="text"
-                app:startIconTint="@color/icon"
-                android:textCursorDrawable="@null"
                 android:nextFocusDown="@id/tilEtMobile"
-                android:textColor="?attr/colorAccent" />
+                android:textColor="?attr/colorAccent"
+                android:textCursorDrawable="@null"
+                app:startIconTint="@color/icon" />
 
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -181,14 +171,14 @@
             android:layout_marginTop="@dimen/margin_large"
             android:backgroundTint="?attr/colorAccent"
             android:hint="@string/mobile_number"
-            android:textCursorDrawable="?attr/colorAccent"
+            android:textCursorDrawable="@null"
             app:boxStrokeColor="@color/textview"
             app:hintTextColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
-            app:startIconTint="@color/icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilDOB"
-            app:startIconDrawable="@drawable/ic_mobile">
+            app:startIconDrawable="@drawable/ic_mobile"
+            app:startIconTint="@color/icon">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tilEtMobile"
@@ -197,8 +187,8 @@
                 android:imeOptions="actionDone"
                 android:inputType="number"
                 android:maxLength="10"
-                android:textCursorDrawable="@null"
-                android:textColor="?attr/colorAccent" />
+                android:textColor="?attr/colorAccent"
+                android:textCursorDrawable="@null" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -208,8 +198,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/margin_small"
-            android:text="@string/next"
             android:backgroundTint="@color/colorPrimary"
+            android:text="@string/next"
             android:textColor="?attr/colorOnPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

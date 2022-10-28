@@ -12,27 +12,14 @@ class ValidateNewEmail(private val userRepository: UserRepository) {
     ): ValidationResult {
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            return ValidationResult(
-                successful = false,
-                errorMessage = "That's not a valid email"
-            )
-        }
+            return ValidationResult.Error("That's not a valid email")
 
+        }
 
         if (!userRepository.isExistingEmail(email)) {
-            return ValidationResult(
-                successful = false,
-                errorMessage = "The email does note exist"
-            )
+            return ValidationResult.Error("The email does not exist")
         }
 
-
-
-
-
-
-        return ValidationResult(
-            successful = true
-        )
+        return ValidationResult.Successful
     }
 }

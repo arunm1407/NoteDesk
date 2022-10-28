@@ -13,6 +13,7 @@ import com.example.version2.R
 import com.example.version2.databinding.FragmentAccountInfoBinding
 import com.example.version2.domain.model.Gender
 import com.example.version2.domain.model.User
+import com.example.version2.domain.usecase.ValidationResult
 import com.example.version2.presentation.common.NotesApplication
 import com.example.version2.presentation.signUp.listener.Navigate
 import com.example.version2.presentation.util.clearError
@@ -97,7 +98,7 @@ class AccountInfoFragment : Fragment() {
                 {
                     if (validateData()) {
                         removeError()
-                        navigationLisenter?.navigate(PersonalInfoFragment())
+                        navigationLisenter?.navigateToPersonalPage()
                     }
 
                 }
@@ -118,30 +119,41 @@ class AccountInfoFragment : Fragment() {
         val email = binding.tilEtEmail.getStringLower()
         val firstName = binding.tilEtFirstName.getString()
         val lastName = binding.tilEtLastName.getString()
-        var flag = false
+        var flag = true
 
         if (firstName.isEmpty()) {
-            binding.tilFirstName.error = "Field is Empty"
+            binding.tilFirstName.error = getString(R.string.field_is_empty)
+            flag = false
         }
+
+
         if (lastName.isEmpty()) {
-            binding.tilLastName.error = "Field is Empty"
-
+            binding.tilLastName.error = getString(R.string.field_is_empty)
+            flag = false
         }
 
-        withContext(Dispatchers.IO)
-        {
-            val res = viewModel.checkEmailExist(email)
-            if (res.successful) {
-                flag = true
-                updateData(email, firstName, lastName)
-            } else {
-                withContext(Dispatchers.Main) {
-                    binding.tilEmail.error = res.errorMessage
+
+            withContext(Dispatchers.IO)
+            {
+                when (val res = viewModel.checkEmailExist(email)) {
+
+                    is ValidationResult.Error -> {
+                        flag = false
+                        withContext(Dispatchers.Main) {
+                            binding.tilEmail.error = res.message
+                        }
+
+                    }
+                    ValidationResult.Successful -> {
+                        updateData(email, firstName, lastName)
+                    }
                 }
+
 
             }
 
-        }
+
+
         return flag
     }
 

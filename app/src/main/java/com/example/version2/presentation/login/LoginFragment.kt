@@ -1,7 +1,6 @@
 package com.example.version2.presentation.login
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,10 +16,7 @@ import com.example.version2.presentation.util.keys.Keys
 import com.example.version2.presentation.util.sharedPreference.SharedPreference
 import com.example.version2.databinding.FragmentLoginBinding
 import com.example.version2.presentation.common.NotesApplication
-import com.example.version2.presentation.common.NoteScreen
 import com.example.version2.presentation.login.listener.Navigation
-import com.example.version2.presentation.onBoarding.activity.BoardingScreen
-import com.example.version2.presentation.signUp.CreateAccount
 import com.example.version2.presentation.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -74,7 +70,7 @@ class LoginFragment : Fragment() {
     private fun signUpListener() {
         binding.toSignup.setOnClickListener {
             clearData()
-            navigationLisenter?.navigate(Intent(requireContext(), CreateAccount::class.java))
+            navigationLisenter?.navigateToSignUp()
         }
     }
 
@@ -86,20 +82,10 @@ class LoginFragment : Fragment() {
 
 
                     if (viewModel.checkUserIsOnBoarded(viewModel.userId)) {
-                        navigationLisenter?.navigate(
-                            Intent(
-                                requireContext(),
-                                NoteScreen::class.java
-                            )
-                        )
+                        navigationLisenter?.navigateToNoteScreen()
 
                     } else {
-                        navigationLisenter?.navigate(
-                            Intent(
-                                requireContext(),
-                                BoardingScreen::class.java
-                            )
-                        )
+                        navigationLisenter?.navigateToBoardingScreen()
                     }
 
 
@@ -159,17 +145,28 @@ class LoginFragment : Fragment() {
         }
 
 
+        when (res) {
+            is ValidationResult.Error -> {
+                binding.tvLoginName.setErrorMessage((res as ValidationResult.Error).message)
+                return false
+            }
+            ValidationResult.Successful -> {
 
-
-        if (!res.successful) {
-            binding.tvLoginName.setErrorMessage(res.errorMessage)
-            return false
+            }
         }
 
-        if (!pass.successful) {
-            binding.tvLoginPassword.setErrorMessage(pass.errorMessage)
-            return false
+
+        when (pass) {
+            is ValidationResult.Error -> {
+                binding.tvLoginPassword.setErrorMessage((pass as ValidationResult.Error).message)
+                return false
+            }
+            ValidationResult.Successful -> {
+
+            }
         }
+
+
         withContext(Dispatchers.Main) {
 
 
@@ -218,7 +215,7 @@ class LoginFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    requireActivity().finish()
+                   navigationLisenter?.exitTheScreen()
 
                 }
             })

@@ -2,7 +2,6 @@ package com.example.version2.domain.usecase
 
 import com.example.version2.domain.model.Note
 import com.example.version2.domain.model.Priority
-import com.example.version2.presentation.homeScreen.enums.FilterChoiceSelected
 
 
 class FilterList {
@@ -10,24 +9,27 @@ class FilterList {
 
     operator fun invoke(
         oldMyNotes: List<Note>,
-        filterChoiceSelected: FilterChoiceSelected
+        isFavorite: Boolean,
+        isPriority_red: Boolean,
+        isPriority_yellow: Boolean,
+        isPriority_green: Boolean
     ): List<Note> {
 
         val ans = mutableListOf<Note>()
-        if (!(filterChoiceSelected.isFavorite || filterChoiceSelected.isPriority_red || filterChoiceSelected.isPriority_yellow || filterChoiceSelected.isPriority_green)) {
+        if (!(isFavorite || isPriority_red || isPriority_yellow || isPriority_green)) {
             return oldMyNotes
         }
 
 
 
         oldMyNotes.forEach {
-            if (it.favorite && filterChoiceSelected.isFavorite)
+            if (it.favorite && isFavorite)
                 ans.add(it)
-            else if (it.priority == Priority.IMPORTANT && filterChoiceSelected.isPriority_red)
+            else if (it.priority == Priority.IMPORTANT && isPriority_red)
                 ans.add(it)
-            else if (it.priority == Priority.MEDIUM && filterChoiceSelected.isPriority_yellow)
+            else if (it.priority == Priority.MEDIUM && isPriority_yellow)
                 ans.add(it)
-            else if (it.priority == Priority.LOW && filterChoiceSelected.isPriority_green)
+            else if (it.priority == Priority.LOW && isPriority_green)
                 ans.add(it)
 
         }

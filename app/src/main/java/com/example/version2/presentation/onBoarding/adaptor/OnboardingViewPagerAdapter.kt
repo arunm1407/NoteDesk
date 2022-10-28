@@ -3,6 +3,7 @@ package com.example.version2.presentation.onBoarding.adaptor
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.version2.R
+import com.example.version2.presentation.common.NotesApplication
 import com.example.version2.presentation.onBoarding.BoardingFragment
 import com.example.version2.presentation.onBoarding.MainFragment
 
@@ -14,18 +15,18 @@ class OnboardingViewPagerAdapter(
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> BoardingFragment.newInstance(
-                "Easy to Add & Use Notes",
-                "Take Notes and access them AnyTime,NoteDesk provide safe and privacy for Data ...",
+                NotesApplication.context?.getString(R.string.title1),
+                NotesApplication.context?.getString(R.string.content1),
                 R.raw.first
             )
             1 -> BoardingFragment.newInstance(
-                "Not Just Texts",
-                "Add Images ,   WebLinks,     Voice-To-Text  , Search Notes , Sort Notes , prioritize Notes and   Choose Color  to your Notes",
+                NotesApplication.context?.getString(R.string.title2),
+                NotesApplication.context?.getString(R.string.content2),
                 R.raw.second
             )
             else -> BoardingFragment.newInstance(
-                "Stay Organised",
-                "Keep Track your Progress with the NoteDesk and Be Organised for better Efficiency and Productivity in you work... ",
+                NotesApplication.context?.getString(R.string.title3),
+                NotesApplication.context?.getString(R.string.content3),
                 R.raw.third
             )
         }

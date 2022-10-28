@@ -8,7 +8,6 @@ import android.content.DialogInterface
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.ImageView
@@ -41,23 +40,16 @@ import com.example.version2.domain.model.Note
 import com.example.version2.presentation.common.NotesApplication
 import com.example.version2.presentation.common.NoteScreen
 import com.example.version2.presentation.common.viewHolder.NotesRVViewHolder
-import com.example.version2.presentation.attachmentPreview.AttachmentPreviewFragment
-import com.example.version2.presentation.createNote.CreateNoteFragment
 import com.example.version2.presentation.homeScreen.adaptor.NotesAdaptor
 import com.example.version2.presentation.homeScreen.dialog.FilterDialog
 import com.example.version2.presentation.homeScreen.dialog.SortDialog
 import com.example.version2.presentation.homeScreen.enums.FilterChoiceSelected
 import com.example.version2.presentation.homeScreen.enums.MenuActions
-import com.example.version2.presentation.homeScreen.enums.SortBy
-import com.example.version2.presentation.homeScreen.enums.SortValues
+import com.example.version2.domain.model.SortBy
+import com.example.version2.domain.model.SortValues
 import com.example.version2.presentation.homeScreen.listener.*
-import com.example.version2.presentation.login.activity.LoginActivity
 import com.example.version2.presentation.model.NotesRvItem
 import com.example.version2.presentation.model.mapper.UiNotesMapper
-import com.example.version2.presentation.policy.PolicyFragment
-import com.example.version2.presentation.previewNote.NotePreviewFragment
-import com.example.version2.presentation.profile.ProfileFragment
-import com.example.version2.presentation.search.SearchFragment
 import com.example.version2.presentation.util.*
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
@@ -77,7 +69,6 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapter: NotesAdaptor
     private var fragmentNavigationLisenter: FragmentNavigationLisenter? = null
-    private var settingsLisenter: SettingsLisenter? = null
 
 
     override fun onAttach(context: Context) {
@@ -85,10 +76,6 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         retrievePreference()
         if (context is FragmentNavigationLisenter) {
             fragmentNavigationLisenter = context
-        }
-        if (context is SettingsLisenter) {
-            settingsLisenter = context
-
         }
     }
 
@@ -98,12 +85,12 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
-        fetchData()
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        fetchData()
         initializeView()
         viewListener()
         eventHandler()
@@ -192,18 +179,18 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                     binding.mainDrawerLayout.closeDrawer(GravityCompat.START)
                 }
                 R.id.menu_app_info -> {
-                    settingsLisenter?.settings()
+                    fragmentNavigationLisenter?.navigateToSettingsPage()
 
                 }
-                R.id.menu_privacy -> {
-                    navigationOnFragment(PolicyFragment(), BackStack.POLICY)
+                R.id.menu_policy -> {
+                    fragmentNavigationLisenter?.navigateToPolicyScreen()
 
                 }
                 R.id.menu_sign_out -> {
                     signOut()
                 }
                 R.id.menu_profile -> {
-                    navigateToProfile()
+                    fragmentNavigationLisenter?.navigateToProfileScreen(viewModel.userId)
                 }
             }
             binding.mainDrawerLayout.closeDrawer(GravityCompat.START)
@@ -235,10 +222,10 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                     .findViewById<ImageView>(R.id.ivProfilePicture).setOnClickListener {
 
                         if (bitmap != null) {
-                            fragmentNavigationLisenter?.navigate(
-                                AttachmentPreviewFragment.newInstance(bitmap!!.name),
-                                BackStack.ATTACHMENT_PREVIEW
-                            )
+
+
+                            fragmentNavigationLisenter?.navigateToAttachmentPreviewScreen(bitmap!!.name)
+
                         } else {
                             Toast.makeText(
                                 requireContext(),
@@ -281,20 +268,6 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
 
     }
 
-    private fun navigateToProfile() {
-
-        lifecycleScope.launch()
-        {
-            withContext(Dispatchers.IO)
-            {
-                fragmentNavigationLisenter?.navigate(
-                    ProfileFragment.newInstance(viewModel.userId),
-                    BackStack.PROFILE
-                )
-            }
-        }
-
-    }
 
     private fun signOut() {
 
@@ -307,7 +280,8 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
 
             ) { _, _ ->
                 SharedPreference(requireActivity()).putIntSharePreferenceInt(Keys.USER_ID, 0)
-                fragmentNavigationLisenter?.navigateActivity(LoginActivity()::class.java)
+
+                fragmentNavigationLisenter?.navigateToLoginScreen()
             }
             .setNegativeButton(getString(R.string.no), null)
             .setCancelable(false)
@@ -323,12 +297,9 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
     }
 
     private fun navigateFragment(action: MenuActions) {
-        navigationOnFragment(CreateNoteFragment.newInstance(null, action), BackStack.CREATE)
-    }
 
-    private fun navigationOnFragment(fragment: Fragment, name: String) {
-        Log.i("arun", "$fragmentNavigationLisenter")
-        fragmentNavigationLisenter?.navigate(fragment, name)
+        fragmentNavigationLisenter?.navigateToCreateNoteScreen(null, action)
+
     }
 
 
@@ -555,12 +526,14 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         { count ->
 
             if (count.getSelectedCount() > 0) {
+
                 binding.sort.btnFilterText.text =
                     resources.getString(R.string.selectedCount, count.getSelectedCount())
                 binding.sort.btnFilterText.visibility = View.VISIBLE
 
 
             } else {
+
                 binding.sort.btnFilterText.visibility = View.GONE
             }
 
@@ -636,7 +609,8 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
                         true
                     }
                     R.id.menu_Search -> {
-                        navigationOnFragment(SearchFragment(), BackStack.SEARCH)
+                        fragmentNavigationLisenter?.navigateToSearchScreen()
+
                         true
                     }
 
@@ -693,11 +667,11 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         lifecycleScope.launch()
         {
 
-
             viewModel.getNotes(viewModel.userId)
                 .observe(viewLifecycleOwner) {
 
-
+                    binding.fetchData.visibility = View.GONE
+                    binding.fetchText.visibility = View.GONE
                     if (it.isEmpty()) {
                         binding.imageEmpty.visibility = View.VISIBLE
                         binding.textEmpty.visibility = View.VISIBLE
@@ -851,6 +825,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         if (isEnable()) {
             clickItem(holder, UiNotesMapper.viewToDomain(adapter.getNotesAtPosition(pos)))
         } else {
+
             onClicked(UiNotesMapper.viewToDomain(adapter.getNotesAtPosition(pos)))
         }
     }
@@ -994,8 +969,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
         setTrueContextualActionMode()
         val holder: RecyclerView.ViewHolder =
             binding.recyclerView.findViewHolderForAdapterPosition(pos)!!
-        if (holder is NotesRVViewHolder
-        )
+        if (holder is NotesRVViewHolder)
             if (!viewModel.isEnable) {
                 val callback = object : ActionMode.Callback {
 
@@ -1140,7 +1114,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
 
 
     private fun onClicked(notes: Note) {
-        navigationOnFragment(NotePreviewFragment.newInstance(notes), BackStack.PREVIEW)
+        fragmentNavigationLisenter?.navigateToPreviewNoteScreen(notes)
     }
 
 
@@ -1281,7 +1255,7 @@ class HomeFragment : Fragment(), SortLisenter, FilterChoiceLisenter, NotesListen
     override fun onDetach() {
         super.onDetach()
         fragmentNavigationLisenter = null
-        settingsLisenter = null
+
     }
 
     private fun backPressedListener() {

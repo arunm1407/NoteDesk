@@ -2,8 +2,8 @@ package com.example.version2.domain.usecase
 
 
 import com.example.version2.domain.model.Note
-import com.example.version2.presentation.homeScreen.enums.SortBy
-import com.example.version2.presentation.homeScreen.enums.SortValues
+import com.example.version2.domain.model.SortBy
+import com.example.version2.domain.model.SortValues
 
 class SortList {
 

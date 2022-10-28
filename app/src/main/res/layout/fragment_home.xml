@@ -79,26 +79,7 @@ tools:openDrawer="start">
 
             app:layout_constraintTop_toBottomOf="@id/sort" />
 
-        <TextView
-            android:id="@+id/search_empty_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
-            android:fontFamily="@font/poppins"
-            android:includeFontPadding="false"
-            android:text="@string/search_result_not_found"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textColor="@color/colorText"
-            android:textSize="14sp"
-            android:textStyle="normal"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_empty"
-            tools:ignore="SmallSp" />
+
 
 
         <ImageView
@@ -116,6 +97,12 @@ tools:openDrawer="start">
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/sort" />
+
+
+
+
+
+
 
         <TextView
             android:id="@+id/text_empty"
@@ -159,6 +146,50 @@ tools:openDrawer="start">
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/filter"
             app:lottie_url="REPLACE_JSON_URL" />
+
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/fetch_Data"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="120dp"
+            android:contentDescription="@string/app_name"
+            android:scaleType="centerInside"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sort"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/fetch2"
+            app:lottie_url="REPLACE_JSON_URL" />
+
+
+
+        <TextView
+            android:id="@+id/fetch_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/poppins_light"
+            android:includeFontPadding="false"
+            android:text="Fetching Data....."
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="?attr/colorAccent"
+            android:textSize="11sp"
+            android:textStyle="normal"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_empty"
+            tools:ignore="SmallSp"
+            tools:visibility="visible" />
 
 
 

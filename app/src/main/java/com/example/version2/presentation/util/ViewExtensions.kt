@@ -19,7 +19,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.example.version2.R
-import com.example.version2.domain.model.Gender
 import com.example.version2.presentation.homeScreen.enums.FilterChoiceSelected
 import com.google.android.material.textfield.TextInputLayout
 import java.util.*
@@ -155,15 +154,7 @@ inline fun FragmentManager.inTransaction(
 }
 
 
-fun String.getGender(): Gender {
 
-
-    return when (this) {
-        "MEN" -> Gender.MEN
-        "WOMEN" -> Gender.WOMEN
-        else -> Gender.NOT_SPECIFIED
-    }
-}
 
 
 inline fun <T : Fragment> T.withArgs(args: Bundle.() -> Unit): T =
@@ -220,6 +211,7 @@ fun EditText.clearErrorOnClick(view: TextInputLayout) {
     this.setOnClickListener {
 
         view.clearError()
+
     }
 }
 

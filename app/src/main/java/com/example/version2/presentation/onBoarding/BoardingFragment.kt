@@ -39,6 +39,11 @@ class BoardingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentBoardingBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         arguments.apply {
             binding.textOnboardingTitle.text = requireArguments().getString(TITLE)
             binding.textOnboardingDescription.text = requireArguments().getString(DESCRIPTION)
@@ -46,7 +51,6 @@ class BoardingFragment : Fragment() {
 
 
         }
-        return binding.root
     }
 
 

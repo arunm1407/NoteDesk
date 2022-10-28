@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="@dimen/margin_small"
-    android:background="?attr/colorOnSecondary"
+    android:background="?attr/colorSurface"
     android:elevation="20dp"
     android:padding="@dimen/padding_large">
 

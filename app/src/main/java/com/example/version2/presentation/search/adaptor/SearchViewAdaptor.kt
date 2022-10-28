@@ -78,7 +78,7 @@ class SearchViewAdaptor(
 
                 holder.itemView.findViewById<ImageView>(R.id.ibRemove).setOnClickListener {
 
-                    val suggestion = items[position] as NotesRvItem.UISuggestion
+                    val suggestion = items[holder.adapterPosition] as NotesRvItem.UISuggestion
                     suggestionListener.deleteSearchHistory(
                         suggestion.suggestion,
                         holder.adapterPosition
@@ -103,8 +103,15 @@ class SearchViewAdaptor(
     }
 
 
-    fun removeItemFromList(position: Int) {
-        items.removeAt(position)
-        notifyItemRemoved(position)
+    @SuppressLint("NotifyDataSetChanged")
+    fun removeItemFromList(pos: Int) {
+        if (items.size == 2) {
+            items.clear()
+            notifyDataSetChanged()
+        } else {
+            items.removeAt(pos)
+            notifyItemRemoved(pos)
+        }
+
     }
 }

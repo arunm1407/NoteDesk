@@ -31,7 +31,6 @@ class EditProfileImageDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = EditProfileDialogBinding.inflate(layoutInflater, container, false)
-        binding.layoutChooseImage
         return binding.root
     }
 

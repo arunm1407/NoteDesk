@@ -2,23 +2,24 @@ package com.example.version2.presentation.signUp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.version2.domain.model.Gender
 import com.example.version2.domain.model.User
 import com.example.version2.domain.repository.UserRepository
-import com.example.version2.domain.usecase.SignUpUseCase
 import com.example.version2.domain.usecase.ValidationResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 
 class SignUpViewModel(
     private val userRepository: UserRepository,
-    private val signUpUseCase: SignUpUseCase
+    private val signUpUseCaseWrapper: SignUpUseCaseWrapper
+
 ) : ViewModel() {
 
 
-   lateinit var userData: User
+    lateinit var userData: User
     var imageFileName: String? = null
     var userID: Int = 0
-
+lateinit var gender: Gender
 
     suspend fun createAccount(user: User): Long {
         val res = viewModelScope.async(Dispatchers.IO) {
@@ -30,26 +31,29 @@ class SignUpViewModel(
     }
 
 
-
-
     suspend fun checkEmailExist(email: String): ValidationResult {
 
-        return signUpUseCase.checkEmailExist(email)
+        return signUpUseCaseWrapper.checkEmailExist(email)
 
     }
 
     fun validateMobileNumber(mobile: String): ValidationResult {
-        return signUpUseCase.validateMobileNumber(mobile)
+        return signUpUseCaseWrapper.validateMobileNumber(mobile)
 
     }
 
 
     fun validatePinCode(pincode: String): ValidationResult {
-        return signUpUseCase.validatePincode(pincode)
+        return signUpUseCaseWrapper.validatePincode(pincode)
     }
 
-    fun validatePassword(password:String,confirmPassword:String):ValidationResult
+    fun validatePassword(password: String, confirmPassword: String): ValidationResult {
+        return signUpUseCaseWrapper.validatePassword(password, confirmPassword)
+    }
+
+
+    fun validateString(field:String,max:Int,fieldName:String):ValidationResult
     {
-        return signUpUseCase.validatePassword(password,confirmPassword)
+        return signUpUseCaseWrapper.validateString(field,max,fieldName)
     }
 }

@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.version2.presentation.util.keys.Keys
-import com.example.version2.presentation.homeScreen.enums.SortValues
+import com.example.version2.domain.model.SortValues
 
 
 class SharedPreference(private val activity: Activity) {

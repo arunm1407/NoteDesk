@@ -1,7 +1,9 @@
 package com.example.version2.domain.usecase
 
 
-data class ValidationResult(
-    val successful: Boolean,
-    val errorMessage: String? = null
-)
+sealed class ValidationResult {
+
+    object Successful : ValidationResult()
+    class Error(val message: String) : ValidationResult()
+
+}

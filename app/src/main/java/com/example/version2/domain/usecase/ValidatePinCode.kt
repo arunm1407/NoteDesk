@@ -8,14 +8,9 @@ class ValidatePinCode {
     operator fun invoke(pinCode: String): ValidationResult {
 
         if (!pinCodeCheck(pinCode)) {
-            return ValidationResult(
-                successful = false,
-                errorMessage = "The pinCode is Invalid"
-            )
+           return ValidationResult.Error("The pinCode is Invalid")
         }
-        return ValidationResult(
-            successful = true
-        )
+        return ValidationResult.Successful
     }
 
 

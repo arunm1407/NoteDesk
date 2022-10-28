@@ -1,39 +1,43 @@
 package com.example.version2.presentation.search
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.version2.presentation.util.keys.Keys
 import com.example.version2.R
 import com.example.version2.databinding.FragmentSearchBinding
 import com.example.version2.domain.model.Note
-import com.example.version2.presentation.common.NotesApplication
 import com.example.version2.presentation.common.NoteScreen
+import com.example.version2.presentation.common.NotesApplication
 import com.example.version2.presentation.homeScreen.dialog.FilterDialog
 import com.example.version2.presentation.homeScreen.dialog.SortDialog
 import com.example.version2.presentation.homeScreen.enums.FilterChoiceSelected
-import com.example.version2.presentation.homeScreen.enums.SortBy
-import com.example.version2.presentation.homeScreen.enums.SortValues
+import com.example.version2.domain.model.SortBy
+import com.example.version2.domain.model.SortValues
 import com.example.version2.presentation.homeScreen.listener.FilterChoiceLisenter
 import com.example.version2.presentation.homeScreen.listener.FragmentNavigationLisenter
 import com.example.version2.presentation.homeScreen.listener.SortLisenter
 import com.example.version2.presentation.model.NotesRvItem
 import com.example.version2.presentation.model.mapper.UiNotesMapper
-import com.example.version2.presentation.previewNote.NotePreviewFragment
 import com.example.version2.presentation.search.adaptor.SearchViewAdaptor
 import com.example.version2.presentation.search.listener.SuggestionLisenter
-import com.example.version2.presentation.util.*
+import com.example.version2.presentation.util.getSelectedCount
+import com.example.version2.presentation.util.hideKeyboard
+import com.example.version2.presentation.util.initRecyclerView
+import com.example.version2.presentation.util.keys.Keys
+import com.example.version2.presentation.util.setup
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -75,16 +79,16 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
-        fetchData()
+
         return binding.root
     }
 
 
     private fun fetchData() {
-
+        viewModel.userId=(requireActivity() as NoteScreen).getUserID()
         lifecycleScope.launch()
         {
-            viewModel.getNotes((requireActivity() as NoteScreen).getUserID())
+            viewModel.getNotes(viewModel.userId)
                 .observe(viewLifecycleOwner)
                 {
 
@@ -97,6 +101,7 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fetchData()
         setAdaptor()
         initializeToolBar()
         initializeMenu()
@@ -120,6 +125,7 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
                 isPriority_green = false
             )
         )
+
     }
 
     private fun initializeMenu() {
@@ -145,7 +151,7 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
 
                     override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
                         searchView.hideKeyboard()
-                        requireActivity().supportFragmentManager.popBackStack()
+                        fragmentNavigationLisenter?.navigateToPreviousScreen()
                         return true
                     }
 
@@ -167,7 +173,8 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
                             viewModel.setSearchQuery(p0)
 
                         }
-                        notesFiltering(p0)
+
+                        notesFiltering(viewModel.searchQuery)
                         return false
                     }
                 })
@@ -188,7 +195,7 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
             withContext(Dispatchers.IO)
             {
                 val suggestion =
-                    viewModel.getSuggestion((requireActivity() as NoteScreen).getUserID())
+                    viewModel.getSuggestion(viewModel.userId)
                 if (suggestion.isNotEmpty()) {
                     list.add(NotesRvItem.UITitle(1, Keys.SEARCH_SUGGESTION))
                     suggestion.forEach {
@@ -222,6 +229,7 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
 
 
     private fun notesFiltering(p0: String) {
+        Log.i("arun","search query $p0")
         binding.searchText.visibility = View.GONE
         binding.searchImage.visibility = View.GONE
         val newFilteredList = mutableListOf<Note>()
@@ -247,7 +255,7 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
 
 
             }
-            Log.i("arun", "  $p0  $newFilteredList  $list")
+
             updateList(list, newFilteredList, p0)
         } else {
             binding.searchText.visibility = View.VISIBLE
@@ -255,15 +263,13 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
             binding.ivSearchIllustration.visibility = View.GONE
             binding.tvScreenInfo.visibility = View.GONE
             updateList(mutableListOf(), listOf(), p0)
-
             lifecycleScope.launch()
             {
 
                 withContext(Dispatchers.IO)
                 {
 
-                    val suggestion =
-                        viewModel.getSuggestion((requireActivity() as NoteScreen).getUserID())
+                    val suggestion = viewModel.getSuggestion(viewModel.userId)
                     if (suggestion.isNotEmpty()) {
                         list.add(NotesRvItem.UITitle(1, Keys.SEARCH_SUGGESTION))
                         suggestion.forEach {
@@ -307,21 +313,21 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
         adaptor.setData(list)
     }
 
-    private fun navigationOnFragment(fragment: Fragment) {
-        fragmentNavigationLisenter?.navigate(fragment, BackStack.PREVIEW)
-    }
+
 
 
     private fun showDialog(dialog: DialogFragment): Boolean {
-        dialog.show(childFragmentManager, "3")
+        dialog.activity?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show(childFragmentManager, "2")
+        dialog.isCancelable = false
         return true
 
     }
 
 
     override fun addSuggestion(name: String) {
-        viewModel.deleteSearchHistory(name, (requireActivity() as NoteScreen).getUserID())
-        viewModel.addSuggestion(name, (requireActivity() as NoteScreen).getUserID())
+        viewModel.deleteSearchHistory(name, viewModel.userId)
+        viewModel.addSuggestion(name, viewModel.userId)
 
     }
 
@@ -330,20 +336,20 @@ class SearchFragment : Fragment(), SuggestionLisenter, SortLisenter,
     }
 
     override fun deleteSearchHistory(name: String, position: Int) {
-        viewModel.deleteSearchHistory(name, (requireActivity() as NoteScreen).getUserID())
+        viewModel.deleteSearchHistory(name, viewModel.userId)
         adaptor.removeItemFromList(position)
 
 
     }
 
     override fun onClickedNote(notes: NotesRvItem.UINotes) {
-        navigationOnFragment(NotePreviewFragment.newInstance(notes.note))
+        fragmentNavigationLisenter?.navigateToPreviewNoteScreen(notes.note)
+
     }
 
     override fun onFilterClickDone(choice: FilterChoiceSelected) {
         viewModel.setFilterChoiceSelected(choice)
         viewModel.displayList = viewModel.filterListByChoice(viewModel.filterList, choice)
-        Log.i("arun", "display list ${viewModel.displayList}")
     }
 
 

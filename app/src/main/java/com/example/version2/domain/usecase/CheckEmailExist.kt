@@ -8,21 +8,14 @@ class CheckEmailExist(private val userRepository: UserRepository) {
     suspend operator fun invoke(email: String): ValidationResult {
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            return ValidationResult(
-                successful = false,
-                errorMessage = "That's not a valid email"
-            )
+            return ValidationResult.Error("That's not a valid email")
         }
 
         if (userRepository.isExistingEmail(email)) {
-            return ValidationResult(
-                successful = false,
-                errorMessage = "The email already exist"
-            )
+            return ValidationResult.Error("The email already exist")
+
         }
-        return ValidationResult(
-            successful = true
-        )
+        return ValidationResult.Successful
     }
 
 

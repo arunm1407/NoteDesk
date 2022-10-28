@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import com.example.version2.presentation.util.keys.Keys
 import com.example.version2.databinding.FilterDailogBinding
@@ -46,7 +47,6 @@ class FilterDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FilterDailogBinding.inflate(inflater, container, false)
-        retrievedChoiceToView()
         return binding.root
     }
 
@@ -57,12 +57,14 @@ class FilterDialog : DialogFragment() {
             val width = ViewGroup.LayoutParams.MATCH_PARENT
             val height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.window?.setLayout(width, height)
-
+            it.window?.addFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH)
         }
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        retrievedChoiceToView()
         eventHandler()
     }
 

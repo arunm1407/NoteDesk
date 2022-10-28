@@ -1,5 +1,6 @@
 package com.example.version2.presentation.attachmentPreview
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
@@ -15,6 +16,7 @@ import com.example.version2.presentation.util.storage.InternalStoragePhoto
 import com.example.version2.presentation.util.storage.Storage
 import com.example.version2.R
 import com.example.version2.databinding.FragmentAttachmentPreviewBinding
+import com.example.version2.presentation.homeScreen.listener.FragmentNavigationLisenter
 import com.example.version2.presentation.util.setup
 import com.example.version2.presentation.util.withArgs
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +37,23 @@ class AttachmentPreviewFragment : Fragment() {
 
     private lateinit var binding: FragmentAttachmentPreviewBinding
     private val viewModel: AttachmentPreviewViewModel by viewModels()
+    private var fragmentNavigationLisenter: FragmentNavigationLisenter? = null
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentNavigationLisenter) {
+            fragmentNavigationLisenter = context
+        }
+
+    }
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        getArgumentParcelable()
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +61,6 @@ class AttachmentPreviewFragment : Fragment() {
     ): View {
 
         binding = FragmentAttachmentPreviewBinding.inflate(layoutInflater, container, false)
-        getArgumentParcelable()
         return binding.root
     }
 
@@ -115,11 +133,17 @@ class AttachmentPreviewFragment : Fragment() {
         )
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        fragmentNavigationLisenter = null
+    }
+
     private fun setupBackPressedListener() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    parentFragmentManager.popBackStack()
+                    fragmentNavigationLisenter?.navigateToPreviousScreen()
 
                 }
             })

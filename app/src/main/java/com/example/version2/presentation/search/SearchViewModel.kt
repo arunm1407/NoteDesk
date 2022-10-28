@@ -7,11 +7,11 @@ import com.example.version2.domain.model.Note
 import com.example.version2.domain.model.SuggestionHistory
 import com.example.version2.domain.repository.NoteRepository
 import com.example.version2.domain.repository.SuggestionRepository
-import com.example.version2.domain.usecase.HomeUseCase
+import com.example.version2.presentation.homeScreen.HomeUseCaseWrapper
 import com.example.version2.presentation.common.NotesViewModel
 import com.example.version2.presentation.homeScreen.enums.FilterChoiceSelected
-import com.example.version2.presentation.homeScreen.enums.SortBy
-import com.example.version2.presentation.homeScreen.enums.SortValues
+import com.example.version2.domain.model.SortBy
+import com.example.version2.domain.model.SortValues
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -20,9 +20,12 @@ import java.util.*
 class SearchViewModel(
     private val suggestionRepository: SuggestionRepository,
     noteRepository: NoteRepository,
-    private val useCase: HomeUseCase
+    private val useCase: HomeUseCaseWrapper
 ) : NotesViewModel(noteRepository) {
 
+
+
+    var userId:Int=0
 
     private val _filterChoiceSelected: MutableLiveData<FilterChoiceSelected> = MutableLiveData()
 
@@ -113,7 +116,14 @@ class SearchViewModel(
         list: List<Note>,
         filterChoiceSelected: FilterChoiceSelected
     ): List<Note> {
-        return useCase.filterList(list, filterChoiceSelected)
+        return useCase.filterList(
+            list,
+            filterChoiceSelected.isFavorite,
+            filterChoiceSelected.isPriority_red,
+            filterChoiceSelected.isPriority_yellow,
+            filterChoiceSelected.isPriority_green
+        )
+
 
 
     }

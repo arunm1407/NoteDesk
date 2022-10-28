@@ -20,13 +20,10 @@ import com.example.version2.domain.model.Attachment
 import com.example.version2.domain.model.Note
 import com.example.version2.domain.model.Priority
 import com.example.version2.presentation.common.NotesApplication
-import com.example.version2.presentation.attachmentPreview.AttachmentPreviewFragment
 import com.example.version2.presentation.attachmentPreview.adaptor.AttachmentAdaptor
 import com.example.version2.presentation.attachmentPreview.listener.AttachmentLisenter
-import com.example.version2.presentation.createNote.CreateNoteFragment
 import com.example.version2.presentation.createNote.adaptor.UrlAdaptor
 import com.example.version2.presentation.createNote.listener.UrlListener
-import com.example.version2.presentation.homeScreen.enums.MenuActions
 import com.example.version2.presentation.homeScreen.listener.FragmentNavigationLisenter
 import com.example.version2.presentation.util.*
 
@@ -76,8 +73,6 @@ class NotePreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
     }
 
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAttachmentTitle()
@@ -103,7 +98,8 @@ class NotePreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
 
                 return when (menuItem.itemId) {
                     R.id.menu_edit -> {
-                        navigate()
+                        fragmentNavigationLisenter?.navigateToEditPage(viewModel.notes)
+
                         true
                     }
                     else -> false
@@ -112,8 +108,6 @@ class NotePreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
     }
-
-
 
 
     private fun getArgumentParcelable() {
@@ -164,8 +158,6 @@ class NotePreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
         setPriorityToView(viewModel.notes.priority)
 
 
-
-
     }
 
     private fun setPriorityToView(priority: Priority) {
@@ -174,7 +166,8 @@ class NotePreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
             Priority.LOW ->
                 binding.apply {
                     resetPriorityChoiceSelected()
-                    green.setImageResource(R.drawable.ic_done) }
+                    green.setImageResource(R.drawable.ic_done)
+                }
             Priority.IMPORTANT ->
                 binding.apply {
                     resetPriorityChoiceSelected()
@@ -225,11 +218,6 @@ class NotePreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
 
         }
 
-    }
-
-    private fun navigate() {
-        val fragment = CreateNoteFragment.newInstance(viewModel.notes, MenuActions.NOACTION)
-        fragmentNavigationLisenter?.navigate(fragment, BackStack.EDIT)
     }
 
 
@@ -287,11 +275,7 @@ class NotePreviewFragment : Fragment(), AttachmentLisenter, UrlListener {
 
 
     override fun onAttachmentClicked(name: String) {
-
-        fragmentNavigationLisenter?.navigate(
-            AttachmentPreviewFragment.newInstance(name),
-            BackStack.ATTACHMENT_PREVIEW
-        )
+        fragmentNavigationLisenter?.navigateToAttachmentPreviewScreen(name)
     }
 
     override fun onDelete(name: String, position: Int) {

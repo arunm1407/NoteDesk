@@ -1,7 +1,12 @@
 package com.example.version2.presentation.signUp.listener
 
-import androidx.fragment.app.Fragment
 
 interface Navigate {
-    fun navigate(fragment: Fragment)
+
+    fun navigateToPersonalPage()
+    fun navigateToAddressPage()
+    fun navigateToPasswordPage()
+    fun navigateToLoginScreen()
+    fun navigateToPreviousScreen()
+    fun navigateToSettingScreen()
 }
